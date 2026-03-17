@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌸 Practice & Tests — Sakura Study!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../sakura.css">
+<style>
+/* ══════════════════════════════════════════
+   CUSTOM ENTRY SYSTEM — Sakura Theme
+══════════════════════════════════════════ */
+
+/* ── Add New Button ── */
+.add-new-btn{
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  color:#fff;border:none;border-radius:2rem;
+  padding:.48rem 1.2rem;font-size:.82rem;font-weight:800;
+  cursor:pointer;box-shadow:0 3px 14px rgba(240,48,106,.38);
+  transition:transform .18s,box-shadow .18s;
+  white-space:nowrap;flex-shrink:0;
+  display:inline-flex;align-items:center;gap:.35rem;
+}
+.add-new-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 7px 22px rgba(240,48,106,.48);}
+.add-new-btn:active{transform:translateY(0) scale(.99);}
+
+/* ── Modal overlay backdrop ── */
+#custom-modal-overlay{backdrop-filter:blur(5px);}
+
+/* ── Modal card ── */
+#custom-modal{
+  background:var(--card-bg) !important;
+  border-radius:1.6rem !important;
+  padding:0 !important;
+  border:1.5px solid rgba(255,182,193,.45);
+  overflow:hidden;
+  animation:cModalPop .24s cubic-bezier(.34,1.52,.64,1);
+}
+@keyframes cModalPop{
+  from{opacity:0;transform:scale(.91) translateY(10px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+
+/* Modal header band */
+.cm-header{
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  padding:1.4rem 1.75rem 1.2rem;
+  display:flex;align-items:center;gap:1rem;
+  position:relative;
+}
+.cm-header-icon{font-size:2rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));}
+.cm-header-text{flex:1;}
+.cm-header-text h3{font-size:1.15rem;font-weight:900;color:#fff;margin:0 0 .12rem;}
+.cm-header-text p{font-size:.78rem;color:rgba(255,255,255,.82);margin:0;line-height:1.4;}
+.cm-close{
+  position:absolute;top:.9rem;right:1rem;
+  background:rgba(255,255,255,.22);border:none;
+  color:#fff;font-size:1.1rem;width:30px;height:30px;
+  border-radius:.5rem;cursor:pointer;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.cm-close:hover{background:rgba(255,255,255,.38);}
+
+/* Modal body */
+.cm-body{padding:1.6rem 1.75rem 1.75rem;max-height:68vh;overflow-y:auto;}
+
+/* Form layout */
+.custom-form{display:flex;flex-direction:column;}
+.custom-form .field-group{margin-bottom:1rem;}
+.custom-form label{
+  display:flex;align-items:center;gap:.3rem;
+  font-size:.74rem;font-weight:800;color:var(--mid);
+  margin-bottom:.32rem;letter-spacing:.04em;text-transform:uppercase;
+}
+.custom-form input,
+.custom-form select,
+.custom-form textarea{
+  width:100%;box-sizing:border-box;
+  padding:.6rem .9rem;
+  border:1.5px solid rgba(255,182,193,.65);
+  border-radius:.75rem;
+  font-size:.87rem;font-family:inherit;
+  background:rgba(255,248,251,.9);
+  color:var(--dark);
+  transition:border-color .2s,box-shadow .2s;
+  outline:none;
+}
+body.dark .custom-form input,
+body.dark .custom-form select,
+body.dark .custom-form textarea{
+  background:rgba(60,20,44,.75);
+  border-color:rgba(200,80,160,.4);
+  color:#f5d0e0;
+}
+.custom-form input:focus,
+.custom-form select:focus,
+.custom-form textarea:focus{
+  border-color:var(--pink);
+  box-shadow:0 0 0 3px rgba(255,133,161,.18);
+}
+.custom-form input::placeholder,
+.custom-form textarea::placeholder{color:#d0a8be;font-size:.83rem;}
+.custom-form textarea{min-height:72px;resize:vertical;line-height:1.55;}
+.custom-form .form-hint{
+  font-size:.72rem;color:#c090aa;margin-top:.28rem;
+  line-height:1.45;display:flex;align-items:flex-start;gap:.25rem;
+}
+.custom-form .form-hint::before{content:'ℹ';flex-shrink:0;opacity:.7;}
+
+/* Sub-section label inside forms */
+.custom-form .form-section-label{
+  font-size:.82rem;font-weight:900;color:var(--pink);
+  padding:.55rem .85rem;
+  background:linear-gradient(135deg,rgba(240,48,106,.09),rgba(200,80,176,.06));
+  border-radius:.65rem;border-left:3px solid var(--pink);
+  margin:.3rem 0 .9rem;
+}
+
+/* Required asterisk */
+.req{color:#f0306a;font-size:.85rem;}
+
+/* Submit button */
+.custom-form .btn-submit{
+  width:100%;margin-top:1.5rem;padding:.82rem;
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  color:#fff;border:none;border-radius:1rem;
+  font-size:.98rem;font-weight:900;cursor:pointer;
+  letter-spacing:.02em;
+  box-shadow:0 4px 18px rgba(240,48,106,.38);
+  transition:opacity .18s,transform .15s;
+}
+.custom-form .btn-submit:hover{opacity:.92;transform:translateY(-1px);}
+.custom-form .btn-submit:active{transform:translateY(0);}
+
+/* ── Custom entry badges ── */
+.custom-kanji-badge,.custom-vocab-badge,.custom-entry-badge{
+  display:inline-block;font-size:.6rem;font-weight:800;
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  color:#fff;border-radius:.3rem;padding:.05rem .38rem;
+  margin-left:.3rem;vertical-align:middle;letter-spacing:.02em;
+}
+
+/* ── Custom entry cards ── */
+.custom-entry-card{
+  border:2px dashed rgba(240,48,106,.5) !important;
+  background:linear-gradient(135deg,rgba(255,235,248,.55),rgba(255,225,245,.35)) !important;
+}
+body.dark .custom-entry-card{
+  background:linear-gradient(135deg,rgba(80,20,55,.5),rgba(60,15,42,.4)) !important;
+  border-color:rgba(240,48,106,.38) !important;
+}
+
+/* ── Custom rows in vocab table ── */
+.custom-entry-row td{background:rgba(240,48,106,.045) !important;}
+
+/* ── Delete button ── */
+.del-custom-btn{
+  background:none;border:none;color:#d0a0b8;
+  cursor:pointer;font-size:.82rem;
+  padding:.2rem .45rem;border-radius:.4rem;
+  transition:color .15s,background .15s;line-height:1;
+}
+.del-custom-btn:hover{color:#f0306a;background:rgba(240,48,106,.12);}
+
+/* ── Section divider for custom content ── */
+.custom-section-divider{
+  display:flex;align-items:center;gap:.6rem;
+  margin:1.2rem 0 .7rem;
+  font-size:.74rem;font-weight:900;
+  color:var(--pink);letter-spacing:.04em;text-transform:uppercase;
+}
+.custom-section-divider::before,.custom-section-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,133,161,.4));
+}
+</style>
+</head>
+<body>
+<div id="petals"></div>
+<canvas id="confetti-canvas"></canvas>
+<div class="celebration-banner" id="celeb-banner">
+  <span class="celeb-emoji" id="celeb-emoji">🎉</span>
+  <div class="celeb-title" id="celeb-title">Outstanding!</div>
+  <div class="celeb-sub" id="celeb-sub">You aced it! 頑張ったね！</div>
+  <button class="celeb-close" onclick="closeCeleb()">Keep studying! 🌸</button>
+</div>
+<div class="mascot-wrap" id="mascot-wrap">
+  <div class="mascot-bubble" id="mascot-bubble">こんにちは！I'm Me3temed! 🦉<br>Tap me for study tips!</div>
+  <svg class="mascot-svg" id="mascot-svg" viewBox="0 0 120 130" onclick="mascotTap()" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="125" rx="22" ry="4" fill="#00000022"/><ellipse cx="60" cy="88" rx="30" ry="28" fill="#4a6741"/><ellipse cx="60" cy="92" rx="19" ry="20" fill="#f0e8c8"/>
+    <path d="M51 84 Q60 78 69 84 Q60 90 51 84Z" fill="#b8a060" opacity=".7"/>
+    <ellipse cx="30" cy="90" rx="10" ry="16" fill="#3a5332" transform="rotate(10 30 90)"/><ellipse cx="90" cy="90" rx="10" ry="16" fill="#3a5332" transform="rotate(-10 90 90)"/>
+    <circle cx="60" cy="55" r="30" fill="#4a6741"/><ellipse cx="60" cy="58" rx="23" ry="22" fill="#f0e8c8"/>
+    <circle cx="49" cy="54" r="11" fill="#1c1c2e"/><circle cx="49" cy="54" r="8.5" fill="#3a7a68"/><circle cx="49" cy="54" r="5" fill="#1c1c2e"/><circle cx="46.5" cy="51.5" r="2.2" fill="white"/>
+    <circle cx="71" cy="54" r="11" fill="#1c1c2e"/><circle cx="71" cy="54" r="8.5" fill="#3a7a68"/><circle cx="71" cy="54" r="5" fill="#1c1c2e"/><circle cx="68.5" cy="51.5" r="2.2" fill="white"/>
+    <path d="M56 63 Q60 69 64 63 Q62 67 60 68 Q58 67 56 63Z" fill="#c8a040"/>
+    <ellipse cx="44" cy="28" rx="7" ry="11" fill="#3a5332" transform="rotate(-20 44 28)"/><ellipse cx="76" cy="28" rx="7" ry="11" fill="#3a5332" transform="rotate(20 76 28)"/>
+    <polygon points="42,75 56,80 56,70" fill="#f0306a"/><polygon points="78,75 64,80 64,70" fill="#f0306a"/>
+    <circle cx="60" cy="75" r="5.5" fill="#c01050"/>
+    <line x1="50" y1="113" x2="43" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="50" y1="113" x2="50" y2="123" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="50" y1="113" x2="57" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="70" y1="113" x2="63" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="70" y1="113" x2="70" y2="123" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="70" y1="113" x2="77" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/>
+  </svg>
+</div>
+<header>
+  <button id="sidebar-toggle" onclick="toggleSidebar()" title="All sections">☰</button>
+  <div class="logo"><span class="logo-icon">🌸</span><div class="logo-text"><h1>Sakura Study!</h1><p>JLPT N5 — Complete Study Guide</p></div></div>
+  <div id="eg-clock" title="Cairo, Egypt 🇪🇬"><div class="clk-time" id="clk-time">--:--</div><div class="clk-label">🇪🇬 Cairo</div></div>
+  <button id="gsearch-shortcut" onclick="openSearch()" title="Search (press /)">🔍 <kbd style="background:rgba(255,255,255,.2);border-radius:.3rem;padding:.05rem .3rem;font-size:.65rem;">/</kbd></button>
+  <div id="ambient-wrap">
+    <button id="ambient-btn" onclick="toggleAmbientPanel()" title="Ambient sounds">🎵 Sounds</button>
+    <div id="ambient-panel">
+      <div style="font-size:.7rem;font-weight:900;color:#aaa;padding:.2rem .65rem .5rem;">🎵 Study Ambience</div>
+      <div class="amb-option" id="amb_off" onclick="setAmbient('off',this)">🔇 Off</div>
+      <div class="amb-option" id="amb_rain" onclick="setAmbient('rain',this)">🌧️ Soft Rain</div>
+      <div class="amb-option" id="amb_cafe" onclick="setAmbient('cafe',this)">☕ Café Chatter</div>
+      <div class="amb-option" id="amb_temple" onclick="setAmbient('temple',this)">⛩️ Temple Bells</div>
+      <div class="amb-option" id="amb_forest" onclick="setAmbient('forest',this)">🌿 Forest Breeze</div>
+      <div class="amb-option" id="amb_lofi" onclick="setAmbient('lofi',this)">🎹 Lo-fi Tones</div>
+      <div class="amb-vol-row">🔊 <input type="range" id="amb-vol" min="0" max="1" step="0.05" value="0.35" oninput="setAmbientVol(this.value)"></div>
+    </div>
+  </div>
+  <button id="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
+  <nav><button onclick="location='../index.html'">🏠 Home</button>
+    <button onclick="location='../pages/study.html'">📖 Study</button>
+    <button  class="active" onclick="location='../pages/practice.html'">🎯 Practice</button>
+    <button onclick="location='../pages/tools.html'">🔧 Tools</button>
+    <button onclick="location='../pages/progress.html'">📊 Progress</button></nav>
+</header>
+<div id="gsearch-overlay" onclick="closeSearchIfOutside(event)">
+  <div id="gsearch-box">
+    <div id="gsearch-input-wrap">
+      <span style="font-size:1.2rem;">🔍</span>
+      <input id="gsearch-input" type="text" placeholder="Search kanji, grammar, vocab…" oninput="runSearch(this.value)" autocomplete="off" spellcheck="false">
+      <button id="gsearch-close" onclick="closeSearch()">✕ Esc</button>
+    </div>
+    <div id="gsearch-results"><div id="gsearch-hint">Type to search across all sections…<br><span style="font-size:.75rem;color:#ddd;">Press <kbd style="background:#eee;border-radius:.3rem;padding:.1rem .35rem;color:#555;">/</kbd> anywhere to open</span></div></div>
+  </div>
+</div>
+<div id="stroke-modal-overlay" onclick="closeStrokeIfOutside(event)">
+  <div id="stroke-modal"><button id="stroke-modal-close" onclick="closeStrokeModal()">✕ Close</button><div id="stroke-modal-content"></div></div>
+</div>
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div id="sidebar">
+  <div class="sidebar-header"><div class="sidebar-logo"><span>🌸</span> Sakura Study!<button class="sidebar-close" onclick="closeSidebar()">✕</button></div></div>
+  <div class="sidebar-section-label">📚 Study</div>
+  <button class="sidebar-btn" onclick="location='../index.html'"><span class="sb-icon">🏠</span> Home</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html'"><span class="sb-icon">📖</span> Grammar</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#kana'"><span class="sb-icon">あ</span> Kana</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#kanji'"><span class="sb-icon">漢</span> Kanji</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#vocab'"><span class="sb-icon">📝</span> Vocabulary</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#adjectives'"><span class="sb-icon">🔄</span> Adj. Opposites</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#counters'"><span class="sb-icon">🔢</span> Counters</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#sentences'"><span class="sb-icon">✍️</span> Sentence Practice</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#numbers'"><span class="sb-icon">🔢</span> Number Practice</button>
+  <button class="sidebar-btn" onclick="location='../pages/study.html#phrases'"><span class="sb-icon">💬</span> Survival Phrases</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">🎯 Practice & Tests</div>
+  <button class="sidebar-btn" onclick="location='../pages/practice.html'"><span class="sb-icon">🃏</span> Flashcards</button>
+  <button class="sidebar-btn" onclick="location='../pages/practice.html#kanji-mcq'"><span class="sb-icon">✏️</span> Kanji Quiz</button>
+  <button class="sidebar-btn" onclick="location='../pages/practice.html#reading'"><span class="sb-icon">📚</span> Reading Test</button>
+  <button class="sidebar-btn" onclick="location='../pages/practice.html#writing'"><span class="sb-icon">✍️</span> Writing Test</button>
+  <button class="sidebar-btn" onclick="location='../pages/practice.html#listening'"><span class="sb-icon">🎧</span> Listening</button>
+  <button class="sidebar-btn" onclick="location='../pages/practice.html#comprehension'"><span class="sb-icon">🧠</span> Comprehension</button>
+  <button class="sidebar-btn" onclick="location='../pages/practice.html#mock-exam'"><span class="sb-icon">📋</span> Mock Exam</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">📈 Track & Plan</div>
+  <button class="sidebar-btn" onclick="location='../pages/progress.html'"><span class="sb-icon">📊</span> My Progress</button>
+  <button class="sidebar-btn" onclick="location='../pages/progress.html#bookmarks'"><span class="sb-icon">⭐</span> Bookmarks</button>
+  <button class="sidebar-btn" onclick="location='../pages/progress.html#study-plan'"><span class="sb-icon">📅</span> Study Plan</button>
+  <button class="sidebar-btn" onclick="location='../pages/progress.html#resources'"><span class="sb-icon">🔗</span> Resources</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">🎌 Fun & Tools</div>
+  <button class="sidebar-btn" onclick="location='../pages/tools.html'"><span class="sb-icon">🎌</span> Anime Corner</button>
+  <button class="sidebar-btn" onclick="location='../pages/tools.html#dictionary'"><span class="sb-icon">📗</span> Dictionary</button>
+</div>
+<div id="custom-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(30,0,20,.6);z-index:9000;align-items:center;justify-content:center;padding:1rem;">
+  <div id="custom-modal" style="max-width:520px;width:100%;max-height:92vh;overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,.35);position:relative;">
+    <div id="custom-modal-inner"></div>
+  </div>
+</div>
+<div id="app-body"><main>
+<!-- ====== FLASHCARDS ====== -->
+<div class="section active" id="flashcards">
+  <div class="section-title">🃏 Flashcards</div>
+  <div class="card">
+    <div style="display:flex;gap:.7rem;margin-bottom:1.1rem;flex-wrap:wrap;align-items:center;">
+      <label style="font-weight:700;color:var(--mid);font-size:.88rem;">Study:</label>
+      <select class="select-box" id="fc-mode" onchange="setupFlashcards()">
+        <option value="vocab">Vocabulary</option>
+        <option value="kanji">Kanji</option>
+        <option value="grammar">Grammar</option>
+        <option value="adjpairs">Adjective Opposites</option>
+      </select>
+      <button class="btn" onclick="shuffleFlashcards()">🔀 Shuffle</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="flashcard-face flashcard-front"><div class="big" id="fc-front">日本語</div><div class="small">Tap to flip!</div></div>
+        <div class="flashcard-face flashcard-back"><div class="big" id="fc-back">にほんご</div><div class="small" id="fc-back-extra">Japanese language</div></div>
+      </div>
+    </div>
+    <div class="fc-counter" id="fc-counter">Card 1 / 1</div>
+    <div class="fc-controls">
+      <button class="fc-btn prev" onclick="fcPrev()">← Previous</button>
+      <button class="fc-btn next" onclick="fcNext()">Next →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====== KANJI MCQ ====== -->
+<div class="section active" id="kanji-mcq">
+  <div class="section-title">✏️ Kanji Quiz</div>
+  <div class="card" id="kanji-quiz-area">
+    <div class="quiz-setup" id="kq-setup">
+      <div style="font-size:3.5rem;margin-bottom:.75rem;">漢字</div>
+      <h2>Kanji Quiz</h2>
+      <p>Test your kanji! 20 questions, 30 seconds each.</p>
+      <div style="margin-bottom:1.25rem;">
+        <label style="font-weight:700;color:var(--mid);display:block;margin-bottom:.4rem;">Quiz Type:</label>
+        <select class="select-box" id="kq-type">
+          <option value="reading">Kanji → Reading (kun)</option>
+          <option value="meaning">Kanji → Meaning</option>
+          <option value="reverse">Meaning → Kanji</option>
+        </select>
+      </div>
+      <button class="btn-start" onclick="startKanjiQuiz()">Start! 🌸</button>
+    </div>
+    <div id="kq-quiz" style="display:none;">
+      <div class="timer-text" id="kq-timer">⏱ 0:30</div>
+      <div class="timer-bar"><div class="timer-fill" id="kq-timer-fill" style="width:100%"></div></div>
+      <div class="progress-bar-wrap"><div class="progress-fill" id="kq-progress" style="width:0%"></div></div>
+      <div class="question-num" id="kq-qnum">Question 1/20</div>
+      <div class="question-text" id="kq-question"></div>
+      <div class="options" id="kq-options"></div>
+      <div class="feedback" id="kq-feedback"></div>
+    </div>
+    <div id="kq-score" style="display:none;">
+      <div class="score-screen">
+        <div class="score-circle"><span class="score-num" id="kq-score-num">0/0</span><span class="score-label">Score</span></div>
+        <div class="score-msg" id="kq-score-msg"></div>
+        <div id="kq-score-sub" style="color:#a0607a;margin-bottom:1rem;"></div>
+        <button class="btn" onclick="resetKanjiQuiz()">Try Again 🔄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====== READING ====== -->
+<div class="section active" id="reading">
+  <div class="section-title">📚 Reading Test</div>
+  <div class="card" id="reading-area">
+    <div id="reading-setup"><div style="text-align:center;padding:1.5rem;">
+      <div style="font-size:3rem;margin-bottom:.75rem;">📖</div>
+      <h2 style="font-size:1.3rem;font-weight:900;color:var(--mid);margin-bottom:.4rem;">Reading Comprehension</h2>
+      <p style="color:#a0607a;margin-bottom:1.75rem;">Short N5-level passage + comprehension questions.<br>Only N5 kanji and vocabulary used.</p>
+      <button class="btn-start" onclick="startReading()">Start! 📖</button>
+    </div></div>
+    <div id="reading-quiz" style="display:none;">
+      <div class="timer-text" id="rd-timer">⏱ 10:00</div>
+      <div class="timer-bar"><div class="timer-fill" id="rd-timer-fill" style="width:100%"></div></div>
+      <div id="rd-passage-area"></div>
+      <div id="rd-questions-area"></div>
+      <button class="btn" id="rd-submit" onclick="submitReading()" style="margin-top:1rem;display:none;">Submit ✓</button>
+    </div>
+    <div id="reading-score" style="display:none;">
+      <div class="score-screen">
+        <div class="score-circle"><span class="score-num" id="rd-score-num">0/0</span><span class="score-label">Score</span></div>
+        <div class="score-msg" id="rd-score-msg"></div>
+        <div id="rd-score-sub" style="color:#a0607a;margin-bottom:1rem;"></div>
+        <button class="btn" onclick="resetReading()">Try Again 🔄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====== WRITING ====== -->
+<div class="section active" id="writing">
+  <div class="section-title">✍️ Writing Test</div>
+  <div class="card">
+    <div id="writing-setup"><div style="text-align:center;padding:1.5rem;">
+      <div style="font-size:3rem;margin-bottom:.75rem;">✍️</div>
+      <h2 style="font-size:1.3rem;font-weight:900;color:var(--mid);margin-bottom:.4rem;">Writing Practice</h2>
+      <p style="color:#a0607a;margin-bottom:1.75rem;">Translate English → Japanese. Self-rate after seeing model answers.</p>
+      <button class="btn-start" onclick="startWriting()">Start! ✍️</button>
+    </div></div>
+    <div id="writing-quiz" style="display:none;">
+      <div class="timer-text" id="wr-timer">⏱ 15:00</div>
+      <div class="timer-bar"><div class="timer-fill" id="wr-timer-fill" style="width:100%"></div></div>
+      <div class="progress-bar-wrap"><div class="progress-fill" id="wr-progress" style="width:0%"></div></div>
+      <div id="wr-items"></div>
+      <button class="btn" onclick="submitWriting()" style="margin-top:1rem;" id="wr-submit">Submit & See Answers ✓</button>
+    </div>
+    <div id="writing-score" style="display:none;">
+      <div class="score-screen">
+        <div class="score-circle"><span class="score-num" id="wr-score-num">0/0</span><span class="score-label">Score</span></div>
+        <div class="score-msg" id="wr-score-msg"></div>
+        <div style="color:#a0607a;margin-bottom:1rem;">Based on your self-rating</div>
+        <button class="btn" onclick="resetWriting()">Try Again 🔄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====== LISTENING PRACTICE ====== -->
+<div class="section active" id="listening">
+  <div class="section-title">🎧 Listening Practice</div>
+  <div class="card" style="background:linear-gradient(135deg,rgba(255,183,197,.2),rgba(199,125,255,.1));margin-bottom:1.25rem;">
+    <p style="font-size:.88rem;color:#555;line-height:1.75;">Use your browser's built-in Japanese text-to-speech to hear native pronunciation! 🇯🇵 Press <strong>▶ Play</strong> for normal speed or <strong>🐢 Slow</strong> for careful listening. Try to repeat after each sentence!</p>
+    <div class="tts-global-bar" style="margin-top:.85rem;">
+      <span style="font-size:.8rem;font-weight:700;color:var(--mid);">🎛 Speed:</span>
+      <button class="tts-speed-btn active" id="speed-slow" onclick="setTTSSpeed(0.6,this)">🐢 Slow (0.6×)</button>
+      <button class="tts-speed-btn" id="speed-normal" onclick="setTTSSpeed(1.0,this)">🚶 Normal (1×)</button>
+      <button class="tts-speed-btn" id="speed-fast" onclick="setTTSSpeed(1.3,this)">🏃 Fast (1.3×)</button>
+      <button class="tts-speed-btn" id="speed-native" onclick="setTTSSpeed(1.6,this)">⚡ Native (1.6×)</button>
+      <span style="margin-left:auto;font-size:.75rem;color:#aaa;" id="tts-status">Ready ✓</span>
+    </div>
+  </div>
+  <div id="listening-list"></div>
+</div>
+
+
+<!-- ====== COMPREHENSION TESTS ====== -->
+<div class="section active" id="comprehension">
+  <div class="section-title">🧠 Reading Comprehension</div>
+  <div class="card" style="background:linear-gradient(135deg,rgba(247,197,159,.25),rgba(255,183,197,.2));margin-bottom:1.25rem;">
+    <p style="font-size:.88rem;color:#555;line-height:1.75;">Read a Japanese passage, then answer multiple-choice questions to test your understanding. Passages range from beginner to solid N5 level. 📖 Each test is randomly selected — try them all!</p>
+  </div>
+  <div id="comp-setup">
+    <div class="ctr-filter-bar" id="comp-filter-bar">
+      <button class="filter-tab active" onclick="filterComp('all',this)">📚 All Topics</button>
+      <button class="filter-tab" onclick="filterComp('daily',this)">🏠 Daily Life</button>
+      <button class="filter-tab" onclick="filterComp('school',this)">🏫 School</button>
+      <button class="filter-tab" onclick="filterComp('travel',this)">✈️ Travel</button>
+      <button class="filter-tab" onclick="filterComp('culture',this)">🎌 Culture</button>
+      <button class="filter-tab" onclick="filterComp('nature',this)">🌿 Nature</button>
+    </div>
+    <div id="comp-passage-list"></div>
+  </div>
+  <div id="comp-test-area" style="display:none;">
+    <div id="comp-passage-card"></div>
+    <div id="comp-questions-area"></div>
+    <div style="display:flex;gap:.7rem;margin-top:1rem;flex-wrap:wrap;">
+      <button class="btn" id="comp-submit-btn" onclick="submitComp()">✅ Submit Answers</button>
+      <button class="listen-slow-btn" onclick="resetComp()">← Back to passages</button>
+    </div>
+  </div>
+  <div id="comp-score-area" style="display:none;"></div>
+</div>
+
+
+<!-- ====== MOCK EXAM ====== -->
+<div class="section active" id="mock-exam">
+  <div class="section-title">📋 Mock N5 Exam</div>
+  <div class="card" id="exam-area">
+    <div id="exam-setup"><div style="text-align:center;padding:1.5rem;">
+      <div style="font-size:3rem;margin-bottom:.75rem;">📋</div>
+      <h2 style="font-size:1.3rem;font-weight:900;color:var(--mid);margin-bottom:.4rem;">Full N5 Mock Exam</h2>
+      <p style="color:#a0607a;margin-bottom:1rem;">30 questions — Grammar, Kanji & Vocabulary.<br>⏱ 35 minutes. 頑張れ！</p>
+      <div style="display:flex;gap:.6rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap;">
+        <div style="background:#fff0f3;padding:.5rem .9rem;border-radius:1rem;font-size:.78rem;font-weight:700;color:var(--mid);">📖 10 Grammar</div>
+        <div style="background:#fff0f3;padding:.5rem .9rem;border-radius:1rem;font-size:.78rem;font-weight:700;color:var(--mid);">漢字 10 Kanji</div>
+        <div style="background:#fff0f3;padding:.5rem .9rem;border-radius:1rem;font-size:.78rem;font-weight:700;color:var(--mid);">📝 10 Vocab</div>
+      </div>
+      <button class="btn-start" onclick="startExam()">Start Exam! 🎯</button>
+    </div></div>
+    <div id="exam-quiz" style="display:none;">
+      <div class="timer-text" id="ex-timer">⏱ 35:00</div>
+      <div class="timer-bar"><div class="timer-fill" id="ex-timer-fill" style="width:100%"></div></div>
+      <div class="progress-bar-wrap"><div class="progress-fill" id="ex-progress" style="width:0%"></div></div>
+      <div class="question-num" id="ex-qnum">Question 1/30</div>
+      <div class="question-text" id="ex-question"></div>
+      <div class="options" id="ex-options"></div>
+      <div class="feedback" id="ex-feedback"></div>
+      <div style="margin-top:1rem;text-align:right;"><button class="btn" id="ex-next" onclick="examNext()" style="display:none;">Next →</button></div>
+    </div>
+    <div id="exam-score" style="display:none;">
+      <div class="score-screen">
+        <div class="score-circle"><span class="score-num" id="ex-score-num">0/30</span><span class="score-label">Score</span></div>
+        <div class="score-msg" id="ex-score-msg"></div>
+        <div id="ex-score-sub" style="color:#a0607a;margin-bottom:.75rem;"></div>
+        <div id="ex-breakdown" style="margin:.75rem auto;max-width:300px;text-align:left;"></div>
+        <button class="btn" onclick="resetExam()">Try Again 🔄</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====== SENTENCE PATTERNS PRACTICE ====== -->
+<div class="section active" id="sentences">
+  <div class="section-title">📝 Sentence Patterns Practice</div>
+  <div class="card" style="background:linear-gradient(135deg,rgba(255,183,197,.2),rgba(199,125,255,.1));margin-bottom:1.25rem;">
+    <p style="font-size:.88rem;color:#555;line-height:1.75;">Fill in the blank with the correct particle, verb form, or grammar pattern. Choose your category and get targeted grammar practice! 🎯</p>
+  </div>
+  <div class="ctr-filter-bar" id="sp-filter-bar">
+    <button class="filter-tab active" onclick="filterSP('all',this)">📚 All</button>
+    <button class="filter-tab" onclick="filterSP('particles',this)">🔵 Particles</button>
+    <button class="filter-tab" onclick="filterSP('te-form',this)">🟢 て-form</button>
+    <button class="filter-tab" onclick="filterSP('conjugation',this)">🟡 Conjugation</button>
+    <button class="filter-tab" onclick="filterSP('patterns',this)">🟣 Patterns</button>
+  </div>
+  <div id="sp-score-bar" style="display:none;background:white;border-radius:1rem;padding:.6rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;border:2px solid rgba(255,182,193,.25);flex-wrap:wrap;">
+    <span style="font-size:.8rem;font-weight:700;color:var(--mid);">Score:</span>
+    <span id="sp-score-num" style="font-size:1.1rem;font-weight:900;color:var(--pink);">0 / 0</span>
+    <div style="flex:1;min-width:80px;"><div style="background:#ffe4ec;border-radius:2rem;height:8px;overflow:hidden;"><div id="sp-score-bar-fill" style="height:100%;border-radius:2rem;background:linear-gradient(90deg,#ff85a1,#c77dff);transition:width .5s;width:0%;"></div></div></div>
+    <button class="listen-slow-btn" style="font-size:.72rem;" onclick="resetSP()">🔄 Reset</button>
+  </div>
+  <div id="sp-list"></div>
+</div>
+
+
+</main></div>
+<footer>
+  <p>🌸 <span>Sakura Study!</span> — JLPT N5 Complete Study Guide</p>
+  <p style="margin-top:.3rem;">© 2026 <span>Ahmed El Bourgy</span>. All rights reserved. Made with 💕 for Japanese learners everywhere.</p>
+</footer>
+<script src="../js/data.js"></script>
+<script>
+// Page-specific code
+
+// ── Pre-declare variables ──
+var mascotTipIndex=0, mascotBubbleTimer=null, phrasesFilter='all';
+var currentVocabFilter='all', currentKanjiFilter='all';
+var currentAdjFilter='all', currentCounterFilter='all';
+<script>
+// ══════════════════════════════════════════════
+//  CUSTOM ENTRIES — must be first so render functions can call loadCustom()
+// ══════════════════════════════════════════════
+const CUSTOM_KEYS = {
+  vocab:    'sakura_custom_vocab',
+  kanji:    'sakura_custom_kanji',
+  grammar:  'sakura_custom_grammar',
+  adj:      'sakura_custom_adj',
+  counters: 'sakura_custom_counters',
+};
+function loadCustom(type) {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_KEYS[type]) || '[]'); }
+  catch(e) { return []; }
+}
+function saveCustom(type, data) {
+  try { localStorage.setItem(CUSTOM_KEYS[type], JSON.stringify(data)); } catch(e) {}
+}
+function deleteCustomEntry(type, idx) {
+  if (!confirm('Delete this custom entry?')) return;
+  const data = loadCustom(type);
+  data.splice(idx, 1);
+  saveCustom(type, data);
+  if (type === 'vocab')    renderVocab(currentVocabFilter, document.getElementById('vocab-search')?.value||'');
+  if (type === 'kanji')    renderKanji(currentKanjiFilter||'all');
+  if (type === 'grammar')  renderGrammar(document.getElementById('grammar-search')?.value||'');
+  if (type === 'adj')      renderAdjPairs(currentAdjFilter||'all');
+  if (type === 'counters') renderCounters(currentCounterFilter||'all');
+  showToast('Entry deleted 🗑️');
+}
+
+// ── Pre-declare variables used across the file to avoid TDZ errors ──
+var mascotTipIndex = 0;
+var mascotBubbleTimer = null;
+var phrasesFilter = 'all';
+var currentVocabFilter = 'all';
+var currentKanjiFilter = 'all';
+var currentAdjFilter = 'all';
+var currentCounterFilter = 'all';
+
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  document.querySelectorAll('.sidebar-btn').forEach(b=>b.classList.remove('active'));
+  if(id==='sentences') setTimeout(renderSP,0);
+  if(id==='listening') renderListening();
+  if(id==='comprehension') setTimeout(renderCompList,0);
+  history.replaceState(null,'','#'+id);
+}
+
+let allGrammarItems=[];
+function buildGrammarList(){allGrammarItems=[];GRAMMAR_SECTIONS.forEach(sec=>{sec.items.forEach(item=>{allGrammarItems.push({...item,sectionId:sec.id});});});}
+buildGrammarList();
+// --- FLASHCARDS ---
+let fcDeck=[],fcIndex=0,fcFlipped=false;
+function setupFlashcards(){
+  const mode=document.getElementById('fc-mode').value;
+  fcFlipped=false;
+  document.getElementById('flashcard').classList.remove('flipped');
+  if(mode==='vocab') fcDeck=VOCAB.map(v=>({front:v.jp,back:v.read,extra:v.en}));
+  else if(mode==='kanji') fcDeck=KANJI.map(k=>({front:k.char,back:k.on,extra:`kun: ${k.kun||'—'} | ${k.meaning} | ${k.strokes} strokes`}));
+  else if(mode==='grammar') fcDeck=allGrammarItems.map(g=>({front:g.pattern,back:g.meaning,extra:g.structure}));
+  else fcDeck=ADJ_PAIRS.map(p=>({front:p.a.jp,back:p.b.jp,extra:`${p.a.en} ↔ ${p.b.en}`}));
+  fcIndex=0; showFC();
+}
+function showFC(){
+  fcFlipped=false;
+  document.getElementById('flashcard').classList.remove('flipped');
+  const c=fcDeck[fcIndex];
+  document.getElementById('fc-front').textContent=c.front;
+  document.getElementById('fc-back').textContent=c.back;
+  document.getElementById('fc-back-extra').textContent=c.extra;
+  document.getElementById('fc-counter').textContent=`Card ${fcIndex+1} / ${fcDeck.length}`;
+}
+function flipCard(){fcFlipped=!fcFlipped;document.getElementById('flashcard').classList.toggle('flipped',fcFlipped);}
+function fcNext(){if(fcIndex<fcDeck.length-1){fcIndex++;showFC();}}
+function fcPrev(){if(fcIndex>0){fcIndex--;showFC();}}
+function shuffleFlashcards(){fcDeck.sort(()=>Math.random()-.5);fcIndex=0;showFC();}
+setupFlashcards();
+
+// --- KANJI QUIZ ---
+let kqQuestionPool=[],kqIndex=0,kqScore=0,kqTimer=null,kqTimeLeft=30;
+
+// --- KANJI QUIZ ---
+let kqQuestionPool=[],kqIndex=0,kqScore=0,kqTimer=null,kqTimeLeft=30;
+function startKanjiQuiz(){
+  const type=document.getElementById('kq-type').value;
+  kqScore=0;kqIndex=0;
+  kqQuestionPool=genKanjiQs(type,20);
+  document.getElementById('kq-setup').style.display='none';
+  document.getElementById('kq-quiz').style.display='block';
+  document.getElementById('kq-score').style.display='none';
+  showKanjiQ();
+}
+function genKanjiQs(type,n){
+  const pool=[...KANJI].sort(()=>Math.random()-.5).slice(0,n);
+  return pool.map(k=>{
+    let q,correct,wrong;
+    if(type==='reading'){q=`「${k.char}」の よみかたは？`;correct=k.kun||k.on.split('・')[0];wrong=KANJI.filter(x=>x.char!==k.char).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.kun||x.on.split('・')[0]);}
+    else if(type==='meaning'){q=`「${k.char}」の いみは？`;correct=k.meaning;wrong=KANJI.filter(x=>x.char!==k.char).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.meaning);}
+    else{q=`「${k.meaning}」の かんじは？`;correct=k.char;wrong=KANJI.filter(x=>x.char!==k.char).sort(()=>Math.random()-.5).slice(0,3).map(x=>x.char);}
+    const all=[correct,...wrong].sort(()=>Math.random()-.5);
+    return{q,opts:all,ans:all.indexOf(correct)};
+  });
+}
+function showKanjiQ(){
+  if(kqIndex>=kqQuestionPool.length){endKanjiQuiz();return;}
+  document.getElementById('kq-qnum').textContent=`Question ${kqIndex+1} / ${kqQuestionPool.length}`;
+  document.getElementById('kq-progress').style.width=`${(kqIndex/kqQuestionPool.length)*100}%`;
+  document.getElementById('kq-question').textContent=kqQuestionPool[kqIndex].q;
+  document.getElementById('kq-feedback').className='feedback';
+  document.getElementById('kq-options').innerHTML=kqQuestionPool[kqIndex].opts.map((o,i)=>`<button class="option-btn" onclick="answerKanjiQ(${i})">${o}</button>`).join('');
+  startKTmr();
+}
+function startKTmr(){kqTimeLeft=30;clearInterval(kqTimer);updateKTmr();kqTimer=setInterval(()=>{kqTimeLeft--;updateKTmr();if(kqTimeLeft<=0){clearInterval(kqTimer);disableKOpts();const fb=document.getElementById('kq-feedback');fb.className='feedback wrong';fb.textContent=`⏰ Time's up! Answer: ${kqQuestionPool[kqIndex].opts[kqQuestionPool[kqIndex].ans]}`;setTimeout(()=>{kqIndex++;showKanjiQ();},1800);}},1000);}
+function updateKTmr(){document.getElementById('kq-timer').textContent=`⏱ 0:${kqTimeLeft.toString().padStart(2,'0')}`;document.getElementById('kq-timer-fill').style.width=`${(kqTimeLeft/30)*100}%`;}
+function disableKOpts(){document.querySelectorAll('#kq-options .option-btn').forEach(b=>b.disabled=true);document.querySelectorAll('#kq-options .option-btn')[kqQuestionPool[kqIndex].ans].classList.add('correct');}
+function answerKanjiQ(i){clearInterval(kqTimer);disableKOpts();const ans=kqQuestionPool[kqIndex].ans;const fb=document.getElementById('kq-feedback');document.querySelectorAll('#kq-options .option-btn')[i].classList.add(i===ans?'correct':'wrong');if(i===ans){kqScore++;fb.className='feedback correct';fb.textContent='✅ Correct!';}else{fb.className='feedback wrong';fb.textContent=`❌ Answer: ${kqQuestionPool[kqIndex].opts[ans]}`;}setTimeout(()=>{kqIndex++;showKanjiQ();},1600);}
+function endKanjiQuiz(){clearInterval(kqTimer);document.getElementById('kq-quiz').style.display='none';document.getElementById('kq-score').style.display='block';const pct=Math.round((kqScore/kqQuestionPool.length)*100);document.getElementById('kq-score-num').textContent=`${kqScore}/${kqQuestionPool.length}`;const msgs=['📚 Keep going! Review and try again!','💪 Getting there! Practice more kanji!','✨ Good work! Keep it up!','🌸 Excellent! You know your kanji!'];const msg=pct>=80?msgs[3]:pct>=60?msgs[2]:pct>=40?msgs[1]:msgs[0];document.getElementById('kq-score-msg').textContent=msg;document.getElementById('kq-score-sub').textContent=`${pct}% accuracy`;saveScore('Kanji Quiz ✏️',kqScore,kqQuestionPool.length);if(pct>=80)setTimeout(()=>showCelebration('✏️',pct===100?'Kanji Perfect!':'Kanji Master!',`${pct}% — すごい！You really know your kanji!`,pct),400);}
+function resetKanjiQuiz(){document.getElementById('kq-setup').style.display='block';document.getElementById('kq-quiz').style.display='none';document.getElementById('kq-score').style.display='none';}
+
+
+
+// --- READING ---
+let rdTimer=null,rdTimeLeft=600,rdCurrentTest=0,rdAnswers=[];
+function startReading(){
+  rdCurrentTest=Math.floor(Math.random()*READING_TESTS.length);
+  rdAnswers=new Array(READING_TESTS[rdCurrentTest].questions.length).fill(-1);
+  rdTimeLeft=600;
+  document.getElementById('reading-setup').style.display='none';
+  document.getElementById('reading-quiz').style.display='block';
+  document.getElementById('reading-score').style.display='none';
+  const test=READING_TESTS[rdCurrentTest];
+  document.getElementById('rd-passage-area').innerHTML=`<div class="card" style="margin-bottom:1rem;"><div style="font-weight:800;color:var(--mid);margin-bottom:.6rem;">📖 ${test.title}</div><div class="reading-passage">${test.passage}</div><div style="font-size:.78rem;color:#888;margin-top:.4rem;font-style:italic;">${test.passageRom}</div></div>`;
+  document.getElementById('rd-questions-area').innerHTML=test.questions.map((q,i)=>`<div class="card" style="margin-bottom:.9rem;"><div class="question-num">Question ${i+1}</div><div class="question-text" style="font-size:1rem;">${q.q}</div><div class="options">${q.opts.map((o,j)=>`<button class="option-btn" id="rdq${i}opt${j}" onclick="selRd(${i},${j})">${o}</button>`).join('')}</div></div>`).join('');
+  document.getElementById('rd-submit').style.display='block';
+  startRdTmr();
+}
+function startRdTmr(){clearInterval(rdTimer);updateRdTmr();rdTimer=setInterval(()=>{rdTimeLeft--;updateRdTmr();if(rdTimeLeft<=0){clearInterval(rdTimer);submitReading();}},1000);}
+function updateRdTmr(){const m=Math.floor(rdTimeLeft/60),s=rdTimeLeft%60;document.getElementById('rd-timer').textContent=`⏱ ${m}:${s.toString().padStart(2,'0')}`;document.getElementById('rd-timer-fill').style.width=`${(rdTimeLeft/600)*100}%`;}
+function selRd(qi,opt){rdAnswers[qi]=opt;for(let j=0;j<4;j++){const b=document.getElementById(`rdq${qi}opt${j}`);if(b){b.style.borderColor='';b.style.background='';}}const sel=document.getElementById(`rdq${qi}opt${opt}`);if(sel){sel.style.borderColor='var(--pink)';sel.style.background='#fff0f3';}}
+function submitReading(){clearInterval(rdTimer);document.getElementById('reading-quiz').style.display='none';document.getElementById('reading-score').style.display='block';const test=READING_TESTS[rdCurrentTest];let score=0;test.questions.forEach((q,i)=>{if(rdAnswers[i]===q.ans)score++;});const pct=Math.round((score/test.questions.length)*100);document.getElementById('rd-score-num').textContent=`${score}/${test.questions.length}`;document.getElementById('rd-score-msg').textContent=pct>=75?'🌸 Great reading!':pct>=50?'✨ Nice! Review the passage again.':'📖 Keep practicing reading!';document.getElementById('rd-score-sub').textContent=`${pct}% accuracy`;saveScore('Reading 📚',score,test.questions.length);if(pct>=80)setTimeout(()=>showCelebration('📚','Great Reading!',`${pct}% — 上手！Excellent comprehension!`,pct),400);}
+function resetReading(){document.getElementById('reading-setup').style.display='block';document.getElementById('reading-quiz').style.display='none';document.getElementById('reading-score').style.display='none';}
+
+// --- WRITING ---
+let wrTimer=null,wrTimeLeft=900,wrRatings=[],_wrShuffled=[];
+
+// --- WRITING ---
+let wrTimer=null,wrTimeLeft=900,wrRatings=[],_wrShuffled=[];
+function startWriting(){
+  wrRatings=[];wrTimeLeft=900;
+  _wrShuffled=[...WRITING_ITEMS].sort(()=>Math.random()-.5).slice(0,8);
+  wrRatings=new Array(_wrShuffled.length).fill(0);
+  document.getElementById('writing-setup').style.display='none';
+  document.getElementById('writing-quiz').style.display='block';
+  document.getElementById('writing-score').style.display='none';
+  document.getElementById('wr-items').innerHTML=_wrShuffled.map((item,i)=>`
+    <div class="card" id="wr-item-${i}" style="margin-bottom:1rem;">
+      <div class="question-num">Question ${i+1} / ${_wrShuffled.length}</div>
+      <div class="sentence-prompt">${item.en}</div>
+      <textarea class="writing-input" id="wr-input-${i}" placeholder="Write in Japanese..."></textarea>
+      <div class="answer-reveal" id="wr-answer-${i}">
+        <p>💡 Model Answer:</p>
+        <p class="model">${item.jp}</p>
+        <p style="margin-top:.3rem;font-size:.78rem;color:#3a7a50;">Hint: ${item.note}</p>
+        <div class="self-rate" style="margin-top:.6rem;">
+          <span style="font-size:.8rem;color:#155724;font-weight:700;">How did you do?</span>
+          <button class="rate-btn good" onclick="rateWr(${i},2)">✅ Got it!</button>
+          <button class="rate-btn ok" onclick="rateWr(${i},1)">🟡 Almost</button>
+          <button class="rate-btn bad" onclick="rateWr(${i},0)">❌ Missed</button>
+        </div>
+      </div>
+    </div>`).join('');
+  startWrTmr();
+}
+function startWrTmr(){clearInterval(wrTimer);updateWrTmr();wrTimer=setInterval(()=>{wrTimeLeft--;updateWrTmr();if(wrTimeLeft<=0){clearInterval(wrTimer);submitWriting();}},1000);}
+function updateWrTmr(){const m=Math.floor(wrTimeLeft/60),s=wrTimeLeft%60;document.getElementById('wr-timer').textContent=`⏱ ${m}:${s.toString().padStart(2,'0')}`;document.getElementById('wr-timer-fill').style.width=`${(wrTimeLeft/900)*100}%`;}
+function rateWr(i,score){wrRatings[i]=score;document.querySelectorAll(`#wr-item-${i} .rate-btn`).forEach(b=>b.style.opacity='.5');const done=wrRatings.filter((r,idx)=>document.getElementById(`wr-answer-${idx}`)&&document.getElementById(`wr-answer-${idx}`).classList.contains('show')).length;document.getElementById('wr-progress').style.width=`${(done/_wrShuffled.length)*100}%`;}
+function submitWriting(){clearInterval(wrTimer);document.getElementById('writing-quiz').style.display='none';document.getElementById('writing-score').style.display='block';_wrShuffled.forEach((_,i)=>document.getElementById(`wr-answer-${i}`).classList.add('show'));const good=wrRatings.filter(r=>r===2).length;document.getElementById('wr-score-num').textContent=`${good}/${_wrShuffled.length}`;const pct=good/_wrShuffled.length;document.getElementById('wr-score-msg').textContent=pct>=.75?'🌸 Great writing!':pct>=.5?'✨ Good! Review missed ones.':'📝 Keep practicing! Writing takes time!';}
+function resetWriting(){document.getElementById('writing-setup').style.display='block';document.getElementById('writing-quiz').style.display='none';document.getElementById('writing-score').style.display='none';wrRatings=[];}
+
+// --- MOCK EXAM ---
+let examQs=[],exIndex=0,exScore=0,exAnswered=false,exTimer=null,exTimeLeft=2100;
+let exBreakdown={grammar:0,kanji:0,vocab:0};
+
+// --- MOCK EXAM ---
+let examQs=[],exIndex=0,exScore=0,exAnswered=false,exTimer=null,exTimeLeft=2100;
+let exBreakdown={grammar:0,kanji:0,vocab:0};
+function startExam(){
+  exIndex=0;exScore=0;exAnswered=false;exTimeLeft=2100;
+  exBreakdown={grammar:0,kanji:0,vocab:0};
+  // Randomly pick 10 of each type from large pool
+  const pick=(type,n)=>[...EXAM_QUESTIONS.filter(q=>q.type===type)].sort(()=>Math.random()-.5).slice(0,n);
+  examQs=[...pick('grammar',10),...pick('kanji',10),...pick('vocab',10)];
+  document.getElementById('exam-setup').style.display='none';
+  document.getElementById('exam-quiz').style.display='block';
+  document.getElementById('exam-score').style.display='none';
+  showExamQ();startExTmr();
+}
+function startExTmr(){clearInterval(exTimer);updateExTmr();exTimer=setInterval(()=>{exTimeLeft--;updateExTmr();if(exTimeLeft<=0){clearInterval(exTimer);endExam();}},1000);}
+function updateExTmr(){const m=Math.floor(exTimeLeft/60),s=exTimeLeft%60;document.getElementById('ex-timer').textContent=`⏱ ${m}:${s.toString().padStart(2,'0')}`;document.getElementById('ex-timer-fill').style.width=`${(exTimeLeft/2100)*100}%`;}
+function showExamQ(){
+  if(exIndex>=examQs.length){endExam();return;}
+  exAnswered=false;
+  const q=examQs[exIndex];
+  document.getElementById('ex-qnum').textContent=`Question ${exIndex+1}/${examQs.length} — ${q.type.charAt(0).toUpperCase()+q.type.slice(1)}`;
+  document.getElementById('ex-progress').style.width=`${(exIndex/examQs.length)*100}%`;
+  document.getElementById('ex-question').textContent=q.q;
+  document.getElementById('ex-feedback').className='feedback';
+  document.getElementById('ex-next').style.display='none';
+  document.getElementById('ex-options').innerHTML=q.opts.map((o,i)=>`<button class="option-btn" onclick="answerExam(${i})">${o}</button>`).join('');
+}
+function answerExam(i){if(exAnswered)return;exAnswered=true;const q=examQs[exIndex];document.querySelectorAll('#ex-options .option-btn').forEach(b=>b.disabled=true);document.querySelectorAll('#ex-options .option-btn')[q.ans].classList.add('correct');const fb=document.getElementById('ex-feedback');if(i===q.ans){exScore++;exBreakdown[q.type]++;document.querySelectorAll('#ex-options .option-btn')[i].classList.add('correct');fb.className='feedback correct';fb.textContent=`✅ Correct! ${q.exp}`;}else{document.querySelectorAll('#ex-options .option-btn')[i].classList.add('wrong');fb.className='feedback wrong';fb.textContent=`❌ ${q.exp}`;}document.getElementById('ex-next').style.display='inline-block';}
+function examNext(){exIndex++;showExamQ();}
+function endExam(){clearInterval(exTimer);document.getElementById('exam-quiz').style.display='none';document.getElementById('exam-score').style.display='block';const pct=Math.round((exScore/examQs.length)*100);document.getElementById('ex-score-num').textContent=`${exScore}/${examQs.length}`;const msgs=['📚 Keep studying! You\'ve got this!','💪 Good effort! Focus on weak areas.','✨ Great work! Almost ready!','🌸 Outstanding! You\'re ready for N5!'];document.getElementById('ex-score-msg').textContent=pct>=80?msgs[3]:pct>=70?msgs[2]:pct>=50?msgs[1]:msgs[0];document.getElementById('ex-score-sub').textContent=`${pct}% — ${pct>=60?'Pass level reached! 🎉':'Keep studying to reach passing level (60%+)'}`;const gT=EXAM_QUESTIONS.filter(q=>q.type==='grammar').length,kT=EXAM_QUESTIONS.filter(q=>q.type==='kanji').length,vT=EXAM_QUESTIONS.filter(q=>q.type==='vocab').length;document.getElementById('ex-breakdown').innerHTML=`<div style="font-weight:700;color:var(--mid);margin-bottom:.4rem;">Section Breakdown:</div><div style="display:flex;flex-direction:column;gap:.3rem;"><div style="display:flex;justify-content:space-between;background:#fff0f3;padding:.35rem .7rem;border-radius:.7rem;"><span>📖 Grammar</span><span style="font-weight:800;color:var(--pink);">${exBreakdown.grammar}/${gT}</span></div><div style="display:flex;justify-content:space-between;background:#fff0f3;padding:.35rem .7rem;border-radius:.7rem;"><span>漢字 Kanji</span><span style="font-weight:800;color:var(--pink);">${exBreakdown.kanji}/${kT}</span></div><div style="display:flex;justify-content:space-between;background:#fff0f3;padding:.35rem .7rem;border-radius:.7rem;"><span>📝 Vocab</span><span style="font-weight:800;color:var(--pink);">${exBreakdown.vocab}/${vT}</span></div></div>`;saveScore('Mock Exam 📋',exScore,examQs.length);if(pct>=80)setTimeout(()=>showCelebration(pct===100?'🏆':pct>=90?'🌸':'🎉',pct===100?'Perfect Score!!':pct>=90?'Outstanding!':'Great Work!',`${pct}% on the Mock Exam! ${pct>=90?'N5 is yours! 頑張ったね！':'もう少し！Keep pushing!'}`,pct),400);}
+function resetExam(){document.getElementById('exam-setup').style.display='block';document.getElementById('exam-quiz').style.display='none';document.getElementById('exam-score').style.display='none';}
+
+// --- HOME MINI TIMELINE ---
+function renderHomeTimeline(){
+  const c=document.getElementById('home-timeline');
+  if(!c)return;
+  c.innerHTML=STUDY_PLAN.map((w,i)=>`
+    <div class="htl-card" style="border-color:${w.color}20;border-left:4px solid ${w.color};" onclick="showSection('study-plan')" title="See full plan">
+      <div class="htl-week" style="color:${w.color};">${w.week}</div>
+      <span class="htl-emoji">${w.emoji}</span>
+      <div class="htl-title">${w.title}</div>
+      <div class="htl-tasks">${w.tasks[0]}</div>
+    </div>`).join('');
+}
+renderHomeTimeline();
+
+
+// ============================================================
+const LISTEN_CATEGORIES = [
+  { title: '🌅 Greetings & Daily Phrases', icon: '🌅', items: [
+    { jp: 'おはようございます。', rom: 'Ohayou gozaimasu.', en: 'Good morning. (polite)' },
+    { jp: 'こんにちは！', rom: 'Konnichiwa!', en: 'Hello! / Good afternoon!' },
+    { jp: 'こんばんは。', rom: 'Konbanwa.', en: 'Good evening.' },
+    { jp: 'おやすみなさい。', rom: 'Oyasuminasai.', en: 'Good night.' },
+    { jp: 'ありがとうございます。', rom: 'Arigatou gozaimasu.', en: 'Thank you very much.' },
+    { jp: 'すみません。', rom: 'Sumimasen.', en: 'Excuse me. / Sorry.' },
+    { jp: 'はじめまして。どうぞ よろしく。', rom: 'Hajimemashite. Douzo yoroshiku.', en: 'Nice to meet you.' },
+    { jp: 'おげんきですか。', rom: 'Ogenki desu ka?', en: 'How are you?' },
+    { jp: 'はい、げんきです。ありがとう。', rom: 'Hai, genki desu. Arigatou.', en: 'Yes, I\'m fine. Thank you.' },
+    { jp: 'またね！', rom: 'Mata ne!', en: 'See you later!' },
+    { jp: 'いってきます！', rom: 'Ittekimasu!', en: 'I\'m heading out!' },
+    { jp: 'おかえりなさい。', rom: 'Okaerinasai.', en: 'Welcome back.' },
+    { jp: 'いただきます！', rom: 'Itadakimasu!', en: 'Let\'s eat! (before meals)' },
+    { jp: 'ごちそうさまでした。', rom: 'Gochisousama deshita.', en: 'Thank you for the meal.' },
+  ]},
+  { title: '🛒 Shopping & Numbers', icon: '🏪', items: [
+    { jp: 'これは いくらですか。', rom: 'Kore wa ikura desu ka?', en: 'How much is this?' },
+    { jp: 'ひゃくえんです。', rom: 'Hyaku-en desu.', en: 'It\'s 100 yen.' },
+    { jp: 'これを ください。', rom: 'Kore o kudasai.', en: 'Please give me this.' },
+    { jp: 'りんごを みっつ ください。', rom: 'Ringo o mittsu kudasai.', en: 'Three apples, please.' },
+    { jp: 'たかいですね。やすいのは ありますか。', rom: 'Takai desu ne. Yasui no wa arimasu ka?', en: 'That\'s expensive! Do you have a cheaper one?' },
+    { jp: 'クレジットカードは つかえますか。', rom: 'Kurejitto kaado wa tsukaemasu ka?', en: 'Can I use a credit card?' },
+    { jp: 'レシートを ください。', rom: 'Reshiito o kudasai.', en: 'Please give me a receipt.' },
+    { jp: 'ふくろは いりますか。', rom: 'Fukuro wa irimasu ka?', en: 'Do you need a bag?' },
+  ]},
+  { title: '🕐 Time & Dates', icon: '📅', items: [
+    { jp: 'いま なんじですか。', rom: 'Ima nanji desu ka?', en: 'What time is it now?' },
+    { jp: 'ごぜん くじはんです。', rom: 'Gozen kuji han desu.', en: 'It\'s 9:30 AM.' },
+    { jp: 'きょうは なんようびですか。', rom: 'Kyou wa nan-youbi desu ka?', en: 'What day of the week is today?' },
+    { jp: 'きょうは もくようびです。', rom: 'Kyou wa mokuyoubi desu.', en: 'Today is Thursday.' },
+    { jp: 'たんじょうびは いつですか。', rom: 'Tanjoubi wa itsu desu ka?', en: 'When is your birthday?' },
+    { jp: 'わたしの たんじょうびは しちがつ ふつかです。', rom: 'Watashi no tanjoubi wa shichigatsu futsuka desu.', en: 'My birthday is July 2nd.' },
+    { jp: 'あしたは なんがつ なんにちですか。', rom: 'Ashita wa nangatsu nannichi desu ka?', en: 'What is tomorrow\'s date?' },
+    { jp: 'よじに あいましょう。', rom: 'Yoji ni aimashou.', en: 'Let\'s meet at 4 o\'clock.' },
+  ]},
+  { title: '📚 Study & School', icon: '🏫', items: [
+    { jp: 'にほんごを べんきょうしています。', rom: 'Nihongo o benkyou shite imasu.', en: 'I am studying Japanese.' },
+    { jp: 'まいにち にじかん べんきょうします。', rom: 'Mainichi ni-jikan benkyou shimasu.', en: 'I study for 2 hours every day.' },
+    { jp: 'このかんじの よみかたは なんですか。', rom: 'Kono kanji no yomikata wa nan desu ka?', en: 'What is the reading of this kanji?' },
+    { jp: 'もういちど いってください。', rom: 'Mou ichido itte kudasai.', en: 'Please say it one more time.' },
+    { jp: 'ゆっくり はなしてください。', rom: 'Yukkuri hanashite kudasai.', en: 'Please speak slowly.' },
+    { jp: 'わかりません。', rom: 'Wakarimasen.', en: 'I don\'t understand.' },
+    { jp: 'にほんごが すこし はなせます。', rom: 'Nihongo ga sukoshi hanasemasu.', en: 'I can speak a little Japanese.' },
+    { jp: 'もう いちど かいてください。', rom: 'Mou ichido kaite kudasai.', en: 'Please write it one more time.' },
+  ]},
+  { title: '🏠 Home & Family', icon: '👨‍👩‍👧', items: [
+    { jp: 'かぞくは よにんです。', rom: 'Kazoku wa yo-nin desu.', en: 'My family has four people.' },
+    { jp: 'ちちは さんじゅうごさいです。', rom: 'Chichi wa sanjuugo-sai desu.', en: 'My father is 35 years old.' },
+    { jp: 'いもうとは がくせいです。', rom: 'Imouto wa gakusei desu.', en: 'My younger sister is a student.' },
+    { jp: 'へやに ねこが います。', rom: 'Heya ni neko ga imasu.', en: 'There is a cat in the room.' },
+    { jp: 'うちに かえってから、ばんごはんを たべます。', rom: 'Uchi ni kaette kara, bangohan o tabemasu.', en: 'After returning home, I eat dinner.' },
+    { jp: 'まいあさ はちじに おきます。', rom: 'Maiasa hachiji ni okimasu.', en: 'I wake up at 8 every morning.' },
+    { jp: 'つくえの うえに ほんが あります。', rom: 'Tsukue no ue ni hon ga arimasu.', en: 'There is a book on the desk.' },
+  ]},
+  { title: '🍜 Food & Restaurant', icon: '🍣', items: [
+    { jp: 'なにが たべたいですか。', rom: 'Nani ga tabetai desu ka?', en: 'What do you want to eat?' },
+    { jp: 'すしが だいすきです！', rom: 'Sushi ga daisuki desu!', en: 'I love sushi!' },
+    { jp: 'このりょうりは おいしいですね。', rom: 'Kono ryouri wa oishii desu ne.', en: 'This dish is delicious, isn\'t it?' },
+    { jp: 'みずを いっぱい ください。', rom: 'Mizu o ippai kudasai.', en: 'One glass of water, please.' },
+    { jp: 'おかいけいを おねがいします。', rom: 'Okaikei o onegaishimasu.', en: 'The bill, please.' },
+    { jp: 'からいものは すこし にがてです。', rom: 'Karai mono wa sukoshi nigate desu.', en: 'I\'m not very good with spicy food.' },
+    { jp: 'なんにん さまですか。', rom: 'Nan-nin-sama desu ka?', en: 'How many in your party?' },
+    { jp: 'えいごの メニューは ありますか。', rom: 'Eigo no menyuu wa arimasu ka?', en: 'Do you have an English menu?' },
+  ]},
+  { title: '🚉 Transport & Directions', icon: '🗺️', items: [
+    { jp: 'えきは どこですか。', rom: 'Eki wa doko desu ka?', en: 'Where is the station?' },
+    { jp: 'まっすぐ いって、みぎに まがってください。', rom: 'Massugu itte, migi ni magatte kudasai.', en: 'Go straight, then turn right.' },
+    { jp: 'このでんしゃは とうきょうへ いきますか。', rom: 'Kono densha wa Toukyou e ikimasu ka?', en: 'Does this train go to Tokyo?' },
+    { jp: 'つぎのえきは なんですか。', rom: 'Tsugi no eki wa nan desu ka?', en: 'What is the next station?' },
+    { jp: 'バスていは ちかくに ありますか。', rom: 'Basutei wa chikaku ni arimasu ka?', en: 'Is there a bus stop nearby?' },
+    { jp: 'とうきょうまで いくらですか。', rom: 'Toukyou made ikura desu ka?', en: 'How much to Tokyo?' },
+    { jp: 'このでんしゃは なんじに でますか。', rom: 'Kono densha wa nanji ni demasu ka?', en: 'What time does this train depart?' },
+  ]},
+  { title: '🌤 Weather & Seasons', icon: '🌸', items: [
+    { jp: 'きょうの てんきは どうですか。', rom: 'Kyou no tenki wa dou desu ka?', en: 'How is the weather today?' },
+    { jp: 'はれています。きもちが いいですね。', rom: 'Harete imasu. Kimochi ga ii desu ne.', en: 'It\'s sunny. It feels nice, doesn\'t it?' },
+    { jp: 'あしたは あめが ふるでしょう。', rom: 'Ashita wa ame ga furu deshou.', en: 'It will probably rain tomorrow.' },
+    { jp: 'ふゆは さむいですが、なつは あついです。', rom: 'Fuyu wa samui desu ga, natsu wa atsui desu.', en: 'Winter is cold but summer is hot.' },
+    { jp: 'はるが いちばん すきな きせつです。', rom: 'Haru ga ichiban suki na kisetsu desu.', en: 'Spring is my favourite season.' },
+    { jp: 'かぜが つよいですね。', rom: 'Kaze ga tsuyoi desu ne.', en: 'The wind is strong, isn\'t it?' },
+  ]},
+];
+
+function renderListening() {
+  const list = document.getElementById('listening-list');
+  if (!list) return;
+  const srs = getSRSData();
+  list.innerHTML = LISTEN_CATEGORIES.map((cat, ci) => `
+    <div class="listen-category">
+      <div class="listen-cat-header">${cat.icon} ${cat.title}</div>
+      ${cat.items.map((item, ii) => {
+        const id = `lc${ci}_${ii}`;
+        const srsItem = srs['listen'] && srs['listen'][id];
+        const srsBadge = srsItem ? `<span class="srs-badge ${srsItem.status}">${srsItem.status==='known'?'✅ Known':'🔁 Review'}</span>` : '';
+        const safeJp = item.jp.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        return `<div class="listen-card" id="${id}">
+          <div class="listen-jp">${item.jp}</div>
+          <div class="listen-rom" id="${id}_rom" style="display:none;">${item.rom}</div>
+          <div class="listen-en" id="${id}_en" style="display:none;">${item.en}</div>
+          <div class="listen-actions">
+            <button class="listen-play-btn" onclick="speakJP('${safeJp}',this)">▶ Play</button>
+            <button class="listen-slow-btn" onclick="speakJP('${safeJp}',this,0.45)">🐢 Slow</button>
+            <button class="listen-reveal" onclick="toggleListenReveal('${id}',this)">👁 Show</button>
+            ${srsBadge}
+          </div>
+          <div class="srs-bar">
+            <button class="srs-know-btn" onclick="markSRS('listen','${id}','known');this.textContent='✅ Saved!'">✅ I know this</button>
+            <button class="srs-review-btn" onclick="markSRS('listen','${id}','review');this.textContent='🔁 Saved!'">🔁 Review again</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`
+  ).join('');
+}
+
+function toggleListenReveal(id, btn) {
+  const rom = document.getElementById(id + '_rom');
+  const en = document.getElementById(id + '_en');
+  const showing = rom.style.display !== 'none';
+  rom.style.display = showing ? 'none' : 'block';
+  en.style.display = showing ? 'none' : 'block';
+  btn.textContent = showing ? '👁 Show' : '🙈 Hide';
+}
+
+renderListening();
+
+// ============================================================
+//  PROGRESS DASHBOARD
+
+
+// ============================================================
+//  COMPREHENSION TESTS
+// ============================================================
+const COMP_PASSAGES = [
+  // DAILY LIFE
+  {
+    id:'c1', cat:'daily', diff:'beginner', title:'わたしの いちにち', titleEn:'My Day',
+    passage:'わたしは まいにち ろくじに おきます。あさごはんを たべてから、がっこうへ いきます。がっこうは くじに はじまります。ひるごはんは ともだちと たべます。ごごさんじに うちに かえります。そして しゅくだいを します。よるは かぞくと ばんごはんを たべます。じゅうじごろ ねます。',
+    passageEn:'Every day I wake up at 6 o\'clock. After eating breakfast, I go to school. School starts at 9 o\'clock. I eat lunch with my friends. I go home at 3 in the afternoon. Then I do homework. In the evening I eat dinner with my family. I go to sleep around 10 o\'clock.',
+    questions:[
+      {q:'なんじに おきますか？',opts:['しちじ','ろくじ','はちじ','ごじ'],ans:1,exp:'まいにち ろくじに おきます'},
+      {q:'ひるごはんは だれと たべますか？',opts:['かぞくと','ひとりで','せんせいと','ともだちと'],ans:3,exp:'ともだちと たべます'},
+      {q:'うちに かえるのは なんじですか？',opts:['にじ','ごじ','さんじ','よじ'],ans:2,exp:'ごごさんじに うちに かえります'},
+      {q:'よるは だれと ばんごはんを たべますか？',opts:['ともだち','ひとり','かぞく','せんせい'],ans:2,exp:'かぞくと ばんごはんを たべます'},
+      {q:'なんじごろ ねますか？',opts:['はちじ','くじ','じゅういちじ','じゅうじ'],ans:3,exp:'じゅうじごろ ねます'},
+    ]
+  },
+  {
+    id:'c2', cat:'daily', diff:'beginner', title:'わたしの へや', titleEn:'My Room',
+    passage:'わたしの へやは ちいさいですが、きれいです。つくえの うえに パソコンと ほんが あります。まどの そばに ベッドが あります。かべに にほんごの ポスターが はって あります。へやに テレビは ありません。でも、スマートフォンで よく どうがを みます。わたしは じぶんの へやが すきです。',
+    passageEn:'My room is small but clean. On the desk there is a computer and books. Near the window there is a bed. On the wall a Japanese poster is hung. There is no TV in the room. But I often watch videos on my smartphone. I like my own room.',
+    questions:[
+      {q:'へやは どうですか？',opts:['おおきくて きれい','ちいさくて きれい','きたなくて おおきい','ちいさくて きたない'],ans:1,exp:'ちいさいですが、きれいです'},
+      {q:'つくえの うえに なにが ありますか？',opts:['テレビと ほん','パソコンと ほん','ベッドと ポスター','スマートフォン'],ans:1,exp:'パソコンと ほんが あります'},
+      {q:'ベッドは どこに ありますか？',opts:['つくえの そば','かべの そば','まどの そば','ドアの そば'],ans:2,exp:'まどの そばに あります'},
+      {q:'へやに テレビは ありますか？',opts:['はい、あります','いいえ、ありません','ちいさい テレビが あります','かべに あります'],ans:1,exp:'テレビは ありません'},
+      {q:'どうがは どうやって みますか？',opts:['テレビで','パソコンで','スマートフォンで','えいがかんで'],ans:2,exp:'スマートフォンで どうがを みます'},
+    ]
+  },
+  {
+    id:'c3', cat:'daily', diff:'intermediate', title:'あさの ルーティン', titleEn:'Morning Routine',
+    passage:'たなかさんは まいあさ しちじに おきます。まず、かおを あらいます。それから、シャワーを あびます。あさごはんは パンと コーヒーです。はみがきを してから、きがえます。がっこうへは でんしゃで いきます。えきまで あるいて じゅっぷんです。でんしゃは はっぷんで がっこうの ちかくの えきに つきます。たなかさんは まいあさ はちじごろ がっこうに つきます。',
+    passageEn:'Tanaka-san wakes up at 7am every morning. First she washes her face. Then she takes a shower. Breakfast is bread and coffee. After brushing her teeth, she gets dressed. She goes to school by train. It is 10 minutes walking to the station. The train takes 8 minutes to arrive at the station near school. Tanaka-san arrives at school around 8am every morning.',
+    questions:[
+      {q:'たなかさんは なんじに おきますか？',opts:['ろくじ','しちじ','はちじ','くじ'],ans:1,exp:'まいあさ しちじに おきます'},
+      {q:'あさごはんは なんですか？',opts:['ごはんと みそしる','パンと コーヒー','たまごと パン','コーヒーと おかし'],ans:1,exp:'パンと コーヒーです'},
+      {q:'がっこうへ どうやって いきますか？',opts:['バスで','くるまで','でんしゃで','あるいて'],ans:2,exp:'でんしゃで いきます'},
+      {q:'えきまで どのくらい かかりますか？',opts:['ごふん','じゅっぷん','はっぷん','じゅうごふん'],ans:1,exp:'あるいて じゅっぷんです'},
+      {q:'たなかさんは なんじごろ がっこうに つきますか？',opts:['しちじ','はちじ','くじ','ろくじ'],ans:1,exp:'はちじごろ がっこうに つきます'},
+    ]
+  },
+  // SCHOOL
+  {
+    id:'c4', cat:'school', diff:'beginner', title:'がっこうの きょうしつ', titleEn:'The Classroom',
+    passage:'わたしの きょうしつは にかいに あります。きょうしつに は つくえが さんじゅっこ あります。まえに おおきい こくばんが あります。せんせいの つくえは まどの そばに あります。きょうしつの かべに せかいちずと にほんの ちずが あります。まいにち にほんごと すうがくと えいごを べんきょうします。',
+    passageEn:'My classroom is on the second floor. In the classroom there are 30 desks. At the front there is a large blackboard. The teacher\'s desk is near the window. On the classroom wall there are a world map and a map of Japan. Every day I study Japanese, math, and English.',
+    questions:[
+      {q:'きょうしつは なんかいですか？',opts:['いっかい','にかい','さんかい','よんかい'],ans:1,exp:'にかいに あります'},
+      {q:'つくえは いくつ ありますか？',opts:['にじゅっこ','さんじゅっこ','よんじゅっこ','じゅっこ'],ans:1,exp:'さんじゅっこ あります'},
+      {q:'せんせいの つくえは どこですか？',opts:['ドアの そば','まどの そば','こくばんの そば','うしろ'],ans:1,exp:'まどの そばに あります'},
+      {q:'かべに なにが ありますか？',opts:['にほんごの ポスター','せかいちずと にほんの ちず','えいごの ほん','カレンダー'],ans:1,exp:'せかいちずと にほんの ちずが あります'},
+      {q:'まいにち なにを べんきょうしますか？',opts:['にほんごだけ','えいごと すうがく','にほんごと すうがくと えいご','かがくと れきし'],ans:2,exp:'にほんごと すうがくと えいごを べんきょうします'},
+    ]
+  },
+  {
+    id:'c5', cat:'school', diff:'intermediate', title:'がっこうの しょくどう', titleEn:'The School Cafeteria',
+    passage:'うちの がっこうに おおきい しょくどうが あります。ひるやすみは じゅうにじから いちじまでです。しょくどうには たくさんの りょうりが あります。きょうの ランチは カレーライスと サラダと みそしるです。カレーライスは さんびゃくえんです。わたしは まいにち しょくどうで ひるごはんを たべます。ともだちの さとうさんは おべんとうを もってきます。ふたりで いつも いっしょに たべます。',
+    passageEn:'Our school has a large cafeteria. Lunch break is from 12 o\'clock to 1 o\'clock. There are many dishes in the cafeteria. Today\'s lunch is curry rice, salad, and miso soup. Curry rice is 300 yen. I eat lunch in the cafeteria every day. My friend Sato-san brings a bento box. We always eat together, the two of us.',
+    questions:[
+      {q:'ひるやすみは なんじから なんじまでですか？',opts:['じゅういちじから じゅうにじ','じゅうにじから いちじ','いちじから にじ','じゅうじから じゅういちじ'],ans:1,exp:'じゅうにじから いちじまでです'},
+      {q:'きょうの ランチは なんですか？',opts:['カレーライスと みそしる','ラーメンと サラダ','カレーライスと サラダと みそしる','すしと みそしる'],ans:2,exp:'カレーライスと サラダと みそしるです'},
+      {q:'カレーライスは いくらですか？',opts:['にひゃくえん','さんびゃくえん','ごひゃくえん','ひゃくえん'],ans:1,exp:'さんびゃくえんです'},
+      {q:'さとうさんは どこで ひるごはんを たべますか？',opts:['しょくどうで','きょうしつで','こうえんで','うちで'],ans:1,exp:'さとうさんは おべんとうを もってきます。ふたりで いっしょに たべます'},
+      {q:'ふたりは どうやって たべますか？',opts:['べつべつに','はやく','いっしょに','しずかに'],ans:2,exp:'ふたりで いつも いっしょに たべます'},
+    ]
+  },
+  // TRAVEL
+  {
+    id:'c6', cat:'travel', diff:'intermediate', title:'とうきょうの りょこう', titleEn:'Trip to Tokyo',
+    passage:'せんしゅう、かぞくと とうきょうへ いきました。しんかんせんで いきました。しんかんせんは とても はやくて、きれいでした。とうきょうでは、あさくさじんじゃと しんじゅくを みました。あさくさじんじゃは むかしの たてものが たくさんあって、すてきでした。しんじゅくは おみせが おおくて、にぎやかでした。ホテルは えきの ちかくで、べんりでした。みっかかん とうきょうに いました。またいきたいです。',
+    passageEn:'Last week I went to Tokyo with my family. We went by Shinkansen. The Shinkansen was very fast and clean. In Tokyo we saw Asakusa Shrine and Shinjuku. Asakusa Shrine had many old buildings and was wonderful. Shinjuku had many shops and was lively. The hotel was near the station and was convenient. We were in Tokyo for three days. I want to go again.',
+    questions:[
+      {q:'いつ とうきょうへ いきましたか？',opts:['きょねん','せんしゅう','らいしゅう','きのう'],ans:1,exp:'せんしゅう、かぞくと いきました'},
+      {q:'どうやって とうきょうへ いきましたか？',opts:['ひこうきで','くるまで','しんかんせんで','バスで'],ans:2,exp:'しんかんせんで いきました'},
+      {q:'あさくさじんじゃは どうでしたか？',opts:['にぎやかだった','むかしの たてものが おおかった','あたらしかった','ちいさかった'],ans:1,exp:'むかしの たてものが たくさんあって、すてきでした'},
+      {q:'ホテルは どこに ありましたか？',opts:['えきの そば','こうえんの そば','しんじゅくの なか','あさくさじんじゃの そば'],ans:0,exp:'えきの ちかくで、べんりでした'},
+      {q:'なんにちかん とうきょうに いましたか？',opts:['ふつかかん','みっかかん','いっかかん','よっかかん'],ans:1,exp:'みっかかん とうきょうに いました'},
+    ]
+  },
+  {
+    id:'c7', cat:'travel', diff:'intermediate', title:'えきで', titleEn:'At the Station',
+    passage:'やまださんは えきに きました。きっぷを かいたいですが、どこで かうか わかりません。えきいんに ききました。「すみません、おおさかまでの きっぷは どこで かえますか？」えきいんは「じどうはんばいきで かえます。あちらです」と おしえてくれました。じどうはんばいきは えきの いりぐちの そばに ありました。きっぷは にせんえんでした。やまださんは きっぷを かって、なんばんせんか かくにんしました。でんしゃは あと じゅっぷんで きます。',
+    passageEn:'Yamada-san came to the station. He wants to buy a ticket but doesn\'t know where to buy one. He asked a station employee. "Excuse me, where can I buy a ticket to Osaka?" The employee told him "You can buy it at the vending machine. It\'s over there." The vending machine was near the station entrance. The ticket was 2000 yen. Yamada-san bought the ticket and confirmed which platform number. The train comes in 10 more minutes.',
+    questions:[
+      {q:'やまださんは なにを したいですか？',opts:['でんしゃに のりたい','きっぷを かいたい','えきいんに あいたい','おおさかへ いきたい'],ans:1,exp:'きっぷを かいたいですが、どこで かうか わかりません'},
+      {q:'えきいんは なんと いいましたか？',opts:['みどりの まどぐちで かえます','じどうはんばいきで かえます','インターネットで かえます','コンビニで かえます'],ans:1,exp:'じどうはんばいきで かえます'},
+      {q:'きっぷは いくらでしたか？',opts:['せんえん','にせんえん','さんぜんえん','ごひゃくえん'],ans:1,exp:'きっぷは にせんえんでした'},
+      {q:'じどうはんばいきは どこに ありましたか？',opts:['ホームに','えきの そとに','いりぐちの そばに','えきいんの となりに'],ans:2,exp:'えきの いりぐちの そばに ありました'},
+      {q:'でんしゃは あと なんぷんで きますか？',opts:['ごふん','じゅっぷん','にじゅっぷん','さんじゅっぷん'],ans:1,exp:'でんしゃは あと じゅっぷんで きます'},
+    ]
+  },
+  // CULTURE
+  {
+    id:'c8', cat:'culture', diff:'intermediate', title:'にほんの おまつり', titleEn:'Japanese Festivals',
+    passage:'にほんには いろいろな おまつりが あります。なつには はなびたいかいが あります。はなびは とても きれいです。はるには さくらまつりが あります。みんなで こうえんへ いって、さくらの したで おべんとうを たべます。これを「はなみ」と いいます。にほんの まつりには、おみこしや おどりも あります。おまつりで やたいが でます。やたいでは たこやきや わたあめや りんごあめを うっています。こどもたちは やたいが だいすきです。',
+    passageEn:'There are various festivals in Japan. In summer there are fireworks displays. Fireworks are very beautiful. In spring there are cherry blossom festivals. Everyone goes to the park and eats bento under the cherry blossoms. This is called "hanami". Japanese festivals also have portable shrines and dancing. Food stalls appear at festivals. At the stalls they sell takoyaki, cotton candy, and candy apples. Children love food stalls.',
+    questions:[
+      {q:'なつの おまつりは なんですか？',opts:['さくらまつり','はなびたいかい','はなみ','おどり'],ans:1,exp:'なつには はなびたいかいが あります'},
+      {q:'「はなみ」は なんですか？',opts:['はなびを みること','さくらの したで たべること','おみこしを かつぐこと','やたいで かうこと'],ans:1,exp:'さくらの したで おべんとうを たべます。これを「はなみ」といいます'},
+      {q:'やたいで うっていない ものは どれですか？',opts:['たこやき','わたあめ','りんごあめ','すし'],ans:3,exp:'やたいでは たこやきや わたあめや りんごあめを うっています'},
+      {q:'だれが やたいが すきですか？',opts:['おとなたち','こどもたち','せんせいたち','おとしよりたち'],ans:1,exp:'こどもたちは やたいが だいすきです'},
+      {q:'「おみこし」は まつりの なんですか？',opts:['たべもの','おどり','はこびもの（ポータブルシュライン）','はなび'],ans:2,exp:'おみこしや おどりも あります — おみこしはポータブルシュライン'},
+    ]
+  },
+  {
+    id:'c9', cat:'culture', diff:'advanced', title:'にほんの しょくじ マナー', titleEn:'Japanese Dining Manners',
+    passage:'にほんでは、しょくじの まえに「いただきます」と いいます。これは「たべものに かんしゃする」という いみです。たべおわったら「ごちそうさまでした」と いいます。はしを つかうとき、いくつかの きそくが あります。はしを たてに ごはんに さすのは マナー いはんです。それは おそうしきの ときだけ します。また、はしから はしへ たべものを わたすのも よくないです。にほんに きたら、これらの マナーを まもりましょう。',
+    passageEn:'In Japan, you say "itadakimasu" before eating. This means "giving thanks for the food". When you finish eating, you say "gochisousama deshita". There are some rules when using chopsticks. Sticking chopsticks vertically into rice is a violation of manners. That is done only at funerals. Also, passing food from chopsticks to chopsticks is also not good. When you come to Japan, let\'s follow these manners.',
+    questions:[
+      {q:'「いただきます」は どんな いみですか？',opts:['おなかが すいた','たべものに かんしゃする','たべおわった','おいしい'],ans:1,exp:'「たべものに かんしゃする」という いみです'},
+      {q:'はしを ごはんに たてに さすのは いつ しますか？',opts:['まいにち','パーティーで','おそうしきの ときだけ','にほんで'],ans:2,exp:'おそうしきの ときだけ します'},
+      {q:'よくない はしの つかいかたは どれですか？',opts:['はしで たべること','はしから はしへ わたすこと','はしを テーブルに おくこと','はしで すくうこと'],ans:1,exp:'はしから はしへ たべものを わたすのも よくないです'},
+      {q:'たべおわったら なんと いいますか？',opts:['いただきます','おいしかった','ごちそうさまでした','ありがとう'],ans:2,exp:'たべおわったら「ごちそうさまでした」といいます'},
+      {q:'このぶんの テーマは なんですか？',opts:['にほんの りょうり','にほんの しょくじ マナー','はしの れきし','にほんの おまつり'],ans:1,exp:'にほんの しょくじ マナーについて かいてあります'},
+    ]
+  },
+  // NATURE
+  {
+    id:'c10', cat:'nature', diff:'beginner', title:'にほんの きせつ', titleEn:'Japanese Seasons',
+    passage:'にほんには よっつの きせつが あります。はる、なつ、あき、ふゆです。はるは さんがつから ごがつです。さくらが さいて、きれいです。なつは ろくがつから はちがつです。あつくて、うみや プールに いきます。あきは くがつから じゅういちがつです。はが あかく なって、きれいです。ふゆは じゅうにがつから にがつです。さむくて、ゆきが ふります。わたしは あきが いちばん すきです。',
+    passageEn:'Japan has four seasons: spring, summer, autumn, winter. Spring is from March to May. Cherry blossoms bloom and it\'s beautiful. Summer is from June to August. It\'s hot, and people go to the sea or pool. Autumn is from September to November. The leaves turn red and it\'s beautiful. Winter is from December to February. It\'s cold and it snows. I like autumn best.',
+    questions:[
+      {q:'はるは なんがつから なんがつですか？',opts:['いちがつから さんがつ','さんがつから ごがつ','ろくがつから はちがつ','くがつから じゅういちがつ'],ans:1,exp:'はるは さんがつから ごがつです'},
+      {q:'なつに どこへ いきますか？',opts:['やまや こうえんに','うみや プールに','えきや デパートに','がっこうや としょかんに'],ans:1,exp:'うみや プールに いきます'},
+      {q:'あきは どうなりますか？',opts:['さくらが さく','ゆきが ふる','はが あかく なる','あつく なる'],ans:2,exp:'はが あかく なって、きれいです'},
+      {q:'ふゆは なんがつから なんがつですか？',opts:['くがつから じゅういちがつ','じゅうにがつから にがつ','さんがつから ごがつ','ろくがつから はちがつ'],ans:1,exp:'ふゆは じゅうにがつから にがつです'},
+      {q:'わたしは どの きせつが いちばん すきですか？',opts:['はる','なつ','あき','ふゆ'],ans:2,exp:'わたしは あきが いちばん すきです'},
+    ]
+  },
+  {
+    id:'c11', cat:'nature', diff:'intermediate', title:'にほんの やまと かわ', titleEn:'Japanese Mountains and Rivers',
+    passage:'にほんは やまが おおい くにです。にほんで いちばん たかい やまは ふじさんで、たかさは さんぜんななひゃくじゅうろく メートルです。まいとし おおくの ひとが ふじさんに のぼります。にほんには かわも たくさん あります。いちばん ながい かわは しなのがわです。にほんの かわは みじかくて はやいものが おおいです。かわの みずは とても きれいで、さかなが たくさん います。なつには かわで あそぶ こどもたちを よく みます。',
+    passageEn:'Japan is a country with many mountains. The tallest mountain in Japan is Mt. Fuji, with a height of 3,776 metres. Many people climb Mt. Fuji every year. Japan also has many rivers. The longest river is the Shinano River. Japan\'s rivers are mostly short and fast. The river water is very clean and there are many fish. In summer you often see children playing in rivers.',
+    questions:[
+      {q:'にほんで いちばん たかい やまは なんですか？',opts:['くじゅうさん','ふじさん','おんたけさん','しらねさん'],ans:1,exp:'ふじさんで、たかさは さんぜんななひゃくじゅうろく メートルです'},
+      {q:'ふじさんの たかさは なんメートルですか？',opts:['さんぜんろっぴゃくメートル','さんぜんななひゃくじゅうろくメートル','よんぜんメートル','にせんメートル'],ans:1,exp:'たかさは さんぜんななひゃくじゅうろくメートルです'},
+      {q:'にほんの かわは どんな かわが おおいですか？',opts:['ながくて おそい','ながくて はやい','みじかくて はやい','みじかくて おそい'],ans:2,exp:'みじかくて はやいものが おおいです'},
+      {q:'にほんで いちばん ながい かわは なんですか？',opts:['とねがわ','しなのがわ','よどがわ','すみだがわ'],ans:1,exp:'いちばん ながい かわは しなのがわです'},
+      {q:'なつに かわで よく みるのは だれですか？',opts:['おとなたち','りょこうしゃ','こどもたち','さかな'],ans:2,exp:'なつには かわで あそぶ こどもたちを よく みます'},
+    ]
+  },
+];
+
+let compFilter = 'all', compCurrent = null, compAnswers = {};
+
+function filterComp(cat, btn) {
+  document.querySelectorAll('#comp-filter-bar .filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); compFilter = cat;
+  renderCompList();
+}
+
+function renderCompList() {
+  const el = document.getElementById('comp-passage-list');
+  if (!el) return;
+  const list = compFilter === 'all' ? COMP_PASSAGES : COMP_PASSAGES.filter(p => p.cat === compFilter);
+  const DIFF_COLORS = { beginner:'#06d6a0', intermediate:'#ff9800', advanced:'#e53935' };
+  const CAT_COLORS = { daily:'#ff85a1', school:'#4cc9f0', travel:'#c77dff', culture:'#ffd700', nature:'#06d6a0' };
+  const CAT_LABELS = { daily:'🏠 Daily Life', school:'🏫 School', travel:'✈️ Travel', culture:'🎌 Culture', nature:'🌿 Nature' };
+  el.innerHTML = list.map(p => `
+    <div class="comp-card" onclick="startComp('${p.id}')">
+      <span class="comp-card-tag" style="background:${CAT_COLORS[p.cat]}22;color:${CAT_COLORS[p.cat]};border:1px solid ${CAT_COLORS[p.cat]}44;">${CAT_LABELS[p.cat]}</span>
+      <div class="comp-card-title">${p.title} <span style="font-size:.75rem;font-weight:600;color:#aaa;">— ${p.titleEn}</span></div>
+      <div class="comp-card-preview">${p.passage.substring(0,90)}…</div>
+      <div class="comp-card-meta">
+        <span class="comp-diff" style="background:${DIFF_COLORS[p.diff]}22;color:${DIFF_COLORS[p.diff]};border:1px solid ${DIFF_COLORS[p.diff]}44;">${p.diff}</span>
+        <span style="font-size:.7rem;color:#aaa;">${p.questions.length} questions</span>
+        <span style="font-size:.7rem;color:#aaa;margin-left:auto;">Tap to start →</span>
+      </div>
+    </div>`).join('');
+}
+
+function startComp(id) {
+  compCurrent = COMP_PASSAGES.find(p => p.id === id);
+  if (!compCurrent) return;
+  compAnswers = {};
+  document.getElementById('comp-setup').style.display = 'none';
+  document.getElementById('comp-score-area').style.display = 'none';
+  const testArea = document.getElementById('comp-test-area');
+  testArea.style.display = 'block';
+  // Render passage
+  document.getElementById('comp-passage-card').innerHTML = `
+    <div class="card" style="margin-bottom:1rem;">
+      <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.75rem;flex-wrap:wrap;">
+        <div style="font-weight:900;color:var(--mid);font-size:1.05rem;">${compCurrent.title}</div>
+        <div style="font-size:.78rem;color:#999;">${compCurrent.titleEn}</div>
+        <button class="tts-btn" style="margin-left:auto;" onclick="speakJP('${compCurrent.passage.replace(/'/g,"\\'")}',this)">🔊 Listen</button>
+      </div>
+      <div class="comp-passage">${compCurrent.passage}</div>
+      <details style="margin-top:.5rem;">
+        <summary style="font-size:.78rem;color:var(--pink);cursor:pointer;font-weight:700;">👁 Show English translation</summary>
+        <div class="comp-passage-rom">${compCurrent.passageEn}</div>
+      </details>
+    </div>`;
+  // Render questions
+  document.getElementById('comp-questions-area').innerHTML = compCurrent.questions.map((q, i) => `
+    <div class="comp-q-card" id="cq_${i}">
+      <div class="comp-q-num">Question ${i + 1} / ${compCurrent.questions.length}</div>
+      <div class="comp-q-text">${q.q}</div>
+      <div style="display:flex;flex-direction:column;gap:.4rem;">
+        ${q.opts.map((o, oi) => `<button class="option-btn" id="cq_${i}_o${oi}" onclick="selectComp(${i},${oi})">${o}</button>`).join('')}
+      </div>
+      <div id="cq_${i}_fb" style="display:none;" class="comp-answer-reveal"></div>
+    </div>`).join('');
+  document.getElementById('comp-submit-btn').style.display = 'inline-block';
+}
+
+function selectComp(qi, oi) {
+  if (compAnswers[qi] !== undefined) return;
+  // Highlight selection
+  compCurrent.questions[qi].opts.forEach((_, j) => {
+    const b = document.getElementById(`cq_${qi}_o${j}`);
+    if (b) { b.style.borderColor = ''; b.style.background = ''; }
+  });
+  const sel = document.getElementById(`cq_${qi}_o${oi}`);
+  if (sel) { sel.style.borderColor = 'var(--pink)'; sel.style.background = 'var(--pink-pale)'; }
+  compAnswers[qi] = oi;
+}
+
+function submitComp() {
+  if (!compCurrent) return;
+  const unanswered = compCurrent.questions.filter((_, i) => compAnswers[i] === undefined).length;
+  if (unanswered > 0) {
+    showToast(`⚠️ Please answer all ${unanswered} remaining question${unanswered > 1 ? 's' : ''}!`);
+    return;
+  }
+  // Reveal answers
+  let correct = 0;
+  compCurrent.questions.forEach((q, i) => {
+    const chosen = compAnswers[i];
+    const isCorrect = chosen === q.ans;
+    if (isCorrect) correct++;
+    q.opts.forEach((_, oi) => {
+      const b = document.getElementById(`cq_${i}_o${oi}`);
+      if (!b) return;
+      b.disabled = true; b.style.borderColor = ''; b.style.background = '';
+      if (oi === q.ans) { b.style.borderColor = '#4caf50'; b.style.background = '#e8f5e9'; b.style.color = '#2e7d32'; }
+      else if (oi === chosen) { b.style.borderColor = '#e53935'; b.style.background = '#ffebee'; b.style.color = '#c62828'; }
+    });
+    const fb = document.getElementById(`cq_${i}_fb`);
+    if (fb) {
+      fb.style.display = 'block';
+      fb.className = `comp-answer-reveal ${isCorrect ? 'correct' : 'wrong'}`;
+      fb.textContent = isCorrect ? `✅ Correct! — ${q.exp}` : `❌ Answer: ${q.opts[q.ans]} — ${q.exp}`;
+    }
+  });
+  document.getElementById('comp-submit-btn').style.display = 'none';
+  const pct = Math.round(correct / compCurrent.questions.length * 100);
+  // Show score banner
+  const scoreEl = document.getElementById('comp-score-area');
+  scoreEl.style.display = 'block';
+  const emoji = pct === 100 ? '🏆' : pct >= 80 ? '🌸' : pct >= 60 ? '✨' : '📖';
+  const msg = pct === 100 ? 'Perfect! Outstanding!' : pct >= 80 ? 'Great comprehension!' : pct >= 60 ? 'Good effort! Review the passage.' : 'Keep practicing — try again!';
+  scoreEl.innerHTML = `
+    <div class="comp-score-banner">
+      <div style="font-size:3rem;margin-bottom:.4rem;">${emoji}</div>
+      <div class="comp-score-big">${correct} / ${compCurrent.questions.length}</div>
+      <div class="comp-score-label">${pct}% — ${msg}</div>
+    </div>
+    <div style="display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;">
+      <button class="btn" onclick="startComp('${compCurrent.id}')">🔄 Try Again</button>
+      <button class="listen-slow-btn" onclick="resetComp()">← All Passages</button>
+    </div>`;
+  scoreEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  saveScore('Comprehension 🧠', correct, compCurrent.questions.length);
+  if (pct >= 80) setTimeout(() => showCelebration(emoji, pct === 100 ? 'Perfect Reading!' : 'Great Comprehension!', `${pct}% — すごい！`, pct), 500);
+}
+
+function resetComp() {
+  compCurrent = null; compAnswers = {};
+  document.getElementById('comp-setup').style.display = 'block';
+  document.getElementById('comp-test-area').style.display = 'none';
+  document.getElementById('comp-score-area').style.display = 'none';
+}
+
+renderCompList();
+
+// ============================================================
+
+// Cache so we don't re-fetch on tab switch
+const animeCache = {};
+let animeCurrentTab = 'trending';
+const JIKAN = 'https://api.jikan.moe/v4';
+
+// ============================================================
+//  SENTENCE PATTERNS PRACTICE
+// ============================================================
+const SP_QUESTIONS = [
+  {cat:'particles',sentence:['わたし','___','がくせいです。'],blank:1,opts:['は','が','を','に'],ans:0,hint:'Topic marker particle',eng:'I am a student.'},
+  {cat:'particles',sentence:['にほんご','___','べんきょうします。'],blank:1,opts:['を','は','が','で'],ans:0,hint:'Object marker particle',eng:'I study Japanese.'},
+  {cat:'particles',sentence:['うち','___','かえります。'],blank:1,opts:['に','を','は','が'],ans:0,hint:'Direction/destination particle',eng:'I go home.'},
+  {cat:'particles',sentence:['バスてい','___','まちます。'],blank:1,opts:['で','に','を','は'],ans:0,hint:'Location of action particle',eng:'I wait at the bus stop.'},
+  {cat:'particles',sentence:['ともだち','___','てがみをかきます。'],blank:1,opts:['に','を','は','が'],ans:0,hint:'Recipient particle',eng:'I write a letter to my friend.'},
+  {cat:'particles',sentence:['ペン','___','かきます。'],blank:1,opts:['で','に','を','は'],ans:0,hint:'Means/tool particle',eng:'I write with a pen.'},
+  {cat:'particles',sentence:['あそこ','___','ゆうびんきょくがあります。'],blank:1,opts:['に','で','を','は'],ans:0,hint:'Existence location particle',eng:'There is a post office over there.'},
+  {cat:'particles',sentence:['くるま','___','がっこうへいきます。'],blank:1,opts:['で','に','を','が'],ans:0,hint:'Means of transport particle',eng:'I go to school by car.'},
+  {cat:'particles',sentence:['りんごとみかん','___','すきです。'],blank:1,opts:['が','は','を','に'],ans:0,hint:'Subject marker (with adjective)',eng:'I like apples and oranges.'},
+  {cat:'particles',sentence:['さとうさん','___','にほんごがじょうずです。'],blank:1,opts:['は','が','を','に'],ans:0,hint:'Topic marker particle',eng:'As for Sato-san, her Japanese is good.'},
+  {cat:'te-form',sentence:['たべ','___','ください。'],blank:1,opts:['て','た','ない','ます'],ans:0,hint:'て-form + ください = please do',eng:'Please eat.'},
+  {cat:'te-form',sentence:['いまテレビをみ','___','います。'],blank:1,opts:['て','た','ない','で'],ans:0,hint:'〜ています = currently doing',eng:'I am watching TV right now.'},
+  {cat:'te-form',sentence:['しゅくだいをし','___','から、あそびます。'],blank:1,opts:['て','た','ない','で'],ans:0,hint:'〜てから = after doing ~',eng:'After doing homework, I will play.'},
+  {cat:'te-form',sentence:['まどをあけ','___','もいいですか。'],blank:1,opts:['て','た','ない','で'],ans:0,hint:'〜てもいいですか = may I?',eng:'May I open the window?'},
+  {cat:'te-form',sentence:['ここでたばこをすっ','___','はいけません。'],blank:1,opts:['て','た','ない','で'],ans:0,hint:'〜てはいけない = must not',eng:'You must not smoke here.'},
+  {cat:'te-form',sentence:['かれはにほんにすん','___','います。'],blank:1,opts:['で','て','た','に'],ans:0,hint:'〜でいます (む→んで)',eng:'He is living in Japan.'},
+  {cat:'te-form',sentence:['ドアをしめ','___','ください。'],blank:1,opts:['て','た','ない','で'],ans:0,hint:'て-form of しめる (Group 2)',eng:'Please close the door.'},
+  {cat:'te-form',sentence:['てをあらっ','___','からたべます。'],blank:1,opts:['て','た','ない','で'],ans:0,hint:'あらう → あらって (Group 1 u→tte)',eng:'After washing hands, I will eat.'},
+  {cat:'conjugation',sentence:['たべ','___',' — negative polite'],blank:1,opts:['ません','ないです','なかった','ませんでした'],ans:0,hint:'〜ません = polite negative present',eng:'I don\'t eat.'},
+  {cat:'conjugation',sentence:['いき','___',' — past polite'],blank:1,opts:['ました','ます','ません','ませんでした'],ans:0,hint:'〜ました = polite past',eng:'I went.'},
+  {cat:'conjugation',sentence:['しずか','___','へやです。'],blank:1,opts:['な','の','に','で'],ans:0,hint:'な-adjective + な before a noun',eng:'It is a quiet room.'},
+  {cat:'conjugation',sentence:['にほんごがじょうずに','___','なりたいです。'],blank:1,opts:['に','な','で','の'],ans:0,hint:'〜になります requires に',eng:'I want to become good at Japanese.'},
+  {cat:'conjugation',sentence:['もっとはやく','___','ください。'],blank:1,opts:['はなして','はなす','はなした','はなし'],ans:0,hint:'て-form of はなす = はなして',eng:'Please speak faster.'},
+  {cat:'patterns',sentence:['もっとねた','___','いいですよ。'],blank:1,opts:['ほうが','ことが','だけが','のが'],ans:0,hint:'〜たほうがいい = you had better',eng:'You had better sleep more.'},
+  {cat:'patterns',sentence:['くすりをのま','___','なりません。'],blank:1,opts:['なければ','ないと','ずに','ないで'],ans:0,hint:'〜なければなりません = must do',eng:'I must take medicine.'},
+  {cat:'patterns',sentence:['このケーキはおいし','___','です。'],blank:1,opts:['そう','よう','らしい','だろう'],ans:0,hint:'〜そうです = looks/seems like (visual)',eng:'This cake looks delicious.'},
+  {cat:'patterns',sentence:['にほんごはえいご','___','むずかしいです。'],blank:1,opts:['より','ほど','だけ','まで'],ans:0,hint:'〜より = than (comparisons)',eng:'Japanese is more difficult than English.'},
+  {cat:'patterns',sentence:['あしたあめが','___','かもしれません。'],blank:1,opts:['ふる','ふって','ふった','ふり'],ans:0,hint:'〜かもしれません comes after plain form',eng:'It might rain tomorrow.'},
+  {cat:'patterns',sentence:['えいがをみ','___','いきたいです。'],blank:1,opts:['に','て','が','を'],ans:0,hint:'verb stem + に + motion verb = go to do',eng:'I want to go see a movie.'},
+  {cat:'patterns',sentence:['すしもさしみ','___','たべました。'],blank:1,opts:['も','を','が','は'],ans:0,hint:'も = also/too (after another も)',eng:'I ate both sushi and sashimi.'},
+];
+
+let spAnswered = {}, spCorrect = 0, spFilter = 'all', spCurrent = [];
+
+function filterSP(cat, btn) {
+  document.querySelectorAll('#sp-filter-bar .filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  spFilter = cat; spAnswered = {}; spCorrect = 0;
+  renderSP();
+}
+
+function renderSP() {
+  spCurrent = spFilter === 'all' ? SP_QUESTIONS : SP_QUESTIONS.filter(q => q.cat === spFilter);
+  const list = document.getElementById('sp-list');
+  if (!list) return;
+  document.getElementById('sp-score-bar').style.display = 'flex';
+  updateSPScore();
+  list.innerHTML = spCurrent.map((q, i) => {
+    const id = `sp_${i}`;
+    const ans = spAnswered[id];
+    const sentHtml = q.sentence.map((p, pi) => {
+      if (pi === q.blank) {
+        const cls = ans ? (ans.correct ? 'correct' : 'wrong') : '';
+        const txt = ans ? (ans.correct ? q.opts[q.ans] : `✗ ${q.opts[q.ans]}`) : '___';
+        return `<span class="sp-blank ${cls}">${txt}</span>`;
+      }
+      return `<span>${p}</span>`;
+    }).join(' ');
+    const optsHtml = q.opts.map((o, oi) => {
+      let cls = '';
+      if (ans) cls = oi === q.ans ? 'correct' : (oi === ans.chosen ? 'wrong' : '');
+      return `<button class="sp-opt-btn ${cls}" onclick="answerSP(${i},${oi})" ${ans ? 'disabled' : ''}>${o}</button>`;
+    }).join('');
+    const fbHtml = ans
+      ? `<div class="sp-hint" style="color:${ans.correct?'#4caf50':'#e53935'};">${ans.correct?'✅ Correct!':'❌ Answer: '+q.opts[q.ans]} — ${q.hint}</div>`
+      : `<div class="sp-hint">💡 ${q.hint}</div>`;
+    const safeJp = q.sentence.join('').replace(/___/g,'').replace(/'/g,"\\'").replace(/— .*/,'').trim();
+    return `<div class="sp-card">
+      <div class="sp-sentence">${sentHtml}</div>
+      <div class="sp-eng">${q.eng}</div>
+      ${fbHtml}
+      <div class="sp-options">${optsHtml}</div>
+      <div style="margin-top:.45rem;"><button class="tts-btn" onclick="speakJP('${safeJp}',this)">🔊 Listen</button></div>
+    </div>`;
+  }).join('');
+}
+
+function answerSP(qi, chosen) {
+  const id = `sp_${qi}`;
+  if (spAnswered[id]) return;
+  const q = spCurrent[qi];
+  const correct = chosen === q.ans;
+  spAnswered[id] = { correct, chosen };
+  if (correct) spCorrect++;
+  updateSPScore();
+  renderSP();
+  if (Object.keys(spAnswered).length === spCurrent.length && spCurrent.length > 0) {
+    const pct = Math.round(spCorrect / spCurrent.length * 100);
+    saveScore('Sentence Practice 📝', spCorrect, spCurrent.length);
+    if (pct >= 80) setTimeout(() => showCelebration('📝', 'Grammar Master!', `${pct}% — Pattern Pro! すごい！`, pct), 400);
+  }
+}
+
+function updateSPScore() {
+  const done = Object.keys(spAnswered).length;
+  document.getElementById('sp-score-num').textContent = `${spCorrect} / ${done} answered (${spCurrent.length} total)`;
+  document.getElementById('sp-score-bar-fill').style.width = done ? `${Math.round(spCorrect/done*100)}%` : '0%';
+}
+function resetSP() { spAnswered = {}; spCorrect = 0; renderSP(); }
+renderSP();
+
+// ============================================================
+//  NUMBER PRACTICE
+
+// --- MASCOT ---
+const MASCOT_TIPS = [
+  "💡 Tip: Practice hiragana every morning for just 5 minutes!",
+  "🌸 Remember: いい (good) is irregular! Negative = よくない, not いくない!",
+  "⚡ Group 3 only has 2 verbs: する and くる. Easy to remember!",
+  "漢字 Try to write each kanji 5 times while saying its meaning out loud!",
+  "🔵 Particles are everything! は, が, を, に, で — master these first!",
+  "🎯 For JLPT N5 you need 110/180 points to pass. You've got this!",
+  "📖 Reading tip: Guess meaning from context, even if you don't know every word!",
+  "🃏 Flashcards work best with spaced repetition — review right before you forget!",
+  "✨ な-adjectives need な before nouns: しずかなへや (quiet room)!",
+  "⏰ 〜ています can mean ongoing action OR a resultant state. Context matters!",
+  "🌺 To say 'I want to do X': take the ます stem and add たい！ e.g. たべたい！",
+  "💪 Study a little every day rather than a lot once a week. 継続は力なり！",
+  "🎨 い-adjectives ending: negative → くない, past → かった. Easy pattern!",
+  "📝 Memorize verb groups by their ending sound — RU verbs are usually Group 2!",
+  "🌸 You're doing amazing! がんばれ！Keep going! 応援してるよ！",
+  "🔄 Opposite adjectives help double your vocab — learn pairs, not singles!",
+  "🎵 Try humming Japanese words to a tune — music helps memory!",
+  "☕ Take breaks! Study 25 min → 5 min break (Pomodoro technique) works great!",
+];
+mascotTipIndex = Math.floor(Math.random()*MASCOT_TIPS.length);
+mascotBubbleTimer = null;
+var mascotVisible = true;
+
+function mascotTap(){
+  const bubble = document.getElementById('mascot-bubble');
+  mascotTipIndex = (mascotTipIndex + 1) % MASCOT_TIPS.length;
+  bubble.classList.remove('hidden');
+  bubble.style.animation = 'none';
+  void bubble.offsetWidth;
+  bubble.style.animation = 'bubblePop .3s cubic-bezier(.34,1.56,.64,1)';
+  bubble.innerHTML = MASCOT_TIPS[mascotTipIndex];
+  clearTimeout(mascotBubbleTimer);
+  mascotBubbleTimer = setTimeout(()=>bubble.classList.add('hidden'), 5000);
+}
+
+// Auto-show tip after 4 seconds, then hide, cycle every 20s
+setTimeout(()=>{
+  const bubble = document.getElementById('mascot-bubble');
+  bubble.classList.add('hidden');
+  setInterval(()=>{
+    mascotTipIndex = (mascotTipIndex + 1) % MASCOT_TIPS.length;
+    bubble.innerHTML = MASCOT_TIPS[mascotTipIndex];
+    bubble.classList.remove('hidden');
+    bubble.style.animation='none';void bubble.offsetWidth;bubble.style.animation='bubblePop .3s cubic-bezier(.34,1.56,.64,1)';
+    clearTimeout(mascotBubbleTimer);
+    mascotBubbleTimer = setTimeout(()=>bubble.classList.add('hidden'), 5000);
+  }, 20000);
+}, 4000);
+
+// ============================================================
+//  TEXT-TO-SPEECH
+// ============================================================
+
+window.addEventListener('load', () => {
+  setupFlashcards();
+  const hash = window.location.hash.slice(1);
+  const valid = ['flashcards','kanji-mcq','reading','writing','listening','comprehension','mock-exam','sentences'];
+  showSection(valid.includes(hash) ? hash : 'flashcards');
+});
+
+</script>
+<script src="../js/utils.js"></script>
+<script>
+// ══════════════════════════════════════════════
+//  CUSTOM ENTRIES — Modal UI (persistence fns are in the main script above)
+// ══════════════════════════════════════════════
+
+// ── Modal open / close ──
+function openCustomModal(type) {
+  const overlay = document.getElementById('custom-modal-overlay');
+  const inner   = document.getElementById('custom-modal-inner');
+  inner.innerHTML = buildModalForm(type);
+  overlay.style.display = 'flex';
+}
+function closeCustomModal() {
+  document.getElementById('custom-modal-overlay').style.display = 'none';
+}
+document.getElementById('custom-modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCustomModal();
+});
+
+// ── Form builders ──
+function buildModalForm(type) {
+  const wrap = (icon, title, sub, formBody) => `
+    <div class="cm-header">
+      <div class="cm-header-icon">${icon}</div>
+      <div class="cm-header-text"><h3>${title}</h3><p>${sub}</p></div>
+      <button class="cm-close" onclick="closeCustomModal()" title="Close">✕</button>
+    </div>
+    <div class="cm-body">
+      <div class="custom-form" id="custom-form">${formBody}</div>
+    </div>`;
+
+  const field = (label, id, inputHtml, hint='', req=false) => `
+    <div class="field-group">
+      <label for="${id}">${label}${req?'<span class="req">*</span>':''}</label>
+      ${inputHtml}
+      ${hint?`<div class="form-hint">${hint}</div>`:''}
+    </div>`;
+
+  const text  = (id, ph, extra='') => `<input id="${id}" placeholder="${ph}" autocomplete="off" ${extra}>`;
+  const num   = (id, val, min=1, max=99) => `<input id="${id}" type="number" value="${val}" min="${min}" max="${max}">`;
+  const area  = (id, ph, rows=3) => `<textarea id="${id}" placeholder="${ph}" rows="${rows}"></textarea>`;
+  const sel   = (id, opts) => `<select id="${id}">${opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+
+  const vocabCats = [['custom','⭐ Custom'],['greetings','Greetings'],['numbers','Numbers'],['time','Time'],['food','Food'],['family','Family'],['place','Places'],['adjective','Adjectives'],['verb','Verbs'],['body','Body'],['clothes','Clothes'],['house','House'],['transport','Transport'],['nature','Nature'],['school','School'],['hobbies','Hobbies'],['nouns','Nouns']];
+  const kanjiCats = [['other','Other'],['numbers','Numbers'],['nature','Nature'],['people','People'],['time','Time'],['body','Body'],['direction','Direction']];
+  const ctrCats   = [['general','General'],['time','Time'],['people','People'],['nature','Nature'],['objects','Objects'],['places','Places']];
+
+  const forms = {
+    vocab: wrap('📝','Add Custom Word','Saved instantly — appears in your Vocabulary section.',
+      field('Japanese','cf-jp', text('cf-jp','e.g. 猫  or  ねこ'), '', true) +
+      field('Reading (Hiragana / Romaji)','cf-read', text('cf-read','e.g. neko')) +
+      field('English Meaning','cf-en', text('cf-en','e.g. Cat'), '', true) +
+      field('Category','cf-cat', sel('cf-cat', vocabCats)) +
+      `<button class="btn-submit" onclick="submitCustom('vocab')">🌸 Save Vocabulary</button>`
+    ),
+
+    kanji: wrap('漢字','Add Custom Kanji','Saved instantly — appears in your Kanji section.',
+      field('Kanji Character','cf-char', `<input id="cf-char" placeholder="e.g. 猫" maxlength="4" style="font-size:1.8rem;text-align:center;letter-spacing:.1em;" autocomplete="off">`, '', true) +
+      field('On Reading 音読み','cf-on', text('cf-on','e.g. BYO')) +
+      field('Kun Reading 訓読み','cf-kun', text('cf-kun','e.g. ねこ')) +
+      field('Meaning','cf-meaning', text('cf-meaning','e.g. Cat'), '', true) +
+      field('Stroke Count','cf-strokes', num('cf-strokes',5,1,30)) +
+      field('Category','cf-cat', sel('cf-cat', kanjiCats)) +
+      field('Example Words','cf-words',
+        area('cf-words','猫の手|ねこのて|a helping hand\n子猫|こねこ|kitten', 3),
+        'One per line — format: japanese|reading|english') +
+      `<button class="btn-submit" onclick="submitCustom('kanji')">🌸 Save Kanji</button>`
+    ),
+
+    grammar: wrap('📖','Add Custom Grammar Pattern','Saved instantly — appears in your Grammar section.',
+      field('Pattern','cf-pattern', text('cf-pattern','e.g. 〜てもいいです'), '', true) +
+      field('Meaning','cf-meaning', text('cf-meaning','e.g. May / It\'s okay to ~'), '', true) +
+      field('Structure','cf-structure', text('cf-structure','e.g. Verb て-form + もいいです')) +
+      field('Explanation','cf-explanation', area('cf-explanation','Describe how this pattern is used...')) +
+      `<div class="form-section-label">📝 Example Sentence (optional)</div>` +
+      field('Japanese','cf-ex-jp', text('cf-ex-jp','e.g. ここに すわっても いいですか。')) +
+      field('Romaji','cf-ex-rom', text('cf-ex-rom','e.g. Koko ni suwatte mo ii desu ka.')) +
+      field('English','cf-ex-en', text('cf-ex-en','e.g. May I sit here?')) +
+      `<button class="btn-submit" onclick="submitCustom('grammar')">🌸 Save Grammar Pattern</button>`
+    ),
+
+    adj: wrap('🔄','Add Custom Adjective Pair','Add an opposite adjective pair — e.g. big ↔ small.',
+      `<div class="form-section-label">✦ Adjective A — Positive side</div>` +
+      field('Japanese','cf-a-jp', text('cf-a-jp','e.g. おおきい'), '', true) +
+      field('Romaji','cf-a-rom', text('cf-a-rom','e.g. Ookii')) +
+      field('English','cf-a-en', text('cf-a-en','e.g. Big'), '', true) +
+      `<div class="form-section-label">✦ Adjective B — Opposite side</div>` +
+      field('Japanese','cf-b-jp', text('cf-b-jp','e.g. ちいさい'), '', true) +
+      field('Romaji','cf-b-rom', text('cf-b-rom','e.g. Chiisai')) +
+      field('English','cf-b-en', text('cf-b-en','e.g. Small'), '', true) +
+      field('Adjective Type','cf-type', sel('cf-type', [['i','い-adjective'],['na','な-adjective']])) +
+      `<button class="btn-submit" onclick="submitCustom('adj')">🌸 Save Adjective Pair</button>`
+    ),
+
+    counters: wrap('🔢','Add Custom Counter','Add a counting suffix (助数詞) with its number forms.',
+      field('Title','cf-title', text('cf-title','e.g. Cups / Glasses'), '', true) +
+      field('Suffix (Japanese)','cf-suffix', text('cf-suffix','e.g. ～はい (杯)'), '', true) +
+      field('Emoji Icon','cf-emoji', `<input id="cf-emoji" placeholder="e.g. ☕" maxlength="4" style="font-size:1.4rem;text-align:center;width:80px;">`) +
+      field('Description','cf-desc', area('cf-desc','e.g. Used for counting cups, glasses, and bowls of liquid.')) +
+      field('Category','cf-cat', sel('cf-cat', ctrCats)) +
+      field('Number Forms','cf-rows',
+        area('cf-rows','1|いっぱい|ippai|one cup\n2|にはい|nihai|two cups\n3|さんばい|sanbai*|three cups', 5),
+        'One per line: number|japanese|romaji|english — add * after romaji to mark irregular (e.g. sanbai*)') +
+      field('Example Sentence','cf-example',
+        text('cf-example','e.g. コーヒーを いっぱい のみます。|Koohii wo ippai nomimasu.|I drink one cup of coffee.'),
+        'Format: japanese|romaji|english') +
+      `<button class="btn-submit" onclick="submitCustom('counters')">🌸 Save Counter</button>`
+    ),
+  };
+  return forms[type] || '';
+}
+
+// ── Submit handlers ──
+function submitCustom(type) {
+  const data = loadCustom(type);
+  let entry;
+
+  if (type === 'vocab') {
+    const jp = document.getElementById('cf-jp').value.trim();
+    const en = document.getElementById('cf-en').value.trim();
+    if (!jp || !en) { alert('Japanese and English are required.'); return; }
+    entry = { jp, read: document.getElementById('cf-read').value.trim(), en, cat: document.getElementById('cf-cat').value, _custom: true };
+  }
+  else if (type === 'kanji') {
+    const char = document.getElementById('cf-char').value.trim();
+    const meaning = document.getElementById('cf-meaning').value.trim();
+    if (!char || !meaning) { alert('Character and meaning are required.'); return; }
+    const wordsRaw = document.getElementById('cf-words').value.trim();
+    const words = wordsRaw ? wordsRaw.split('\n').filter(l=>l.trim()).map(l=>{ const p=l.split('|'); return {jp:p[0]||'',read:p[1]||'',en:p[2]||''}; }) : [];
+    entry = { char, on: document.getElementById('cf-on').value.trim(), kun: document.getElementById('cf-kun').value.trim(), meaning, strokes: parseInt(document.getElementById('cf-strokes').value)||5, cat: document.getElementById('cf-cat').value, words, _custom: true };
+  }
+  else if (type === 'grammar') {
+    const pattern = document.getElementById('cf-pattern').value.trim();
+    const meaning = document.getElementById('cf-meaning').value.trim();
+    if (!pattern || !meaning) { alert('Pattern and meaning are required.'); return; }
+    const exJp = document.getElementById('cf-ex-jp').value.trim();
+    const examples = exJp ? [{ jp: exJp, rom: document.getElementById('cf-ex-rom').value.trim(), en: document.getElementById('cf-ex-en').value.trim() }] : [];
+    entry = { pattern, meaning, structure: document.getElementById('cf-structure').value.trim(), explanation: document.getElementById('cf-explanation').value.trim(), examples, _custom: true };
+  }
+  else if (type === 'adj') {
+    const ajp = document.getElementById('cf-a-jp').value.trim();
+    const aen = document.getElementById('cf-a-en').value.trim();
+    const bjp = document.getElementById('cf-b-jp').value.trim();
+    const ben = document.getElementById('cf-b-en').value.trim();
+    if (!ajp || !aen || !bjp || !ben) { alert('Both adjectives (JP + EN) are required.'); return; }
+    entry = { a: { jp: ajp, rom: document.getElementById('cf-a-rom').value.trim(), en: aen }, b: { jp: bjp, rom: document.getElementById('cf-b-rom').value.trim(), en: ben }, type: document.getElementById('cf-type').value, _custom: true };
+  }
+  else if (type === 'counters') {
+    const title = document.getElementById('cf-title').value.trim();
+    const suffix = document.getElementById('cf-suffix').value.trim();
+    if (!title || !suffix) { alert('Title and suffix are required.'); return; }
+    const rowsRaw = document.getElementById('cf-rows').value.trim();
+    const rows = rowsRaw ? rowsRaw.split('\n').filter(l=>l.trim()).map(l=>{ const p=l.split('|'); const rom=p[2]||''; return {n:p[0]||'', jp:p[1]||'', rom:rom.replace('*',''), en:p[3]||'', irreg:rom.endsWith('*')}; }) : [];
+    const exRaw = document.getElementById('cf-example').value.trim();
+    const examples = exRaw ? (() => { const p=exRaw.split('|'); return [{jp:p[0]||'',rom:p[1]||'',en:p[2]||''}]; })() : [];
+    const id = 'custom_' + Date.now();
+    entry = { id, title, suffix, emoji: document.getElementById('cf-emoji').value.trim()||'📌', desc: document.getElementById('cf-desc').value.trim(), cat: document.getElementById('cf-cat').value, pics: [], rows, examples, note: '', _custom: true };
+  }
+
+  data.push(entry);
+  saveCustom(type, data);
+  closeCustomModal();
+  showToast('✨ Custom entry saved!');
+
+  // Re-render
+  if (type === 'vocab')    renderVocab(currentVocabFilter, document.getElementById('vocab-search')?.value||'');
+  if (type === 'kanji')    renderKanji(currentKanjiFilter||'all');
+  if (type === 'grammar')  renderGrammar(document.getElementById('grammar-search')?.value||'');
+  if (type === 'adj')      renderAdjPairs(currentAdjFilter||'all');
+  if (type === 'counters') renderCounters(currentCounterFilter||'all');
+}
+
+// ── Track current filters for re-render ──
+</script>
+</body>
+</html>
