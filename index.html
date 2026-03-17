@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌸 Sakura Study! — JLPT N5 Japanese</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sakura.css">
+<style>
+/* ══════════════════════════════════════════
+   CUSTOM ENTRY SYSTEM — Sakura Theme
+══════════════════════════════════════════ */
+
+/* ── Add New Button ── */
+.add-new-btn{
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  color:#fff;border:none;border-radius:2rem;
+  padding:.48rem 1.2rem;font-size:.82rem;font-weight:800;
+  cursor:pointer;box-shadow:0 3px 14px rgba(240,48,106,.38);
+  transition:transform .18s,box-shadow .18s;
+  white-space:nowrap;flex-shrink:0;
+  display:inline-flex;align-items:center;gap:.35rem;
+}
+.add-new-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 7px 22px rgba(240,48,106,.48);}
+.add-new-btn:active{transform:translateY(0) scale(.99);}
+
+/* ── Modal overlay backdrop ── */
+#custom-modal-overlay{backdrop-filter:blur(5px);}
+
+/* ── Modal card ── */
+#custom-modal{
+  background:var(--card-bg) !important;
+  border-radius:1.6rem !important;
+  padding:0 !important;
+  border:1.5px solid rgba(255,182,193,.45);
+  overflow:hidden;
+  animation:cModalPop .24s cubic-bezier(.34,1.52,.64,1);
+}
+@keyframes cModalPop{
+  from{opacity:0;transform:scale(.91) translateY(10px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+
+/* Modal header band */
+.cm-header{
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  padding:1.4rem 1.75rem 1.2rem;
+  display:flex;align-items:center;gap:1rem;
+  position:relative;
+}
+.cm-header-icon{font-size:2rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2));}
+.cm-header-text{flex:1;}
+.cm-header-text h3{font-size:1.15rem;font-weight:900;color:#fff;margin:0 0 .12rem;}
+.cm-header-text p{font-size:.78rem;color:rgba(255,255,255,.82);margin:0;line-height:1.4;}
+.cm-close{
+  position:absolute;top:.9rem;right:1rem;
+  background:rgba(255,255,255,.22);border:none;
+  color:#fff;font-size:1.1rem;width:30px;height:30px;
+  border-radius:.5rem;cursor:pointer;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.cm-close:hover{background:rgba(255,255,255,.38);}
+
+/* Modal body */
+.cm-body{padding:1.6rem 1.75rem 1.75rem;max-height:68vh;overflow-y:auto;}
+
+/* Form layout */
+.custom-form{display:flex;flex-direction:column;}
+.custom-form .field-group{margin-bottom:1rem;}
+.custom-form label{
+  display:flex;align-items:center;gap:.3rem;
+  font-size:.74rem;font-weight:800;color:var(--mid);
+  margin-bottom:.32rem;letter-spacing:.04em;text-transform:uppercase;
+}
+.custom-form input,
+.custom-form select,
+.custom-form textarea{
+  width:100%;box-sizing:border-box;
+  padding:.6rem .9rem;
+  border:1.5px solid rgba(255,182,193,.65);
+  border-radius:.75rem;
+  font-size:.87rem;font-family:inherit;
+  background:rgba(255,248,251,.9);
+  color:var(--dark);
+  transition:border-color .2s,box-shadow .2s;
+  outline:none;
+}
+body.dark .custom-form input,
+body.dark .custom-form select,
+body.dark .custom-form textarea{
+  background:rgba(60,20,44,.75);
+  border-color:rgba(200,80,160,.4);
+  color:#f5d0e0;
+}
+.custom-form input:focus,
+.custom-form select:focus,
+.custom-form textarea:focus{
+  border-color:var(--pink);
+  box-shadow:0 0 0 3px rgba(255,133,161,.18);
+}
+.custom-form input::placeholder,
+.custom-form textarea::placeholder{color:#d0a8be;font-size:.83rem;}
+.custom-form textarea{min-height:72px;resize:vertical;line-height:1.55;}
+.custom-form .form-hint{
+  font-size:.72rem;color:#c090aa;margin-top:.28rem;
+  line-height:1.45;display:flex;align-items:flex-start;gap:.25rem;
+}
+.custom-form .form-hint::before{content:'ℹ';flex-shrink:0;opacity:.7;}
+
+/* Sub-section label inside forms */
+.custom-form .form-section-label{
+  font-size:.82rem;font-weight:900;color:var(--pink);
+  padding:.55rem .85rem;
+  background:linear-gradient(135deg,rgba(240,48,106,.09),rgba(200,80,176,.06));
+  border-radius:.65rem;border-left:3px solid var(--pink);
+  margin:.3rem 0 .9rem;
+}
+
+/* Required asterisk */
+.req{color:#f0306a;font-size:.85rem;}
+
+/* Submit button */
+.custom-form .btn-submit{
+  width:100%;margin-top:1.5rem;padding:.82rem;
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  color:#fff;border:none;border-radius:1rem;
+  font-size:.98rem;font-weight:900;cursor:pointer;
+  letter-spacing:.02em;
+  box-shadow:0 4px 18px rgba(240,48,106,.38);
+  transition:opacity .18s,transform .15s;
+}
+.custom-form .btn-submit:hover{opacity:.92;transform:translateY(-1px);}
+.custom-form .btn-submit:active{transform:translateY(0);}
+
+/* ── Custom entry badges ── */
+.custom-kanji-badge,.custom-vocab-badge,.custom-entry-badge{
+  display:inline-block;font-size:.6rem;font-weight:800;
+  background:linear-gradient(135deg,#f0306a,#c850b0);
+  color:#fff;border-radius:.3rem;padding:.05rem .38rem;
+  margin-left:.3rem;vertical-align:middle;letter-spacing:.02em;
+}
+
+/* ── Custom entry cards ── */
+.custom-entry-card{
+  border:2px dashed rgba(240,48,106,.5) !important;
+  background:linear-gradient(135deg,rgba(255,235,248,.55),rgba(255,225,245,.35)) !important;
+}
+body.dark .custom-entry-card{
+  background:linear-gradient(135deg,rgba(80,20,55,.5),rgba(60,15,42,.4)) !important;
+  border-color:rgba(240,48,106,.38) !important;
+}
+
+/* ── Custom rows in vocab table ── */
+.custom-entry-row td{background:rgba(240,48,106,.045) !important;}
+
+/* ── Delete button ── */
+.del-custom-btn{
+  background:none;border:none;color:#d0a0b8;
+  cursor:pointer;font-size:.82rem;
+  padding:.2rem .45rem;border-radius:.4rem;
+  transition:color .15s,background .15s;line-height:1;
+}
+.del-custom-btn:hover{color:#f0306a;background:rgba(240,48,106,.12);}
+
+/* ── Section divider for custom content ── */
+.custom-section-divider{
+  display:flex;align-items:center;gap:.6rem;
+  margin:1.2rem 0 .7rem;
+  font-size:.74rem;font-weight:900;
+  color:var(--pink);letter-spacing:.04em;text-transform:uppercase;
+}
+.custom-section-divider::before,.custom-section-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,133,161,.4));
+}
+</style>
+</head>
+<body>
+<div id="petals"></div>
+<canvas id="confetti-canvas"></canvas>
+<div class="celebration-banner" id="celeb-banner">
+  <span class="celeb-emoji" id="celeb-emoji">🎉</span>
+  <div class="celeb-title" id="celeb-title">Outstanding!</div>
+  <div class="celeb-sub" id="celeb-sub">You aced it! 頑張ったね！</div>
+  <button class="celeb-close" onclick="closeCeleb()">Keep studying! 🌸</button>
+</div>
+<div class="mascot-wrap" id="mascot-wrap">
+  <div class="mascot-bubble" id="mascot-bubble">こんにちは！I'm Me3temed! 🦉<br>Tap me for study tips!</div>
+  <svg class="mascot-svg" id="mascot-svg" viewBox="0 0 120 130" onclick="mascotTap()" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="125" rx="22" ry="4" fill="#00000022"/><ellipse cx="60" cy="88" rx="30" ry="28" fill="#4a6741"/><ellipse cx="60" cy="92" rx="19" ry="20" fill="#f0e8c8"/>
+    <path d="M51 84 Q60 78 69 84 Q60 90 51 84Z" fill="#b8a060" opacity=".7"/><path d="M46 92 Q55 87 60 93 Q54 98 46 92Z" fill="#b8a060" opacity=".55"/>
+    <ellipse cx="30" cy="90" rx="10" ry="16" fill="#3a5332" transform="rotate(10 30 90)"/><ellipse cx="90" cy="90" rx="10" ry="16" fill="#3a5332" transform="rotate(-10 90 90)"/>
+    <circle cx="60" cy="55" r="30" fill="#4a6741"/><ellipse cx="60" cy="58" rx="23" ry="22" fill="#f0e8c8"/>
+    <circle cx="49" cy="54" r="11" fill="#1c1c2e"/><circle cx="49" cy="54" r="8.5" fill="#3a7a68"/><circle cx="49" cy="54" r="5" fill="#1c1c2e"/><circle cx="46.5" cy="51.5" r="2.2" fill="white"/>
+    <circle cx="71" cy="54" r="11" fill="#1c1c2e"/><circle cx="71" cy="54" r="8.5" fill="#3a7a68"/><circle cx="71" cy="54" r="5" fill="#1c1c2e"/><circle cx="68.5" cy="51.5" r="2.2" fill="white"/>
+    <path d="M56 63 Q60 69 64 63 Q62 67 60 68 Q58 67 56 63Z" fill="#c8a040"/>
+    <ellipse cx="44" cy="28" rx="7" ry="11" fill="#3a5332" transform="rotate(-20 44 28)"/><ellipse cx="76" cy="28" rx="7" ry="11" fill="#3a5332" transform="rotate(20 76 28)"/>
+    <polygon points="42,75 56,80 56,70" fill="#f0306a"/><polygon points="78,75 64,80 64,70" fill="#f0306a"/>
+    <circle cx="60" cy="75" r="5.5" fill="#c01050"/>
+    <line x1="50" y1="113" x2="43" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="50" y1="113" x2="50" y2="123" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="50" y1="113" x2="57" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="70" y1="113" x2="63" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="70" y1="113" x2="70" y2="123" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/><line x1="70" y1="113" x2="77" y2="122" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/>
+  </svg>
+</div>
+<header>
+  <button id="sidebar-toggle" onclick="toggleSidebar()" title="All sections">☰</button>
+  <div class="logo"><span class="logo-icon">🌸</span><div class="logo-text"><h1>Sakura Study!</h1><p>JLPT N5 — Complete Study Guide</p></div></div>
+  <div id="eg-clock" title="Cairo, Egypt 🇪🇬"><div class="clk-time" id="clk-time">--:--</div><div class="clk-label">🇪🇬 Cairo</div></div>
+  <div id="ambient-wrap">
+    <button id="ambient-btn" onclick="toggleAmbientPanel()" title="Ambient sounds">🎵 Sounds</button>
+    <div id="ambient-panel">
+      <div style="font-size:.7rem;font-weight:900;color:#aaa;padding:.2rem .65rem .5rem;">🎵 Study Ambience</div>
+      <div class="amb-option" id="amb_off" onclick="setAmbient('off',this)">🔇 Off</div>
+      <div class="amb-option" id="amb_rain" onclick="setAmbient('rain',this)">🌧️ Soft Rain</div>
+      <div class="amb-option" id="amb_cafe" onclick="setAmbient('cafe',this)">☕ Café Chatter</div>
+      <div class="amb-option" id="amb_temple" onclick="setAmbient('temple',this)">⛩️ Temple Bells</div>
+      <div class="amb-option" id="amb_forest" onclick="setAmbient('forest',this)">🌿 Forest Breeze</div>
+      <div class="amb-option" id="amb_lofi" onclick="setAmbient('lofi',this)">🎹 Lo-fi Tones</div>
+      <div class="amb-vol-row">🔊 <input type="range" id="amb-vol" min="0" max="1" step="0.05" value="0.35" oninput="setAmbientVol(this.value)"></div>
+    </div>
+  </div>
+  <button id="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
+  <nav>
+    <button class="active" onclick="location='index.html'">🏠 Home</button>
+    <button onclick="location='pages/study.html'">📖 Study</button>
+    <button onclick="location='pages/practice.html'">🎯 Practice</button>
+    <button onclick="location='pages/tools.html'">🔧 Tools</button>
+    <button onclick="location='pages/progress.html'">📊 Progress</button>
+  </nav>
+</header>
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div id="sidebar">
+  <div class="sidebar-header"><div class="sidebar-logo"><span>🌸</span> Sakura Study!<button class="sidebar-close" onclick="closeSidebar()">✕</button></div></div>
+  <div class="sidebar-section-label">📚 Study</div>
+  <button class="sidebar-btn active" onclick="closeSidebar()"><span class="sb-icon">🏠</span> Home</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html'"><span class="sb-icon">📖</span> Grammar</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#kana'"><span class="sb-icon">あ</span> Kana</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#kanji'"><span class="sb-icon">漢</span> Kanji</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#vocab'"><span class="sb-icon">📝</span> Vocabulary</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#adjectives'"><span class="sb-icon">🔄</span> Adj. Opposites</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#counters'"><span class="sb-icon">🔢</span> Counters</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#sentences'"><span class="sb-icon">✍️</span> Sentence Practice</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#numbers'"><span class="sb-icon">🔢</span> Number Practice</button>
+  <button class="sidebar-btn" onclick="location='pages/study.html#phrases'"><span class="sb-icon">💬</span> Survival Phrases</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">🎯 Practice & Tests</div>
+  <button class="sidebar-btn" onclick="location='pages/practice.html'"><span class="sb-icon">🃏</span> Flashcards</button>
+  <button class="sidebar-btn" onclick="location='pages/practice.html#kanji-mcq'"><span class="sb-icon">✏️</span> Kanji Quiz</button>
+  <button class="sidebar-btn" onclick="location='pages/practice.html#reading'"><span class="sb-icon">📚</span> Reading Test</button>
+  <button class="sidebar-btn" onclick="location='pages/practice.html#writing'"><span class="sb-icon">✍️</span> Writing Test</button>
+  <button class="sidebar-btn" onclick="location='pages/practice.html#listening'"><span class="sb-icon">🎧</span> Listening</button>
+  <button class="sidebar-btn" onclick="location='pages/practice.html#comprehension'"><span class="sb-icon">🧠</span> Comprehension</button>
+  <button class="sidebar-btn" onclick="location='pages/practice.html#mock-exam'"><span class="sb-icon">📋</span> Mock Exam</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">📈 Track & Plan</div>
+  <button class="sidebar-btn" onclick="location='pages/progress.html'"><span class="sb-icon">📊</span> My Progress</button>
+  <button class="sidebar-btn" onclick="location='pages/progress.html#bookmarks'"><span class="sb-icon">⭐</span> Bookmarks</button>
+  <button class="sidebar-btn" onclick="location='pages/progress.html#study-plan'"><span class="sb-icon">📅</span> Study Plan</button>
+  <button class="sidebar-btn" onclick="location='pages/progress.html#resources'"><span class="sb-icon">🔗</span> Resources</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">🎌 Fun & Tools</div>
+  <button class="sidebar-btn" onclick="location='pages/tools.html'"><span class="sb-icon">🎌</span> Anime Corner</button>
+  <button class="sidebar-btn" onclick="location='pages/tools.html#dictionary'"><span class="sb-icon">📗</span> Dictionary</button>
+</div>
+<div id="app-body"><main>
+<!-- ====== HOME ====== -->
+<div class="section active" id="home">
+
+  <!-- Hero Banner -->
+  <div style="background:linear-gradient(135deg,#ff85a1 0%,#c77dff 50%,#4cc9f0 100%);border-radius:1.75rem;padding:2.5rem 2rem 2rem;text-align:center;position:relative;overflow:hidden;margin-bottom:1.75rem;box-shadow:0 8px 32px rgba(255,133,161,.35);">
+    <div style="position:absolute;top:-20px;right:-20px;font-size:8rem;opacity:.08;line-height:1;pointer-events:none;">日本語</div>
+    <div style="position:absolute;bottom:-10px;left:-10px;font-size:5rem;opacity:.08;pointer-events:none;">🌸</div>
+    <div style="font-size:3.5rem;margin-bottom:.5rem;">🌸</div>
+    <h2 style="font-size:2rem;font-weight:900;color:white;margin-bottom:.4rem;text-shadow:0 2px 8px rgba(0,0,0,.15);">Sakura Study! へようこそ</h2>
+    <p style="color:rgba(255,255,255,.92);font-size:1rem;font-weight:600;margin-bottom:1.2rem;line-height:1.7;">Your beautiful Japanese study companion 🌸<br>Master Japanese step by step — from hiragana to fluency!</p>
+    <div style="display:inline-flex;gap:.65rem;flex-wrap:wrap;justify-content:center;">
+      <span style="background:rgba(255,255,255,.25);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.4);border-radius:2rem;padding:.35rem 1rem;font-size:.8rem;font-weight:700;color:white;">🎌 Japanese for Everyone</span>
+      <span style="background:rgba(255,255,255,.25);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.4);border-radius:2rem;padding:.35rem 1rem;font-size:.8rem;font-weight:700;color:white;">✨ Free Forever</span>
+      <span style="background:rgba(255,255,255,.25);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.4);border-radius:2rem;padding:.35rem 1rem;font-size:.8rem;font-weight:700;color:white;">🌸 Made with Love</span>
+    </div>
+  </div>
+
+  <!-- Coming Soon Levels Banner -->
+  <div style="background:white;border-radius:1.4rem;padding:1.3rem 1.5rem;border:2px solid rgba(255,182,193,.3);box-shadow:0 4px 14px var(--shadow);margin-bottom:1.75rem;">
+    <div style="font-weight:900;color:var(--mid);font-size:.95rem;margin-bottom:.9rem;">📚 Available Levels — More Coming Soon!</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.65rem;align-items:center;">
+      <div style="display:flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,#ff85a1,#e05f88);color:white;border-radius:1rem;padding:.5rem 1.1rem;font-weight:800;font-size:.85rem;box-shadow:0 3px 10px rgba(255,133,161,.4);">
+        <span style="font-size:1.1rem;">🌸</span> N5 — Available Now!
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;background:rgba(200,200,200,.15);color:#aaa;border-radius:1rem;padding:.5rem 1.1rem;font-weight:700;font-size:.85rem;border:2px dashed #ddd;">
+        <span>🌿</span> N4 — Coming Soon
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;background:rgba(200,200,200,.15);color:#aaa;border-radius:1rem;padding:.5rem 1.1rem;font-weight:700;font-size:.85rem;border:2px dashed #ddd;">
+        <span>⚡</span> N3 — Coming Soon
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;background:rgba(200,200,200,.15);color:#aaa;border-radius:1rem;padding:.5rem 1.1rem;font-weight:700;font-size:.85rem;border:2px dashed #ddd;">
+        <span>🏯</span> N2 — Coming Soon
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;background:rgba(200,200,200,.15);color:#aaa;border-radius:1rem;padding:.5rem 1.1rem;font-weight:700;font-size:.85rem;border:2px dashed #ddd;">
+        <span>👑</span> N1 — Coming Soon
+      </div>
+    </div>
+    <p style="font-size:.78rem;color:#a0607a;margin-top:.75rem;line-height:1.6;">🎯 Sakura Study is designed for <strong>all learners</strong> — from complete beginners to advanced students. Right now <strong>N5</strong> is fully available with grammar, kanji, vocabulary, counters, kana, quizzes, a mock exam, and more. More levels are in the works! 頑張れ！</p>
+  </div>
+
+  <!-- Main Study Cards Grid -->
+  <div style="font-weight:900;color:var(--mid);font-size:1rem;margin-bottom:.9rem;">🗂 N5 Study Sections — Pick where to start!</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.85rem;margin-bottom:1.75rem;">
+
+    <!-- Kana -->
+    <div onclick="location='pages/study.html#kana'" style="background:linear-gradient(135deg,#ffecd2,#fcb69f);border-radius:1.3rem;padding:1.1rem;cursor:pointer;border:2px solid transparent;box-shadow:0 4px 14px rgba(252,182,159,.35);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(252,182,159,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(252,182,159,.35)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">あ</div>
+      <div style="font-weight:900;color:#7d3c00;font-size:.9rem;">Kana</div>
+      <div style="font-size:.72rem;color:#a05020;margin-top:.2rem;line-height:1.5;">Hiragana & Katakana charts + quiz</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.15;">カ</div>
+    </div>
+
+    <!-- Grammar -->
+    <div onclick="location='pages/study.html#grammar'" style="background:linear-gradient(135deg,#ffd6e7,#ffb3c6);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(255,182,193,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(255,133,161,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(255,182,193,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">📖</div>
+      <div style="font-weight:900;color:#7b2d4a;font-size:.9rem;">Grammar</div>
+      <div style="font-size:.72rem;color:#a04060;margin-top:.2rem;line-height:1.5;">て形・ない形・た形 + all patterns</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">文</div>
+    </div>
+
+    <!-- Counters -->
+    <div onclick="location='pages/study.html#counters'" style="background:linear-gradient(135deg,#e8f5e9,#a5d6a7);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(165,214,167,.45);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(76,175,80,.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(165,214,167,.45)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">🔢</div>
+      <div style="font-weight:900;color:#1b5e20;font-size:.9rem;">Counters</div>
+      <div style="font-size:.72rem;color:#2e7d32;margin-top:.2rem;line-height:1.5;">〜本・〜枚・〜人・time & more</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">数</div>
+    </div>
+
+    <!-- Kanji -->
+    <div onclick="location='pages/study.html#kanji'" style="background:linear-gradient(135deg,#e3f2fd,#90caf9);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(144,202,249,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(33,150,243,.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(144,202,249,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">漢</div>
+      <div style="font-weight:900;color:#0d47a1;font-size:.9rem;">Kanji</div>
+      <div style="font-size:.72rem;color:#1565c0;margin-top:.2rem;line-height:1.5;">80 N5 kanji with readings & words</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">字</div>
+    </div>
+
+    <!-- Vocabulary -->
+    <div onclick="location='pages/study.html#vocab'" style="background:linear-gradient(135deg,#fff3e0,#ffcc80);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(255,204,128,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(255,152,0,.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(255,204,128,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">📝</div>
+      <div style="font-weight:900;color:#6d4c00;font-size:.9rem;">Vocabulary</div>
+      <div style="font-size:.72rem;color:#8d5e00;margin-top:.2rem;line-height:1.5;">N5 words sorted by category</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">語</div>
+    </div>
+
+    <!-- Adj Opposites -->
+    <div onclick="location='pages/study.html#adjectives'" style="background:linear-gradient(135deg,#fce4ec,#f48fb1);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(244,143,177,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(233,30,99,.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(244,143,177,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">🔄</div>
+      <div style="font-weight:900;color:#880e4f;font-size:.9rem;">Adj. Opposites</div>
+      <div style="font-size:.72rem;color:#ad1457;margin-top:.2rem;line-height:1.5;">28 い and な adjective pairs</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">形</div>
+    </div>
+
+    <!-- Flashcards -->
+    <div onclick="location='pages/practice.html#flashcards'" style="background:linear-gradient(135deg,#ede7f6,#b39ddb);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(179,157,219,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(103,58,183,.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(179,157,219,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">🃏</div>
+      <div style="font-weight:900;color:#311b92;font-size:.9rem;">Flashcards</div>
+      <div style="font-size:.72rem;color:#4527a0;margin-top:.2rem;line-height:1.5;">Vocab, kanji, grammar & adj pairs</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">暗</div>
+    </div>
+
+    <!-- Kanji Quiz -->
+    <div onclick="location='pages/practice.html#kanji-mcq'" style="background:linear-gradient(135deg,#e0f7fa,#80deea);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(128,222,234,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(0,188,212,.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(128,222,234,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">✏️</div>
+      <div style="font-weight:900;color:#006064;font-size:.9rem;">Kanji Quiz</div>
+      <div style="font-size:.72rem;color:#00838f;margin-top:.2rem;line-height:1.5;">Timed MCQ — 30 sec per question</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">問</div>
+    </div>
+
+    <!-- Reading -->
+    <div onclick="location='pages/practice.html#reading'" style="background:linear-gradient(135deg,#f3e5f5,#ce93d8);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(206,147,216,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(156,39,176,.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(206,147,216,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">📚</div>
+      <div style="font-weight:900;color:#4a148c;font-size:.9rem;">Reading Test</div>
+      <div style="font-size:.72rem;color:#6a1b9a;margin-top:.2rem;line-height:1.5;">5 N5 passages, random each time</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">読</div>
+    </div>
+
+    <!-- Writing -->
+    <div onclick="location='pages/practice.html#writing'" style="background:linear-gradient(135deg,#fff8e1,#ffe082);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(255,224,130,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(255,193,7,.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(255,224,130,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">✍️</div>
+      <div style="font-weight:900;color:#5d4200;font-size:.9rem;">Writing Test</div>
+      <div style="font-size:.72rem;color:#7d5700;margin-top:.2rem;line-height:1.5;">Translate to Japanese, self-rate</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">書</div>
+    </div>
+
+    <!-- Mock Exam -->
+    <div onclick="location='pages/practice.html#mock-exam'" style="background:linear-gradient(135deg,#ffebee,#ef9a9a);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(239,154,154,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(244,67,54,.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(239,154,154,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">📋</div>
+      <div style="font-weight:900;color:#7f0000;font-size:.9rem;">Mock Exam</div>
+      <div style="font-size:.72rem;color:#b71c1c;margin-top:.2rem;line-height:1.5;">30 questions — full N5 format</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">試</div>
+    </div>
+
+    <!-- Study Plan -->
+    <div onclick="location='pages/progress.html#study-plan'" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(200,230,201,.5);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(76,175,80,.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(200,230,201,.5)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">📅</div>
+      <div style="font-weight:900;color:#1b5e20;font-size:.9rem;">Study Plan</div>
+      <div style="font-size:.72rem;color:#2e7d32;margin-top:.2rem;line-height:1.5;">8-week roadmap to pass N5</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">計</div>
+    </div>
+
+    <!-- Resources -->
+    <div onclick="location='pages/progress.html#resources'" style="background:linear-gradient(135deg,#e8eaf6,#9fa8da);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(159,168,218,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(63,81,181,.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(159,168,218,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">🔗</div>
+      <div style="font-weight:900;color:#1a237e;font-size:.9rem;">Resources</div>
+      <div style="font-size:.72rem;color:#283593;margin-top:.2rem;line-height:1.5;">Best N5 study websites</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">参</div>
+    </div>
+
+    <!-- Listening Practice -->
+    <div onclick="location='pages/practice.html#listening'" style="background:linear-gradient(135deg,#e0f2f1,#80cbc4);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(128,203,196,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(0,150,136,.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(128,203,196,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">🎧</div>
+      <div style="font-weight:900;color:#004d40;font-size:.9rem;">Listening</div>
+      <div style="font-size:.72rem;color:#00695c;margin-top:.2rem;line-height:1.5;">60+ sentences with TTS playback</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">聴</div>
+    </div>
+
+    <!-- Comprehension Tests -->
+    <div onclick="location='pages/practice.html#comprehension'" style="background:linear-gradient(135deg,#fdf6ec,#f7c59f);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(247,197,159,.45);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(230,126,34,.35)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(247,197,159,.45)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">🧠</div>
+      <div style="font-weight:900;color:#7d3c00;font-size:.9rem;">Comprehension</div>
+      <div style="font-size:.72rem;color:#a04000;margin-top:.2rem;line-height:1.5;">Reading passages with MCQ tests</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.12;">解</div>
+    </div>
+
+    <!-- Anime Corner -->
+    <div onclick="location='pages/tools.html#anime'" style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(233,69,96,.35);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(233,69,96,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(233,69,96,.35)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">🎌</div>
+      <div style="font-weight:900;color:#e9c46a;font-size:.9rem;">Anime Corner</div>
+      <div style="font-size:.72rem;color:#f4a261;margin-top:.2rem;line-height:1.5;">Trending anime + JP synopses</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.18;color:#e9c46a;">ア</div>
+    </div>
+
+    <!-- Dictionary -->
+    <div onclick="location='pages/tools.html#dictionary'" style="background:linear-gradient(135deg,#2d1b69,#11998e);border-radius:1.3rem;padding:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(17,153,142,.4);transition:all .22s;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 28px rgba(17,153,142,.55)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 14px rgba(17,153,142,.4)'">
+      <div style="font-size:2rem;margin-bottom:.35rem;">📗</div>
+      <div style="font-weight:900;color:#a8ffce;font-size:.9rem;">Dictionary</div>
+      <div style="font-size:.72rem;color:#c8ffd4;margin-top:.2rem;line-height:1.5;">AI-powered Japanese dictionary</div>
+      <div style="position:absolute;right:-8px;bottom:-8px;font-size:2.5rem;opacity:.18;color:#a8ffce;">辞</div>
+    </div>
+
+  </div>
+
+  <!-- Animated Progress Rings -->
+  <div style="font-weight:900;color:var(--mid);font-size:.95rem;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;">📊 Your N5 Progress</div>
+  <div class="rings-grid" id="home-rings"></div>
+
+  <!-- Home Mini Timeline -->
+  <div style="background:white;border-radius:1.4rem;padding:1.1rem 1.3rem;border:2px solid rgba(255,182,193,.3);box-shadow:0 4px 14px var(--shadow);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;">
+      <div style="font-weight:900;color:var(--mid);font-size:.92rem;">📅 Your 8-Week Study Roadmap</div>
+      <button class="btn" style="font-size:.75rem;padding:.35rem 1rem;" onclick="location='pages/progress.html#study-plan'">See Full Plan →</button>
+    </div>
+    <div class="home-timeline" id="home-timeline"></div>
+  </div>
+
+</div>
+
+
+</main></div>
+<footer>
+  <p>🌸 <span>Sakura Study!</span> — JLPT N5 Complete Study Guide</p>
+  <p style="margin-top:.3rem;">© 2026 <span>Ahmed El Bourgy</span>. All rights reserved. Made with 💕 for Japanese learners everywhere.</p>
+</footer>
+<script src="js/data.js"></script>
+<script>
+var mascotTipIndex=0, mascotBubbleTimer=null;
+var currentVocabFilter='all', currentKanjiFilter='all';
+var currentAdjFilter='all', currentCounterFilter='all';
+<script>
+// ══════════════════════════════════════════════
+//  CUSTOM ENTRIES — must be first so render functions can call loadCustom()
+// ══════════════════════════════════════════════
+const CUSTOM_KEYS = {
+  vocab:    'sakura_custom_vocab',
+  kanji:    'sakura_custom_kanji',
+  grammar:  'sakura_custom_grammar',
+  adj:      'sakura_custom_adj',
+  counters: 'sakura_custom_counters',
+};
+function loadCustom(type) {
+  try { return JSON.parse(localStorage.getItem(CUSTOM_KEYS[type]) || '[]'); }
+  catch(e) { return []; }
+}
+function saveCustom(type, data) {
+  try { localStorage.setItem(CUSTOM_KEYS[type], JSON.stringify(data)); } catch(e) {}
+}
+function deleteCustomEntry(type, idx) {
+  if (!confirm('Delete this custom entry?')) return;
+  const data = loadCustom(type);
+  data.splice(idx, 1);
+  saveCustom(type, data);
+  if (type === 'vocab')    renderVocab(currentVocabFilter, document.getElementById('vocab-search')?.value||'');
+  if (type === 'kanji')    renderKanji(currentKanjiFilter||'all');
+  if (type === 'grammar')  renderGrammar(document.getElementById('grammar-search')?.value||'');
+  if (type === 'adj')      renderAdjPairs(currentAdjFilter||'all');
+  if (type === 'counters') renderCounters(currentCounterFilter||'all');
+  showToast('Entry deleted 🗑️');
+}
+
+// ── Pre-declare variables used across the file to avoid TDZ errors ──
+var mascotTipIndex = 0;
+var mascotBubbleTimer = null;
+var phrasesFilter = 'all';
+var currentVocabFilter = 'all';
+var currentKanjiFilter = 'all';
+var currentAdjFilter = 'all';
+var currentCounterFilter = 'all';
+
+
+const SECTION_TIPS = { home:"🏠 Welcome back! Me3temed is cheering for you! 🦉 Pick a section to start!" };
+function showSection(id) { location='pages/study.html#'+id; }
+// ============================================================
+//  DARK MODE
+// ============================================================
+// ============================================================
+//  SIDEBAR
+// ============================================================
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+function sbGo(id) {
+  showSection(id);
+  closeSidebar();
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('sb_' + id);
+  if (btn) btn.classList.add('active');
+}
+
+// ============================================================
+//  ANIMATED PROGRESS RINGS
+// ============================================================
+function makeSVGRing(pct, color, size = 88) {
+  const r = (size / 2) - 9;
+  const circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;
+  return `<svg class="ring-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(0,0,0,.06)" stroke-width="8"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="8"
+      stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}"
+      transform="rotate(-90 ${size/2} ${size/2})"
+      style="transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);will-change:stroke-dashoffset;"
+      data-target-offset="${circ - dash}"/>
+    <text x="${size/2}" y="${size/2 + 5}" text-anchor="middle" font-size="13" font-weight="900" fill="${color}" font-family="Nunito,sans-serif">${pct}%</text>
+  </svg>`;
+}
+
+const RING_DATA = [
+  { label:'Kanji', total:80, color:'#4cc9f0', section:'kanji', icon:'漢', getVal: () => {
+    try { const bm = JSON.parse(localStorage.getItem('sakura_bm')||'{}');
+      return Object.values(bm).filter(b=>b.type==='kanji').length; } catch(e){return 0;} }
+  },
+  { label:'Grammar', total:50, color:'#ff85a1', section:'grammar', icon:'📖', getVal: () => {
+    try { const bm = JSON.parse(localStorage.getItem('sakura_bm')||'{}');
+      return Object.values(bm).filter(b=>b.type==='grammar').length; } catch(e){return 0;} }
+  },
+  { label:'Phrases Known', total:60, color:'#06d6a0', section:'phrases', icon:'💬', getVal: () => {
+    try { const d = JSON.parse(localStorage.getItem('sakura_srs')||'{}');
+      return Object.values(d.phrases||{}).filter(v=>v.status==='known').length; } catch(e){return 0;} }
+  },
+  { label:'Listening Done', total:60, color:'#c77dff', section:'listening', icon:'🎧', getVal: () => {
+    try { const d = JSON.parse(localStorage.getItem('sakura_srs')||'{}');
+      return Object.values(d.listen||{}).filter(v=>v.status==='known').length; } catch(e){return 0;} }
+  },
+  { label:'Quizzes Taken', total:30, color:'#ff9800', section:'mock-exam', icon:'📋', getVal: () => {
+    try { return Math.min(30, JSON.parse(localStorage.getItem('sakura_scores')||'[]').length); } catch(e){return 0;} }
+  },
+  { label:'Day Streak 🔥', total:30, color:'#e53935', section:'progress', icon:'🔥', getVal: () => {
+    try { const d = JSON.parse(localStorage.getItem('sakura_streak')||'{}'); return Math.min(30, d.streak||0); } catch(e){return 0;} }
+  },
+];
+
+function renderHomeRings() {
+  const el = document.getElementById('home-rings');
+  if (!el) return;
+  el.innerHTML = RING_DATA.map(r => {
+    const val = r.getVal();
+    const pct = Math.round((val / r.total) * 100);
+    return `<div class="ring-card" onclick="showSection('${r.section}')" style="cursor:pointer;" title="Go to ${r.label}">
+      ${makeSVGRing(pct, r.color)}
+      <div class="ring-value">${val} <span style="font-size:.65rem;color:#aaa;font-weight:600;">/ ${r.total}</span></div>
+      <div class="ring-label">${r.label}</div>
+    </div>`;
+  }).join('');
+  // Animate after paint
+  setTimeout(() => {
+    el.querySelectorAll('circle[data-target-offset]').forEach(c => {
+      c.style.strokeDashoffset = c.getAttribute('data-target-offset');
+    });
+  }, 80);
+}
+
+renderHomeRings();
+
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark');
+  document.getElementById('dark-toggle').innerHTML = isDark ? '☀️ Light' : '🌙 Dark';
+  try { localStorage.setItem('sakura_dark', isDark ? '1' : '0'); } catch(e) {}
+}
+try {
+  if (localStorage.getItem('sakura_dark') === '1') {
+    document.body.classList.add('dark');
+    document.getElementById('dark-toggle').innerHTML = '☀️ Light';
+  }
+} catch(e) {}
+
+// ============================================================
+//  BOOKMARKS
+// ============================================================
+
+function renderHomeTimeline(){
+  const c=document.getElementById('home-timeline');
+  if(!c)return;
+  c.innerHTML=STUDY_PLAN.map((w,i)=>`
+    <div class="htl-card" style="border-color:${w.color}20;border-left:4px solid ${w.color};" onclick="showSection('study-plan')" title="See full plan">
+      <div class="htl-week" style="color:${w.color};">${w.week}</div>
+      <span class="htl-emoji">${w.emoji}</span>
+      <div class="htl-title">${w.title}</div>
+      <div class="htl-tasks">${w.tasks[0]}</div>
+    </div>`).join('');
+}
+renderHomeTimeline();
+
+// ============================================================
+//  COUNTERS DATA
+
+// --- MASCOT ---
+const MASCOT_TIPS = [
+  "💡 Tip: Practice hiragana every morning for just 5 minutes!",
+  "🌸 Remember: いい (good) is irregular! Negative = よくない, not いくない!",
+  "⚡ Group 3 only has 2 verbs: する and くる. Easy to remember!",
+  "漢字 Try to write each kanji 5 times while saying its meaning out loud!",
+  "🔵 Particles are everything! は, が, を, に, で — master these first!",
+  "🎯 For JLPT N5 you need 110/180 points to pass. You've got this!",
+  "📖 Reading tip: Guess meaning from context, even if you don't know every word!",
+  "🃏 Flashcards work best with spaced repetition — review right before you forget!",
+  "✨ な-adjectives need な before nouns: しずかなへや (quiet room)!",
+  "⏰ 〜ています can mean ongoing action OR a resultant state. Context matters!",
+  "🌺 To say 'I want to do X': take the ます stem and add たい！ e.g. たべたい！",
+  "💪 Study a little every day rather than a lot once a week. 継続は力なり！",
+  "🎨 い-adjectives ending: negative → くない, past → かった. Easy pattern!",
+  "📝 Memorize verb groups by their ending sound — RU verbs are usually Group 2!",
+  "🌸 You're doing amazing! がんばれ！Keep going! 応援してるよ！",
+  "🔄 Opposite adjectives help double your vocab — learn pairs, not singles!",
+  "🎵 Try humming Japanese words to a tune — music helps memory!",
+  "☕ Take breaks! Study 25 min → 5 min break (Pomodoro technique) works great!",
+];
+mascotTipIndex = Math.floor(Math.random()*MASCOT_TIPS.length);
+mascotBubbleTimer = null;
+var mascotVisible = true;
+
+function mascotTap(){
+  const bubble = document.getElementById('mascot-bubble');
+  mascotTipIndex = (mascotTipIndex + 1) % MASCOT_TIPS.length;
+  bubble.classList.remove('hidden');
+  bubble.style.animation = 'none';
+  void bubble.offsetWidth;
+  bubble.style.animation = 'bubblePop .3s cubic-bezier(.34,1.56,.64,1)';
+  bubble.innerHTML = MASCOT_TIPS[mascotTipIndex];
+  clearTimeout(mascotBubbleTimer);
+  mascotBubbleTimer = setTimeout(()=>bubble.classList.add('hidden'), 5000);
+}
+
+// Auto-show tip after 4 seconds, then hide, cycle every 20s
+setTimeout(()=>{
+  const bubble = document.getElementById('mascot-bubble');
+  bubble.classList.add('hidden');
+  setInterval(()=>{
+    mascotTipIndex = (mascotTipIndex + 1) % MASCOT_TIPS.length;
+    bubble.innerHTML = MASCOT_TIPS[mascotTipIndex];
+    bubble.classList.remove('hidden');
+    bubble.style.animation='none';void bubble.offsetWidth;bubble.style.animation='bubblePop .3s cubic-bezier(.34,1.56,.64,1)';
+    clearTimeout(mascotBubbleTimer);
+    mascotBubbleTimer = setTimeout(()=>bubble.classList.add('hidden'), 5000);
+  }, 20000);
+}, 4000);
+
+// ============================================================
+//  TEXT-TO-SPEECH
+// ============================================================
+
+// ============================================================
+//  SCORE TRACKER
+// ============================================================
+function saveScore(type, score, total) {
+  try {
+    const h = JSON.parse(localStorage.getItem('sakura_scores') || '[]');
+    h.unshift({ type, score, total, pct: Math.round(score/total*100), date: new Date().toISOString() });
+    if (h.length > 100) h.pop();
+    localStorage.setItem('sakura_scores', JSON.stringify(h));
+  } catch(e) {}
+}
+function getScores() {
+  try { return JSON.parse(localStorage.getItem('sakura_scores') || '[]'); } catch(e) { return []; }
+}
+
+// ============================================================
+//  STREAK TRACKER
+// ============================================================
+function getStreak() {
+  try {
+    const raw = localStorage.getItem('sakura_streak');
+    const d = raw ? JSON.parse(raw) : { streak: 0, lastDate: '' };
+    const today = new Date().toDateString();
+    const last = d.lastDate ? new Date(d.lastDate).toDateString() : '';
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (last === today) return d; // already recorded today
+    if (last === yesterday) d.streak = (d.streak || 0) + 1;
+    else d.streak = 1;
+    d.lastDate = new Date().toISOString();
+    localStorage.setItem('sakura_streak', JSON.stringify(d));
+    return d;
+  } catch(e) { return { streak: 1 }; }
+}
+getStreak(); // record visit on page load
+
+// ============================================================
+//  LISTENING PRACTICE DATA & RENDER
+// ============================================================
+const LISTEN_CATEGORIES = [
+  { title: '🌅 Greetings & Daily Phrases', icon: '🌅', items: [
+    { jp: 'おはようございます。', rom: 'Ohayou gozaimasu.', en: 'Good morning. (polite)' },
+    { jp: 'こんにちは！', rom: 'Konnichiwa!', en: 'Hello! / Good afternoon!' },
+    { jp: 'こんばんは。', rom: 'Konbanwa.', en: 'Good evening.' },
+    { jp: 'おやすみなさい。', rom: 'Oyasuminasai.', en: 'Good night.' },
+    { jp: 'ありがとうございます。', rom: 'Arigatou gozaimasu.', en: 'Thank you very much.' },
+    { jp: 'すみません。', rom: 'Sumimasen.', en: 'Excuse me. / Sorry.' },
+    { jp: 'はじめまして。どうぞ よろしく。', rom: 'Hajimemashite. Douzo yoroshiku.', en: 'Nice to meet you.' },
+    { jp: 'おげんきですか。', rom: 'Ogenki desu ka?', en: 'How are you?' },
+    { jp: 'はい、げんきです。ありがとう。', rom: 'Hai, genki desu. Arigatou.', en: 'Yes, I\'m fine. Thank you.' },
+    { jp: 'またね！', rom: 'Mata ne!', en: 'See you later!' },
+    { jp: 'いってきます！', rom: 'Ittekimasu!', en: 'I\'m heading out!' },
+    { jp: 'おかえりなさい。', rom: 'Okaerinasai.', en: 'Welcome back.' },
+    { jp: 'いただきます！', rom: 'Itadakimasu!', en: 'Let\'s eat! (before meals)' },
+    { jp: 'ごちそうさまでした。', rom: 'Gochisousama deshita.', en: 'Thank you for the meal.' },
+  ]},
+  { title: '🛒 Shopping & Numbers', icon: '🏪', items: [
+    { jp: 'これは いくらですか。', rom: 'Kore wa ikura desu ka?', en: 'How much is this?' },
+    { jp: 'ひゃくえんです。', rom: 'Hyaku-en desu.', en: 'It\'s 100 yen.' },
+    { jp: 'これを ください。', rom: 'Kore o kudasai.', en: 'Please give me this.' },
+    { jp: 'りんごを みっつ ください。', rom: 'Ringo o mittsu kudasai.', en: 'Three apples, please.' },
+    { jp: 'たかいですね。やすいのは ありますか。', rom: 'Takai desu ne. Yasui no wa arimasu ka?', en: 'That\'s expensive! Do you have a cheaper one?' },
+    { jp: 'クレジットカードは つかえますか。', rom: 'Kurejitto kaado wa tsukaemasu ka?', en: 'Can I use a credit card?' },
+    { jp: 'レシートを ください。', rom: 'Reshiito o kudasai.', en: 'Please give me a receipt.' },
+    { jp: 'ふくろは いりますか。', rom: 'Fukuro wa irimasu ka?', en: 'Do you need a bag?' },
+  ]},
+  { title: '🕐 Time & Dates', icon: '📅', items: [
+    { jp: 'いま なんじですか。', rom: 'Ima nanji desu ka?', en: 'What time is it now?' },
+    { jp: 'ごぜん くじはんです。', rom: 'Gozen kuji han desu.', en: 'It\'s 9:30 AM.' },
+    { jp: 'きょうは なんようびですか。', rom: 'Kyou wa nan-youbi desu ka?', en: 'What day of the week is today?' },
+    { jp: 'きょうは もくようびです。', rom: 'Kyou wa mokuyoubi desu.', en: 'Today is Thursday.' },
+    { jp: 'たんじょうびは いつですか。', rom: 'Tanjoubi wa itsu desu ka?', en: 'When is your birthday?' },
+    { jp: 'わたしの たんじょうびは しちがつ ふつかです。', rom: 'Watashi no tanjoubi wa shichigatsu futsuka desu.', en: 'My birthday is July 2nd.' },
+    { jp: 'あしたは なんがつ なんにちですか。', rom: 'Ashita wa nangatsu nannichi desu ka?', en: 'What is tomorrow\'s date?' },
+    { jp: 'よじに あいましょう。', rom: 'Yoji ni aimashou.', en: 'Let\'s meet at 4 o\'clock.' },
+  ]},
+  { title: '📚 Study & School', icon: '🏫', items: [
+    { jp: 'にほんごを べんきょうしています。', rom: 'Nihongo o benkyou shite imasu.', en: 'I am studying Japanese.' },
+    { jp: 'まいにち にじかん べんきょうします。', rom: 'Mainichi ni-jikan benkyou shimasu.', en: 'I study for 2 hours every day.' },
+    { jp: 'このかんじの よみかたは なんですか。', rom: 'Kono kanji no yomikata wa nan desu ka?', en: 'What is the reading of this kanji?' },
+    { jp: 'もういちど いってください。', rom: 'Mou ichido itte kudasai.', en: 'Please say it one more time.' },
+    { jp: 'ゆっくり はなしてください。', rom: 'Yukkuri hanashite kudasai.', en: 'Please speak slowly.' },
+    { jp: 'わかりません。', rom: 'Wakarimasen.', en: 'I don\'t understand.' },
+    { jp: 'にほんごが すこし はなせます。', rom: 'Nihongo ga sukoshi hanasemasu.', en: 'I can speak a little Japanese.' },
+    { jp: 'もう いちど かいてください。', rom: 'Mou ichido kaite kudasai.', en: 'Please write it one more time.' },
+  ]},
+  { title: '🏠 Home & Family', icon: '👨‍👩‍👧', items: [
+    { jp: 'かぞくは よにんです。', rom: 'Kazoku wa yo-nin desu.', en: 'My family has four people.' },
+    { jp: 'ちちは さんじゅうごさいです。', rom: 'Chichi wa sanjuugo-sai desu.', en: 'My father is 35 years old.' },
+    { jp: 'いもうとは がくせいです。', rom: 'Imouto wa gakusei desu.', en: 'My younger sister is a student.' },
+    { jp: 'へやに ねこが います。', rom: 'Heya ni neko ga imasu.', en: 'There is a cat in the room.' },
+    { jp: 'うちに かえってから、ばんごはんを たべます。', rom: 'Uchi ni kaette kara, bangohan o tabemasu.', en: 'After returning home, I eat dinner.' },
+    { jp: 'まいあさ はちじに おきます。', rom: 'Maiasa hachiji ni okimasu.', en: 'I wake up at 8 every morning.' },
+    { jp: 'つくえの うえに ほんが あります。', rom: 'Tsukue no ue ni hon ga arimasu.', en: 'There is a book on the desk.' },
+  ]},
+  { title: '🍜 Food & Restaurant', icon: '🍣', items: [
+    { jp: 'なにが たべたいですか。', rom: 'Nani ga tabetai desu ka?', en: 'What do you want to eat?' },
+    { jp: 'すしが だいすきです！', rom: 'Sushi ga daisuki desu!', en: 'I love sushi!' },
+    { jp: 'このりょうりは おいしいですね。', rom: 'Kono ryouri wa oishii desu ne.', en: 'This dish is delicious, isn\'t it?' },
+    { jp: 'みずを いっぱい ください。', rom: 'Mizu o ippai kudasai.', en: 'One glass of water, please.' },
+    { jp: 'おかいけいを おねがいします。', rom: 'Okaikei o onegaishimasu.', en: 'The bill, please.' },
+    { jp: 'からいものは すこし にがてです。', rom: 'Karai mono wa sukoshi nigate desu.', en: 'I\'m not very good with spicy food.' },
+    { jp: 'なんにん さまですか。', rom: 'Nan-nin-sama desu ka?', en: 'How many in your party?' },
+    { jp: 'えいごの メニューは ありますか。', rom: 'Eigo no menyuu wa arimasu ka?', en: 'Do you have an English menu?' },
+  ]},
+  { title: '🚉 Transport & Directions', icon: '🗺️', items: [
+    { jp: 'えきは どこですか。', rom: 'Eki wa doko desu ka?', en: 'Where is the station?' },
+    { jp: 'まっすぐ いって、みぎに まがってください。', rom: 'Massugu itte, migi ni magatte kudasai.', en: 'Go straight, then turn right.' },
+    { jp: 'このでんしゃは とうきょうへ いきますか。', rom: 'Kono densha wa Toukyou e ikimasu ka?', en: 'Does this train go to Tokyo?' },
+    { jp: 'つぎのえきは なんですか。', rom: 'Tsugi no eki wa nan desu ka?', en: 'What is the next station?' },
+    { jp: 'バスていは ちかくに ありますか。', rom: 'Basutei wa chikaku ni arimasu ka?', en: 'Is there a bus stop nearby?' },
+    { jp: 'とうきょうまで いくらですか。', rom: 'Toukyou made ikura desu ka?', en: 'How much to Tokyo?' },
+    { jp: 'このでんしゃは なんじに でますか。', rom: 'Kono densha wa nanji ni demasu ka?', en: 'What time does this train depart?' },
+  ]},
+  { title: '🌤 Weather & Seasons', icon: '🌸', items: [
+    { jp: 'きょうの てんきは どうですか。', rom: 'Kyou no tenki wa dou desu ka?', en: 'How is the weather today?' },
+    { jp: 'はれています。きもちが いいですね。', rom: 'Harete imasu. Kimochi ga ii desu ne.', en: 'It\'s sunny. It feels nice, doesn\'t it?' },
+    { jp: 'あしたは あめが ふるでしょう。', rom: 'Ashita wa ame ga furu deshou.', en: 'It will probably rain tomorrow.' },
+    { jp: 'ふゆは さむいですが、なつは あついです。', rom: 'Fuyu wa samui desu ga, natsu wa atsui desu.', en: 'Winter is cold but summer is hot.' },
+    { jp: 'はるが いちばん すきな きせつです。', rom: 'Haru ga ichiban suki na kisetsu desu.', en: 'Spring is my favourite season.' },
+    { jp: 'かぜが つよいですね。', rom: 'Kaze ga tsuyoi desu ne.', en: 'The wind is strong, isn\'t it?' },
+  ]},
+];
+
+function renderListening() {
+  const list = document.getElementById('listening-list');
+  if (!list) return;
+  const srs = getSRSData();
+  list.innerHTML = LISTEN_CATEGORIES.map((cat, ci) => `
+    <div class="listen-category">
+
+
+// ============================================================
+//  BOOKMARKS
+// ============================================================
+function getBookmarks() {
+  try { return JSON.parse(localStorage.getItem('sakura_bm') || '{}'); } catch(e) { return {}; }
+}
+function saveBookmarks(d) { try { localStorage.setItem('sakura_bm', JSON.stringify(d)); } catch(e) {} }
+function getBookmarkStar(id) { return getBookmarks()[id] ? '⭐' : '☆'; }
+
+function toggleBookmark(type, id, btn) {
+  const bm = getBookmarks();
+  if (bm[id]) {
+    delete bm[id];
+    btn.textContent = '☆'; btn.classList.remove('active');
+  } else {
+    const card = document.getElementById(id);
+    let label = '', detail = '', char = '';
+    if (type === 'grammar') {
+      label = card?.querySelector('.grammar-pattern')?.textContent || id;
+      detail = card?.querySelector('.grammar-meaning-tag')?.textContent || '';
+    } else if (type === 'kanji') {
+      char = card?.querySelector('.kanji-big')?.textContent || '';
+      label = char;
+      detail = card?.querySelector('.kanji-info')?.textContent?.replace(/\s+/g,' ').trim() || '';
+    }
+    bm[id] = { type, label, detail, char, date: new Date().toISOString() };
+    btn.textContent = '⭐'; btn.classList.add('active');
+    showToast('⭐ Bookmarked!');
+  }
+  saveBookmarks(bm);
+  if (document.getElementById('bookmarks').classList.contains('active')) renderBookmarks();
+}
+
+function showToast(msg) {
+  let t = document.getElementById('bm-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'bm-toast';
+    t.style.cssText = 'position:fixed;bottom:5.5rem;right:1.25rem;background:linear-gradient(135deg,var(--pink),#e05f88);color:white;padding:.5rem 1.2rem;border-radius:2rem;font-size:.82rem;font-weight:700;z-index:99997;box-shadow:0 4px 16px rgba(255,133,161,.4);transition:opacity .4s;pointer-events:none;opacity:0;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 1800);
+}
+
+function renderBookmarks(filter = 'all') {
+  const bm = getBookmarks();
+  const list = document.getElementById('bookmarks-list');
+  if (!list) return;
+  const entries = Object.entries(bm).filter(([,item]) => filter === 'all' || item.type === filter);
+  if (entries.length === 0) {
+    list.innerHTML = `<div class="bm-empty">
+      <div style="font-size:3rem;margin-bottom:.75rem;">☆</div>
+      <div style="font-weight:700;color:#bbb;margin-bottom:.4rem;">No bookmarks yet!</div>
+      <div>Tap the ☆ on any grammar card or kanji to save it here. 🌸</div>
+      <div style="margin-top:1.1rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;">
+        <button class="listen-play-btn" style="font-size:.78rem;" onclick="showSection('grammar')">📖 Grammar</button>
+        <button class="listen-play-btn" style="background:linear-gradient(135deg,#4cc9f0,#0077b6);font-size:.78rem;" onclick="showSection('kanji')">漢字 Kanji</button>
+      </div>
+    </div>`;
+    return;
+  }
+  list.innerHTML = entries.sort((a,b) => new Date(b[1].date)-new Date(a[1].date)).map(([id,item]) => {
+    const tc = item.type==='grammar'?'#ff85a1':'#4cc9f0';
+    const tl = item.type==='grammar'?'📖 Grammar':'漢字 Kanji';
+    const go = item.type==='grammar'?`showSection('grammar')`:`showSection('kanji')`;
+    const safe = (item.char||item.label||'').replace(/'/g,"\\'");
+    return `<div class="bm-item" id="bmi_${id}">
+      <div style="display:flex;align-items:flex-start;gap:.75rem;">
+        ${item.type==='kanji'?`<div style="font-size:2.5rem;font-weight:900;color:var(--mid);flex-shrink:0;line-height:1.1;">${item.char}</div>`:''}
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem;">
+            <span class="bm-tag" style="background:${tc}22;color:${tc};border:1px solid ${tc}44;">${tl}</span>
+            <span style="font-weight:800;color:var(--mid);font-size:.92rem;">${item.label}</span>
+          </div>
+          <div style="font-size:.78rem;color:#888;line-height:1.5;max-height:2.5em;overflow:hidden;">${item.detail}</div>
+          <div style="display:flex;gap:.4rem;margin-top:.55rem;flex-wrap:wrap;">
+            ${safe?`<button class="tts-btn" onclick="speakJP('${safe}',this)">🔊 Listen</button>`:''}
+            <button class="listen-slow-btn" style="font-size:.72rem;" onclick="${go}">→ Go to section</button>
+          </div>
+        </div>
+      </div>
+      <button class="bm-remove" onclick="removeBookmark('${id}')" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function removeBookmark(id) {
+  const bm = getBookmarks(); delete bm[id]; saveBookmarks(bm);
+  const star = document.getElementById('bms_'+id);
+  if (star) { star.textContent='☆'; star.classList.remove('active'); }
+  const activeBtn = document.querySelector('#bm-filter-bar .filter-tab.active');
+  const f = activeBtn?.textContent?.includes('Grammar')?'grammar':activeBtn?.textContent?.includes('Kanji')?'kanji':'all';
+  renderBookmarks(f);
+}
+function filterBookmarks(f,btn){
+  document.querySelectorAll('#bm-filter-bar .filter-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); renderBookmarks(f);
+}
+
+// ============================================================
+//  CONFETTI
+// ============================================================
+
+// ============================================================
+//  CONFETTI
+// ============================================================
+const confettiCanvas = document.getElementById('confetti-canvas');
+const confettiCtx = confettiCanvas.getContext('2d');
+let confettiFrame = null;
+
+function launchConfetti(duration=3500) {
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+  const colors = ['#ff85a1','#c77dff','#4cc9f0','#ffd700','#06d6a0','#ffb347','#ff6b6b'];
+  const particles = Array.from({length:180},()=>({
+    x: Math.random()*confettiCanvas.width, y:-10-Math.random()*300,
+    r:3+Math.random()*7, vx:Math.random()*2-1, vy:1.5+Math.random()*2.5,
+    color:colors[Math.floor(Math.random()*colors.length)],
+    tilt:0, ts:0.04+Math.random()*0.06,
+    shape:Math.random()>.4?'rect':'circle', rot:Math.random()*360
+  }));
+  const end = Date.now()+duration;
+  if (confettiFrame) cancelAnimationFrame(confettiFrame);
+  function draw() {
+    confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    const now = Date.now(), remaining = end-now;
+    const alpha = remaining<600 ? remaining/600 : 1;
+    particles.forEach(p=>{
+      confettiCtx.save();
+      confettiCtx.globalAlpha = alpha*0.9;
+      confettiCtx.fillStyle = p.color;
+      confettiCtx.translate(p.x,p.y);
+      confettiCtx.rotate(p.rot*Math.PI/180);
+      if(p.shape==='rect') confettiCtx.fillRect(-p.r/2,-p.r*.3,p.r,p.r*.6);
+      else { confettiCtx.beginPath(); confettiCtx.arc(0,0,p.r/2,0,Math.PI*2); confettiCtx.fill(); }
+      confettiCtx.restore();
+      p.x+=p.vx+Math.sin(p.tilt)*.8; p.y+=p.vy;
+      p.rot+=2; p.tilt+=p.ts;
+      if(p.y>confettiCanvas.height+20){p.y=-10;p.x=Math.random()*confettiCanvas.width;}
+    });
+    if(now<end) confettiFrame=requestAnimationFrame(draw);
+    else confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  }
+  draw();
+}
+
+function showCelebration(emoji,title,sub,pct=80){
+  document.getElementById('celeb-emoji').textContent=emoji;
+  document.getElementById('celeb-title').textContent=title;
+  document.getElementById('celeb-sub').textContent=sub;
+  document.getElementById('celeb-banner').classList.add('show');
+  launchConfetti(pct>=95?5500:pct>=80?3500:2500);
+}
+function closeCeleb(){
+  document.getElementById('celeb-banner').classList.remove('show');
+  if(confettiFrame) cancelAnimationFrame(confettiFrame);
+  confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+}
+
+// ============================================================
+//  SENTENCE PATTERNS PRACTICE
+// ============================================================
+const SP_QUESTIONS = [
+  {cat:'particles',sentence:['わたし','___','がくせいです。'],blank:1,opts:['は','が','を','に'],ans:0,hint:'Topic marker particle',eng:'I am a student.'},
+  {cat:'particles',sentence:['にほんご','___','べんきょうします。'],blank:1,opts:['を','は','が','で'],ans:0,hint:'Object marker particle',eng:'I study Japanese.'},
+  {cat:'particles',sentence:['うち','___','かえります。'],blank:1,opts:['に','を','は','が'],ans:0,hint:'Direction/destination particle',eng:'I go home.'},
+
+function toggleDark() {
+  const isDark=document.body.classList.toggle('dark');
+  document.getElementById('dark-toggle').innerHTML=isDark?'☀️ Light':'🌙 Dark';
+  try{localStorage.setItem('sakura_dark',isDark?'1':'0');}catch(e){}
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('open');}
+try{if(localStorage.getItem('sakura_dark')==='1'){document.body.classList.add('dark');document.getElementById('dark-toggle').innerHTML='☀️ Light';}}catch(e){}
+let ambCtx=null,ambNodes=[],ambCurrent='off',ambVol=0.35;
+function stopAmbient(){ambNodes.forEach(n=>{try{n.stop();}catch(e){}});ambNodes=[];}
+function getAudioCtx(){if(!ambCtx)ambCtx=new(window.AudioContext||window.webkitAudioContext)();return ambCtx;}
+function setAmbient(type,btn){stopAmbient();ambCurrent=type;document.querySelectorAll('.amb-option').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const ab=document.getElementById('ambient-btn');const icons={off:'🎵 Sounds',rain:'🌧️ Rain',cafe:'☕ Café',temple:'⛩️ Temple',forest:'🌿 Forest',lofi:'🎹 Lo-fi'};ab.textContent=icons[type]||'🎵 Sounds';document.getElementById('ambient-panel').classList.remove('open');}
+function setAmbientVol(v){ambVol=parseFloat(v);}
+function toggleAmbientPanel(){document.getElementById('ambient-panel').classList.toggle('open');}
+document.addEventListener('click',e=>{const w=document.getElementById('ambient-wrap');if(w&&!w.contains(e.target))document.getElementById('ambient-panel').classList.remove('open');});
+window.addEventListener('load',()=>{
+  renderHomeRings();
+  renderHomeTimeline();
+  getStreak();
+  const pc=document.getElementById('petals');
+  for(let i=0;i<15;i++){const p=document.createElement('div');p.className='petal';p.textContent=['🌸','🌺','✿','❀','🌷'][Math.floor(Math.random()*5)];p.style.left=Math.random()*100+'vw';p.style.animationDuration=(7+Math.random()*9)+'s';p.style.animationDelay=(Math.random()*12)+'s';p.style.fontSize=(.8+Math.random()*1.1)+'rem';pc.appendChild(p);}
+});
+</script>
+<script>
+// ══════════════════════════════════════════════
+//  CUSTOM ENTRIES — Modal UI (persistence fns are in the main script above)
+// ══════════════════════════════════════════════
+
+// ── Modal open / close ──
+function openCustomModal(type) {
+  const overlay = document.getElementById('custom-modal-overlay');
+  const inner   = document.getElementById('custom-modal-inner');
+  inner.innerHTML = buildModalForm(type);
+  overlay.style.display = 'flex';
+}
+function closeCustomModal() {
+  document.getElementById('custom-modal-overlay').style.display = 'none';
+}
+document.getElementById('custom-modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCustomModal();
+});
+
+// ── Form builders ──
+function buildModalForm(type) {
+  const wrap = (icon, title, sub, formBody) => `
+    <div class="cm-header">
+      <div class="cm-header-icon">${icon}</div>
+      <div class="cm-header-text"><h3>${title}</h3><p>${sub}</p></div>
+      <button class="cm-close" onclick="closeCustomModal()" title="Close">✕</button>
+    </div>
+    <div class="cm-body">
+      <div class="custom-form" id="custom-form">${formBody}</div>
+    </div>`;
+
+  const field = (label, id, inputHtml, hint='', req=false) => `
+    <div class="field-group">
+      <label for="${id}">${label}${req?'<span class="req">*</span>':''}</label>
+      ${inputHtml}
+      ${hint?`<div class="form-hint">${hint}</div>`:''}
+    </div>`;
+
+  const text  = (id, ph, extra='') => `<input id="${id}" placeholder="${ph}" autocomplete="off" ${extra}>`;
+  const num   = (id, val, min=1, max=99) => `<input id="${id}" type="number" value="${val}" min="${min}" max="${max}">`;
+  const area  = (id, ph, rows=3) => `<textarea id="${id}" placeholder="${ph}" rows="${rows}"></textarea>`;
+  const sel   = (id, opts) => `<select id="${id}">${opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+
+  const vocabCats = [['custom','⭐ Custom'],['greetings','Greetings'],['numbers','Numbers'],['time','Time'],['food','Food'],['family','Family'],['place','Places'],['adjective','Adjectives'],['verb','Verbs'],['body','Body'],['clothes','Clothes'],['house','House'],['transport','Transport'],['nature','Nature'],['school','School'],['hobbies','Hobbies'],['nouns','Nouns']];
+  const kanjiCats = [['other','Other'],['numbers','Numbers'],['nature','Nature'],['people','People'],['time','Time'],['body','Body'],['direction','Direction']];
+  const ctrCats   = [['general','General'],['time','Time'],['people','People'],['nature','Nature'],['objects','Objects'],['places','Places']];
+
+  const forms = {
+    vocab: wrap('📝','Add Custom Word','Saved instantly — appears in your Vocabulary section.',
+      field('Japanese','cf-jp', text('cf-jp','e.g. 猫  or  ねこ'), '', true) +
+      field('Reading (Hiragana / Romaji)','cf-read', text('cf-read','e.g. neko')) +
+      field('English Meaning','cf-en', text('cf-en','e.g. Cat'), '', true) +
+      field('Category','cf-cat', sel('cf-cat', vocabCats)) +
+      `<button class="btn-submit" onclick="submitCustom('vocab')">🌸 Save Vocabulary</button>`
+    ),
+
+    kanji: wrap('漢字','Add Custom Kanji','Saved instantly — appears in your Kanji section.',
+      field('Kanji Character','cf-char', `<input id="cf-char" placeholder="e.g. 猫" maxlength="4" style="font-size:1.8rem;text-align:center;letter-spacing:.1em;" autocomplete="off">`, '', true) +
+      field('On Reading 音読み','cf-on', text('cf-on','e.g. BYO')) +
+      field('Kun Reading 訓読み','cf-kun', text('cf-kun','e.g. ねこ')) +
+      field('Meaning','cf-meaning', text('cf-meaning','e.g. Cat'), '', true) +
+      field('Stroke Count','cf-strokes', num('cf-strokes',5,1,30)) +
+      field('Category','cf-cat', sel('cf-cat', kanjiCats)) +
+      field('Example Words','cf-words',
+        area('cf-words','猫の手|ねこのて|a helping hand\n子猫|こねこ|kitten', 3),
+        'One per line — format: japanese|reading|english') +
+      `<button class="btn-submit" onclick="submitCustom('kanji')">🌸 Save Kanji</button>`
+    ),
+
+    grammar: wrap('📖','Add Custom Grammar Pattern','Saved instantly — appears in your Grammar section.',
+      field('Pattern','cf-pattern', text('cf-pattern','e.g. 〜てもいいです'), '', true) +
+      field('Meaning','cf-meaning', text('cf-meaning','e.g. May / It\'s okay to ~'), '', true) +
+      field('Structure','cf-structure', text('cf-structure','e.g. Verb て-form + もいいです')) +
+      field('Explanation','cf-explanation', area('cf-explanation','Describe how this pattern is used...')) +
+      `<div class="form-section-label">📝 Example Sentence (optional)</div>` +
+      field('Japanese','cf-ex-jp', text('cf-ex-jp','e.g. ここに すわっても いいですか。')) +
+      field('Romaji','cf-ex-rom', text('cf-ex-rom','e.g. Koko ni suwatte mo ii desu ka.')) +
+      field('English','cf-ex-en', text('cf-ex-en','e.g. May I sit here?')) +
+      `<button class="btn-submit" onclick="submitCustom('grammar')">🌸 Save Grammar Pattern</button>`
+    ),
+
+    adj: wrap('🔄','Add Custom Adjective Pair','Add an opposite adjective pair — e.g. big ↔ small.',
+      `<div class="form-section-label">✦ Adjective A — Positive side</div>` +
+      field('Japanese','cf-a-jp', text('cf-a-jp','e.g. おおきい'), '', true) +
+      field('Romaji','cf-a-rom', text('cf-a-rom','e.g. Ookii')) +
+      field('English','cf-a-en', text('cf-a-en','e.g. Big'), '', true) +
+      `<div class="form-section-label">✦ Adjective B — Opposite side</div>` +
+      field('Japanese','cf-b-jp', text('cf-b-jp','e.g. ちいさい'), '', true) +
+      field('Romaji','cf-b-rom', text('cf-b-rom','e.g. Chiisai')) +
+      field('English','cf-b-en', text('cf-b-en','e.g. Small'), '', true) +
+      field('Adjective Type','cf-type', sel('cf-type', [['i','い-adjective'],['na','な-adjective']])) +
+      `<button class="btn-submit" onclick="submitCustom('adj')">🌸 Save Adjective Pair</button>`
+    ),
+
+    counters: wrap('🔢','Add Custom Counter','Add a counting suffix (助数詞) with its number forms.',
+      field('Title','cf-title', text('cf-title','e.g. Cups / Glasses'), '', true) +
+      field('Suffix (Japanese)','cf-suffix', text('cf-suffix','e.g. ～はい (杯)'), '', true) +
+      field('Emoji Icon','cf-emoji', `<input id="cf-emoji" placeholder="e.g. ☕" maxlength="4" style="font-size:1.4rem;text-align:center;width:80px;">`) +
+      field('Description','cf-desc', area('cf-desc','e.g. Used for counting cups, glasses, and bowls of liquid.')) +
+      field('Category','cf-cat', sel('cf-cat', ctrCats)) +
+      field('Number Forms','cf-rows',
+        area('cf-rows','1|いっぱい|ippai|one cup\n2|にはい|nihai|two cups\n3|さんばい|sanbai*|three cups', 5),
+        'One per line: number|japanese|romaji|english — add * after romaji to mark irregular (e.g. sanbai*)') +
+      field('Example Sentence','cf-example',
+        text('cf-example','e.g. コーヒーを いっぱい のみます。|Koohii wo ippai nomimasu.|I drink one cup of coffee.'),
+        'Format: japanese|romaji|english') +
+      `<button class="btn-submit" onclick="submitCustom('counters')">🌸 Save Counter</button>`
+    ),
+  };
+  return forms[type] || '';
+}
+
+// ── Submit handlers ──
+function submitCustom(type) {
+  const data = loadCustom(type);
+  let entry;
+
+  if (type === 'vocab') {
+    const jp = document.getElementById('cf-jp').value.trim();
+    const en = document.getElementById('cf-en').value.trim();
+    if (!jp || !en) { alert('Japanese and English are required.'); return; }
+    entry = { jp, read: document.getElementById('cf-read').value.trim(), en, cat: document.getElementById('cf-cat').value, _custom: true };
+  }
+  else if (type === 'kanji') {
+    const char = document.getElementById('cf-char').value.trim();
+    const meaning = document.getElementById('cf-meaning').value.trim();
+    if (!char || !meaning) { alert('Character and meaning are required.'); return; }
+    const wordsRaw = document.getElementById('cf-words').value.trim();
+    const words = wordsRaw ? wordsRaw.split('\n').filter(l=>l.trim()).map(l=>{ const p=l.split('|'); return {jp:p[0]||'',read:p[1]||'',en:p[2]||''}; }) : [];
+    entry = { char, on: document.getElementById('cf-on').value.trim(), kun: document.getElementById('cf-kun').value.trim(), meaning, strokes: parseInt(document.getElementById('cf-strokes').value)||5, cat: document.getElementById('cf-cat').value, words, _custom: true };
+  }
+  else if (type === 'grammar') {
+    const pattern = document.getElementById('cf-pattern').value.trim();
+    const meaning = document.getElementById('cf-meaning').value.trim();
+    if (!pattern || !meaning) { alert('Pattern and meaning are required.'); return; }
+    const exJp = document.getElementById('cf-ex-jp').value.trim();
+    const examples = exJp ? [{ jp: exJp, rom: document.getElementById('cf-ex-rom').value.trim(), en: document.getElementById('cf-ex-en').value.trim() }] : [];
+    entry = { pattern, meaning, structure: document.getElementById('cf-structure').value.trim(), explanation: document.getElementById('cf-explanation').value.trim(), examples, _custom: true };
+  }
+  else if (type === 'adj') {
+    const ajp = document.getElementById('cf-a-jp').value.trim();
+    const aen = document.getElementById('cf-a-en').value.trim();
+    const bjp = document.getElementById('cf-b-jp').value.trim();
+    const ben = document.getElementById('cf-b-en').value.trim();
+    if (!ajp || !aen || !bjp || !ben) { alert('Both adjectives (JP + EN) are required.'); return; }
+    entry = { a: { jp: ajp, rom: document.getElementById('cf-a-rom').value.trim(), en: aen }, b: { jp: bjp, rom: document.getElementById('cf-b-rom').value.trim(), en: ben }, type: document.getElementById('cf-type').value, _custom: true };
+  }
+  else if (type === 'counters') {
+    const title = document.getElementById('cf-title').value.trim();
+    const suffix = document.getElementById('cf-suffix').value.trim();
+    if (!title || !suffix) { alert('Title and suffix are required.'); return; }
+    const rowsRaw = document.getElementById('cf-rows').value.trim();
+    const rows = rowsRaw ? rowsRaw.split('\n').filter(l=>l.trim()).map(l=>{ const p=l.split('|'); const rom=p[2]||''; return {n:p[0]||'', jp:p[1]||'', rom:rom.replace('*',''), en:p[3]||'', irreg:rom.endsWith('*')}; }) : [];
+    const exRaw = document.getElementById('cf-example').value.trim();
+    const examples = exRaw ? (() => { const p=exRaw.split('|'); return [{jp:p[0]||'',rom:p[1]||'',en:p[2]||''}]; })() : [];
+    const id = 'custom_' + Date.now();
+    entry = { id, title, suffix, emoji: document.getElementById('cf-emoji').value.trim()||'📌', desc: document.getElementById('cf-desc').value.trim(), cat: document.getElementById('cf-cat').value, pics: [], rows, examples, note: '', _custom: true };
+  }
+
+  data.push(entry);
+  saveCustom(type, data);
+  closeCustomModal();
+  showToast('✨ Custom entry saved!');
+
+  // Re-render
+  if (type === 'vocab')    renderVocab(currentVocabFilter, document.getElementById('vocab-search')?.value||'');
+  if (type === 'kanji')    renderKanji(currentKanjiFilter||'all');
+  if (type === 'grammar')  renderGrammar(document.getElementById('grammar-search')?.value||'');
+  if (type === 'adj')      renderAdjPairs(currentAdjFilter||'all');
+  if (type === 'counters') renderCounters(currentCounterFilter||'all');
+}
+
+// ── Track current filters for re-render ──
+</script>
+</body>
+</html>
