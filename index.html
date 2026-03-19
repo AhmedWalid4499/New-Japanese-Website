@@ -7916,12 +7916,11 @@ function renderProfilePage() {
   // Save username to Firestore for chat lookup (migrate if missing)
   if (window._sakuraUser && window._sakuraFirebase) {
     var f = window._sakuraFirebase;
-    // Always save username as lowercase for chat lookup
-    if (!ud.username || ud.username !== ud.username.toLowerCase()) {
-      f.updateDoc(f.doc(window._sakuraDB, 'users', user.uid), {
-        username: username.toLowerCase(),
-        photoURL: user.photoURL || ud.photoURL || ''
-      }).catch(function(e) { console.warn('Username save:', e); });
+    // Always save username as lowercase for chat lookup, even if it already exists
+    f.updateDoc(f.doc(window._sakuraDB, 'users', user.uid), {
+      username: username.toLowerCase(),
+      photoURL: user.photoURL || ud.photoURL || ''
+    }).catch(function(e) { console.warn('Username save:', e); });
     }
   }
 }
