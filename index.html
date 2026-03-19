@@ -7667,7 +7667,7 @@ async function handleSignup(){
       email=document.getElementById('signup-email').value.trim(),
       password=document.getElementById('signup-password').value,
       confirm=document.getElementById('signup-confirm').value,
-      username=document.getElementById('signup-username') ? document.getElementById('signup-username').value.trim() : '';
+      username=document.getElementById('signup-username') ? document.getElementById('signup-username').value.trim().toLowerCase() : '';
   if(!name){
     showAuthError('Please enter your name.');
     return;
@@ -7702,7 +7702,7 @@ async function handleSignup(){
         srs: {},
         bookmarks: {},
         customEntries: { vocab: [], kanji: [], grammar: [], adj: [], counters: [] },
-        username: username
+        username: username.toLowerCase()
       }, { merge: true });
     } catch(e) {
       showAuthError('Failed to save username. Please try again.');
@@ -7751,7 +7751,7 @@ async function handleSignup(){
       srs: {},
       bookmarks: {},
       customEntries: { vocab: [], kanji: [], grammar: [], adj: [], counters: [] },
-      username: username
+      username: username.toLowerCase()
     }, { merge: true });
     closeAuthModal();
   }catch(e){showAuthError(friendlyAuthError(e.code));}
