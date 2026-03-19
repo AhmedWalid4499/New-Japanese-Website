@@ -7849,7 +7849,7 @@ function renderProfilePage() {
   var ud = window._sakuraUserData || {};
   var name = user.displayName || user.email.split('@')[0];
   // Prefer Firestore username, else fallback
-  var username = ud.username || (name.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + user.uid.slice(0, 5));
+  var username = (ud.username ? ud.username.toLowerCase() : (name.toLowerCase().replace(/[^a-z0-9]/g, '') + '_' + user.uid.slice(0, 5)));
 
   // Hero
   var heroName = document.getElementById('profile-hero-name');
@@ -7916,9 +7916,10 @@ function renderProfilePage() {
   // Save username to Firestore for chat lookup (migrate if missing)
   if (window._sakuraUser && window._sakuraFirebase) {
     var f = window._sakuraFirebase;
-    if (!ud.username) {
+    // Always save username as lowercase for chat lookup
+    if (!ud.username || ud.username !== ud.username.toLowerCase()) {
       f.updateDoc(f.doc(window._sakuraDB, 'users', user.uid), {
-        username: username,
+        username: username.toLowerCase(),
         photoURL: user.photoURL || ud.photoURL || ''
       }).catch(function(e) { console.warn('Username save:', e); });
     }
