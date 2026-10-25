@@ -61,7 +61,7 @@ ${current ? `\nTheir CURRENT plan (update it according to the conversation, keep
 Learner progress: ${S.ai.learnerContext()}
 Interview:
 ${transcript}`;
-    const out = await S.ai.chat([{ role: 'system', content: 'You are an expert Japanese-language study planner. Reply only with the JSON plan.' }, { role: 'user', content: prompt }], { schema: schema(), temperature: 0.4 });
+    const out = await S.ai.chat([{ role: 'user', content: prompt }], { system: 'You are an expert Japanese-language study planner. Reply only with the JSON plan.', schema: schema().schema, effort: 'medium' });
     const plan = JSON.parse(out);
     return { ...plan, done: current?.done || {}, created: current?.created || Date.now() };
   }
@@ -118,7 +118,7 @@ ${transcript}`;
 
   function interview(root, current) {
     root.innerHTML = `
-      ${S.ui.pageHead({ kicker: 'Study plan', title: current ? 'Adjust your plan' : 'Let’s build your plan', desc: 'Answer a few questions and ChatGPT will design a week-by-week plan that fits your goals and schedule. Every task links to the right page here.', actions: current ? `<button class="btn ghost" data-back>${S.icon('left')} Back to plan</button>` : '<a class="btn ghost" href="#/plan">Use the standard 8-week roadmap</a>' })}
+      ${S.ui.pageHead({ kicker: 'Study plan', title: current ? 'Adjust your plan' : 'Let’s build your plan', desc: 'Answer a few questions and Claude will design a week-by-week plan that fits your goals and schedule. Every task links to the right page here.', actions: current ? `<button class="btn ghost" data-back>${S.icon('left')} Back to plan</button>` : '<a class="btn ghost" href="#/plan">Use the standard 8-week roadmap</a>' })}
       <div class="card flush" data-chat></div>
       <div class="plan-bar card">
         <span class="muted small" data-hint>Answer a couple of questions first.</span><span class="spacer"></span>

@@ -1,4 +1,4 @@
-// AI tutor — chat with a ChatGPT-powered Japanese teacher that knows your progress.
+// AI tutor — chat with a Claude-powered Japanese teacher that knows your progress.
 (function (S) {
   const SYSTEM = () => `You are Sensei, a warm, encouraging Japanese tutor inside the "Sakura Study" JLPT N5 website.
 - The learner is a beginner (JLPT N5 level). Use N5 vocabulary and grammar; avoid kanji above N5 or add the reading in hiragana in brackets, e.g. 勉強(べんきょう).
@@ -16,7 +16,7 @@ Learner progress: ${S.ai.learnerContext()}`;
   S.view('tutor', {
     render(root) {
       root.innerHTML = `
-        ${S.ui.pageHead({ kicker: 'Practice', title: 'AI tutor', jp: 'せんせい', desc: 'A ChatGPT-powered teacher who knows your progress. Tap the speaker on any reply to hear the Japanese.', actions: S.ai.hasChat() ? `<button class="btn ghost" data-new>${S.icon('refresh')} New chat</button>` : '' })}
+        ${S.ui.pageHead({ kicker: 'Practice', title: 'AI tutor', jp: 'せんせい', desc: 'A Claude-powered teacher who knows your progress. Tap the speaker on any reply to hear the Japanese.', actions: S.ai.hasChat() ? `<button class="btn ghost" data-new>${S.icon('refresh')} New chat</button>` : '' })}
         <div data-body></div>`;
       const body = S.$('[data-body]', root);
       if (!S.ai.hasChat()) { body.innerHTML = S.aiKeyNeeded('The AI tutor'); return; }

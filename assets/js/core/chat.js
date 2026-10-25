@@ -50,7 +50,10 @@
       busy = true; save(); paint();
       input.value = ''; input.style.height = '';
       try {
-        const reply = await S.ai.chat([{ role: 'system', content: opts.system() }, ...messages.slice(-HISTORY)]);
+        // Claude needs the conversation to open with a user turn; the greeting lives in the system prompt
+        const hist = messages.slice(-HISTORY);
+        while (hist.length && hist[0].role !== 'user') hist.shift();
+        const reply = await S.ai.chat(hist, { system: `${opts.system()}\n\nYou opened the conversation with: "${messages[0].content}"` });
         messages.push({ role: 'assistant', content: reply });
         S.store.activity.log(1);
       } catch (e) {
@@ -79,9 +82,9 @@
   // Shown wherever an AI feature needs a key that hasn't been added yet
   S.aiKeyNeeded = (what) => `<section class="card center hero-card">
     <div class="glyph huge" lang="ja">鍵</div>
-    <h2>Add your ChatGPT API key</h2>
-    <p class="muted">${esc(what)} uses your own OpenAI account. Paste an API key in settings — it stays in this browser only.</p>
+    <h2>Add your Claude API key</h2>
+    <p class="muted">${esc(what)} runs on Claude with your own Anthropic account. Paste an API key in settings — it stays in this browser only.</p>
     <div class="row gap center"><a class="btn primary" href="#/account?ai=1">${S.icon('pencil')} Add API key</a>
-      <a class="btn" href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">Get a key ${S.icon('external')}</a></div>
+      <a class="btn" href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener">Get a key ${S.icon('external')}</a></div>
   </section>`;
 })(window.S);
