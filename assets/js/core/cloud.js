@@ -35,12 +35,12 @@
     scores: s.scores || [], srs: s.srs || {}, bookmarks: s.bm || {},
     streak: s.streak?.streak || 0, streakBest: s.streak?.best || 0, lastStudyDate: s.streak?.lastDate || '',
     customEntries: s.custom || {}, cards: s.cards || {}, activity: s.activity || {},
-    plan: s.plan || {}, settings: s.settings || {},
+    plan: s.plan || {}, settings: s.settings || {}, aiPlan: s.aiplan || null,
   });
   const fromRemote = (d) => ({
     scores: d.scores, srs: d.srs, bm: d.bookmarks,
     streak: { streak: d.streak || 0, best: d.streakBest || 0, lastDate: d.lastStudyDate || '' },
-    custom: d.customEntries, cards: d.cards, activity: d.activity, plan: d.plan, settings: d.settings,
+    custom: d.customEntries, cards: d.cards, activity: d.activity, plan: d.plan, settings: d.settings, aiplan: d.aiPlan || null,
   });
 
   async function load() {

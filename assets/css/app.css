@@ -814,6 +814,39 @@ tr.irregular td { background: color-mix(in srgb, var(--warn-soft) 60%, transpare
 .profile > * + * { margin-top: 16px; }
 .profile h2 { font-size: 20px; }
 
+/* AI chat (tutor + plan coach) */
+.chat { display: flex; flex-direction: column; height: min(68vh, 640px); min-height: 380px; }
+.chat-log { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.msg-row { display: flex; gap: 10px; align-items: flex-end; max-width: 86%; }
+.msg-row.user { align-self: flex-end; }
+.msg-avatar { width: 32px; height: 32px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary-ink); font: 600 15px/1 var(--font-jp); }
+.bubble { padding: 10px 14px; border-radius: 16px; background: var(--surface-2); line-height: 1.6; overflow-wrap: anywhere; }
+.msg-row.assistant .bubble { border-bottom-left-radius: 4px; }
+.msg-row.user .bubble { background: var(--primary); color: var(--on-primary); border-bottom-right-radius: 4px; }
+.bubble p { margin: 0 0 .5em; }
+.bubble p:last-child, .bubble ul:last-child { margin-bottom: 0; }
+.bubble ul { margin: .25em 0 .5em; padding-left: 1.2em; }
+.bubble code { font: 13px ui-monospace, monospace; background: var(--surface-3); padding: 1px 5px; border-radius: 5px; }
+.bubble-tools { display: flex; justify-content: flex-end; margin: 2px -6px -6px 0; }
+.bubble.typing { display: flex; gap: 4px; padding: 14px 16px; }
+.bubble.typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); animation: blink 1.2s infinite; }
+.bubble.typing span:nth-child(2) { animation-delay: .2s; }
+.bubble.typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+.chat-suggest { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 20px 12px; }
+.chat-suggest:empty { display: none; }
+.chat-suggest .chip { height: auto; min-height: 32px; padding: 6px 12px; text-align: left; }
+.chat-form { display: flex; gap: 8px; align-items: flex-end; padding: 12px; border-top: 1px solid var(--border); background: var(--surface); }
+.chat-form textarea { flex: 1; resize: none; min-height: 42px; max-height: 160px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-strong); background: var(--surface); outline: none; line-height: 1.45; }
+.chat-form textarea:focus { border-color: var(--primary); box-shadow: var(--ring); }
+.chat-form .btn { min-height: 42px; }
+.plan-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 16px; }
+.routine { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--text-2); }
+.task-row { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.task-row .btn { flex: none; }
+.key-input { display: flex; align-items: center; gap: 4px; }
+.key-input input { flex: 1; font-family: ui-monospace, monospace; }
+
 /* 6. Responsive ------------------------------------------------------------ */
 @media (max-width: 1180px) {
   .mastery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -890,6 +923,9 @@ tr.irregular td { background: color-mix(in srgb, var(--warn-soft) 60%, transpare
   .tip-card { flex-direction: column; text-align: center; }
   .owl { width: 70px; }
   .modal-overlay { padding: 0; align-items: end; }
+  .chat { height: calc(100vh - 260px); }
+  .msg-row { max-width: 94%; }
+  .task-row { flex-wrap: wrap; }
   .modal { max-height: 92vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   #toasts { bottom: calc(80px + env(safe-area-inset-bottom)); }
 

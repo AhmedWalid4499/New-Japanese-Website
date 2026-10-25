@@ -11,7 +11,7 @@
         const current = STUDY_PLAN.findIndex((w, wi) => w.tasks.some((_, ti) => !done[`${wi}-${ti}`]));
 
         root.innerHTML = `
-          ${S.ui.pageHead({ kicker: 'Track', title: 'Study plan', jp: 'けいかく', desc: 'About an hour a day for eight weeks. Tick tasks off as you go — consistency beats intensity.' })}
+          ${S.ui.pageHead({ kicker: 'Track', title: 'N5 roadmap', jp: 'けいかく', desc: 'The standard plan: about an hour a day for eight weeks. Tick tasks off as you go — or let the AI coach build a <a href="#/myplan">personal study plan</a> around your schedule.' })}
           <section class="card plan-summary">
             ${S.ui.ring(S.pct(doneCount, total), { size: 84, stroke: 8 })}
             <div><h2>${doneCount} of ${total} tasks done</h2><p class="muted">${current >= 0 ? `You’re on <b>${esc(STUDY_PLAN[current].week)}</b>: ${esc(STUDY_PLAN[current].title)}.` : 'Every task complete — you’re ready for the exam! 頑張って！'}</p></div>
