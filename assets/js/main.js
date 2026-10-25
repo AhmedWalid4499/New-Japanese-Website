@@ -16,7 +16,7 @@
       { id: 'phrases', label: 'Survival phrases', glyph: '話', desc: 'Real-life phrases with audio' },
     ] },
     { group: 'Practice', items: [
-      { id: 'tutor', label: 'AI tutor', glyph: '先', desc: 'Chat with a ChatGPT-powered teacher' },
+      { id: 'tutor', label: 'AI tutor', glyph: '先', desc: 'Chat with a Claude-powered teacher' },
       { id: 'review', label: 'Flashcards', glyph: '覚', desc: 'Spaced-repetition review' },
       { id: 'quiz', label: 'Quizzes', glyph: '問', desc: 'Kana, kanji, vocab & numbers' },
       { id: 'drills', label: 'Sentence drills', glyph: '練', desc: 'Fill-in-the-blank grammar' },
