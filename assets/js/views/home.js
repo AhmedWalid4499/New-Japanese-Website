@@ -26,8 +26,10 @@
   function nextSteps(due) {
     const steps = [];
     if (due) steps.push({ glyph: '覚', title: `Review ${due} due card${due > 1 ? 's' : ''}`, sub: 'Spaced repetition keeps them in long-term memory', route: 'review' });
+    const ai = S.aiPlanNext();
+    if (ai) steps.push({ glyph: '計', title: ai.task.text, sub: `Your plan · ${ai.week.label}: ${ai.week.focus}`, route: ai.task.section !== 'none' ? ai.task.section : 'myplan' });
     const plan = S.store.plan.all();
-    for (let w = 0; w < STUDY_PLAN.length && steps.length < 2; w++) {
+    for (let w = 0; !ai && w < STUDY_PLAN.length && steps.length < 2; w++) {
       const t = STUDY_PLAN[w].tasks.findIndex((_, i) => !plan[`${w}-${i}`]);
       if (t >= 0) { steps.push({ glyph: '計', title: STUDY_PLAN[w].tasks[t], sub: `${STUDY_PLAN[w].week} · ${STUDY_PLAN[w].title}`, route: 'plan' }); break; }
     }
@@ -56,7 +58,7 @@
             <h1>${st.studiedToday ? 'Nice work today. Keep the momentum going.' : st.current ? `You’re on a ${st.current}-day streak — study today to keep it.` : 'Ready to study? Small steps every day add up.'}</h1>
             <div class="row gap wrap">
               <button class="btn primary lg" data-go="${due ? 'review' : 'quiz'}">${S.icon(due ? 'cards' : 'play')} ${due ? `Review ${due} cards` : 'Start a quick quiz'}</button>
-              <button class="btn lg" data-go="plan">${S.icon('target')} Study plan</button>
+              <button class="btn lg" data-go="myplan">${S.icon('target')} ${S.aiPlanNext() ? 'My study plan' : 'Build my study plan'}</button>
             </div>
           </div>
           <div class="hero-stats">

@@ -16,6 +16,7 @@
       { id: 'phrases', label: 'Survival phrases', glyph: '話', desc: 'Real-life phrases with audio' },
     ] },
     { group: 'Practice', items: [
+      { id: 'tutor', label: 'AI tutor', glyph: '先', desc: 'Chat with a ChatGPT-powered teacher' },
       { id: 'review', label: 'Flashcards', glyph: '覚', desc: 'Spaced-repetition review' },
       { id: 'quiz', label: 'Quizzes', glyph: '問', desc: 'Kana, kanji, vocab & numbers' },
       { id: 'drills', label: 'Sentence drills', glyph: '練', desc: 'Fill-in-the-blank grammar' },
@@ -27,7 +28,8 @@
     { group: 'Track', items: [
       { id: 'progress', label: 'Progress', glyph: '進', desc: 'Streaks, mastery and history' },
       { id: 'bookmarks', label: 'Bookmarks', glyph: '印', desc: 'Everything you starred' },
-      { id: 'plan', label: 'Study plan', glyph: '計', desc: '8-week roadmap to N5' },
+      { id: 'myplan', label: 'Study plan', glyph: '計', desc: 'Your personal plan, built with the AI coach' },
+      { id: 'plan', label: 'N5 roadmap', glyph: '道', desc: 'The standard 8-week roadmap to N5' },
     ] },
     { group: 'Explore', items: [
       { id: 'dictionary', label: 'Dictionary', glyph: '辞', desc: 'Look up any word or kanji' },

@@ -36,7 +36,8 @@ assets/js/
 | Phrases / listening   | `assets/js/data/phrases.js`   | `SURVIVAL_PHRASES`, `LISTEN_CATEGORIES` |
 | Exam, drills, writing | `assets/js/data/practice.js`  | `EXAM_QUESTIONS`, `SP_QUESTIONS`, `WRITING_ITEMS` |
 | Reading passages      | `assets/js/data/reading.js`   | `READING_TESTS`, `COMP_PASSAGES` |
-| Study plan, links, tips | `assets/js/data/plan.js`    | `STUDY_PLAN`, `RESOURCES`, `MASCOT_TIPS` |
+| N5 roadmap, links, tips | `assets/js/data/plan.js`  | `STUDY_PLAN`, `RESOURCES`, `MASCOT_TIPS` |
+| AI tutor / plan coach prompts | `assets/js/views/tutor.js`, `myplan.js` | `SYSTEM`, `COACH` |
 | Colours & fonts       | `assets/css/app.css`          | `:root` tokens at the top |
 | Menu items            | `assets/js/main.js`           | `S.NAV`               |
 
@@ -51,3 +52,13 @@ No build step. Open `index.html` directly, or serve the folder (`python3 -m http
 Progress lives in the browser (`localStorage`) and keeps the same keys as the previous version, so existing streaks,
 scores, bookmarks and custom entries carry over. Signing in (Firebase email or Google) merges it into your cloud
 profile and keeps devices in sync. You can also download / restore a backup file from **Account & settings**.
+
+## AI features (optional, ChatGPT)
+
+Open **Account & settings → AI & voice** and paste your OpenAI API key to unlock:
+
+- **AI tutor** — chat with "Sensei", who knows your progress, explains grammar, quizzes you and corrects sentences.
+- **Study plan** — the AI coach interviews you (level, goals, deadline, time per day) and builds a week-by-week plan whose tasks link to the right pages. Plans sync with your account; the classic 8-week plan is still under **N5 roadmap**.
+- **ChatGPT voice** — switch "Voice engine" to ChatGPT for natural Japanese pronunciation on every speaker button (optionally with a separate key).
+
+Keys are stored only in your browser (never synced or included in backups) and usage is billed to your OpenAI account.

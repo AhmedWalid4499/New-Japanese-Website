@@ -43,10 +43,48 @@
   const select = (name, label, opts, value) => `<label class="field inline"><span class="field-label">${esc(label)}</span>
     <select data-setting="${name}">${opts.map(([v, l]) => `<option value="${v}" ${String(v) === String(value) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`;
 
+  function aiPanel() {
+    const c = S.ai.config();
+    const opt = (list, v) => list.map(([k, l]) => `<option value="${esc(k)}" ${k === v ? 'selected' : ''}>${esc(l)}</option>`).join('');
+    const keyField = (name, label, value, hint) => `<label class="field"><span class="field-label">${label}</span>
+      <span class="key-input"><input name="${name}" type="password" value="${esc(value)}" placeholder="sk-…" autocomplete="off" spellcheck="false"><button type="button" class="btn-icon" data-reveal-key title="Show / hide">${S.icon('eye')}</button></span>
+      <span class="field-hint">${hint}</span></label>`;
+    return `<section class="card" id="ai-settings">
+      <h2 class="card-title"><span class="glyph sm" lang="ja">鍵</span> AI & voice — ChatGPT</h2>
+      <p class="muted">Paste your own <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">OpenAI API key</a> to unlock the <a href="#/tutor">AI tutor</a>, your personal <a href="#/myplan">study plan</a> and natural ChatGPT voices. Keys are stored <b>only in this browser</b> — never synced, backed up or sent anywhere except OpenAI. Usage is billed to your OpenAI account.</p>
+      <form class="form" data-ai-form>
+        <div class="grid-2">
+          <div>
+            <h3 class="mini-title">AI chatbot</h3>
+            ${keyField('chatKey', 'Chat API key', c.chatKey, c.chatKey ? 'Saved on this device.' : 'Used by the AI tutor and the study-plan coach.')}
+            <label class="field"><span class="field-label">Model</span><select name="chatModel">${opt(S.ai.MODELS, c.chatModel)}</select></label>
+          </div>
+          <div>
+            <h3 class="mini-title">Sounds & pronunciation</h3>
+            <label class="field"><span class="field-label">Voice engine</span><select name="voiceEngine">${opt([['browser', 'Browser voice (free)'], ['openai', 'ChatGPT voice (natural)']], c.voiceEngine)}</select></label>
+            ${keyField('voiceKey', 'Voice API key <span class="muted">(optional)</span>', c.voiceKey, 'Leave empty to use the chat key.')}
+            <div class="grid-2">
+              <label class="field"><span class="field-label">Voice</span><select name="voice">${opt(S.ai.VOICES.map((v) => [v, v[0].toUpperCase() + v.slice(1)]), c.voice)}</select></label>
+              <label class="field"><span class="field-label">Voice model</span><select name="ttsModel">${opt(S.ai.TTS_MODELS, c.ttsModel)}</select></label>
+            </div>
+          </div>
+        </div>
+        <div class="msg" data-ai-msg hidden></div>
+        <div class="row gap wrap">
+          <button class="btn primary" type="submit">${S.icon('check')} Save</button>
+          <button class="btn" type="button" data-test-chat>Test chat</button>
+          <button class="btn" type="button" data-test-voice>${S.icon('volume')} Test voice</button>
+          <span class="spacer"></span>
+          ${c.chatKey || c.voiceKey ? `<button class="btn ghost danger" type="button" data-remove-keys>${S.icon('trash')} Remove keys</button>` : ''}
+        </div>
+      </form>
+    </section>`;
+  }
+
   S.view('account', {
     title: 'Account & settings',
     mode: 'signin',
-    render(root) {
+    render(root, { query }) {
       const u = S.cloud.user;
       const s = S.store.settings.all();
       root.innerHTML = `
@@ -62,6 +100,7 @@
               <span class="muted small">${S.tts.supported ? (S.tts.hasVoice() ? 'Japanese voice found.' : 'No Japanese voice detected — install one in your device’s language settings for best results.') : 'Speech isn’t supported in this browser.'}</span></div>
           </section>
         </div>
+        ${aiPanel()}
         <section class="card">
           <h2 class="card-title">Your data</h2>
           <p class="muted">Progress is saved in this browser${u ? ' and backed up to your account' : ''}. Download a backup file to move it to another device or keep it safe.</p>
@@ -77,6 +116,7 @@
       const msg = (text, kind = 'bad') => { const m = S.$('[data-msg]', root); if (m) { m.hidden = false; m.className = `msg ${kind}`; m.textContent = text; } };
       const busy = (btn, on) => { if (btn) { btn.disabled = on; btn.classList.toggle('loading', on); } };
 
+      if (query.ai) { const el = S.$('#ai-settings', root); el.scrollIntoView({ block: 'start' }); el.classList.add('flash'); S.$('[name=chatKey]', el).focus(); }
       if (u) S.cloud.memberSince().then((d) => { const el = S.$('[data-since]', root); if (el && d) el.textContent = `Member since ${S.fmtDate(d)}`; });
 
       root.addEventListener('submit', async (e) => {
@@ -84,6 +124,13 @@
         const f = e.target;
         const data = Object.fromEntries(new FormData(f).entries());
         const btn = S.$('[type=submit]', f);
+        if (f.dataset.aiForm !== undefined) {
+          S.ai.save({ chatKey: (data.chatKey || '').trim(), voiceKey: (data.voiceKey || '').trim(), chatModel: data.chatModel, voiceEngine: data.voiceEngine, voice: data.voice, ttsModel: data.ttsModel });
+          S.ai._cache.clear();
+          S.toast(data.voiceEngine === 'openai' && !(data.voiceKey || data.chatKey) ? 'Saved — add a key to use ChatGPT voice' : 'AI settings saved');
+          S.rerender();
+          return;
+        }
         if (f.dataset.auth) {
           if (!data.email || !data.password) { msg('Please enter your email and password.'); return; }
           busy(btn, true);
@@ -102,6 +149,34 @@
       });
 
       root.addEventListener('click', async (e) => {
+        const eye = e.target.closest('[data-reveal-key]');
+        if (eye) { const i = eye.previousElementSibling; i.type = i.type === 'password' ? 'text' : 'password'; return; }
+        const aiMsg = (text, kind) => { const m = S.$('[data-ai-msg]', root); m.hidden = false; m.className = `msg ${kind}`; m.textContent = text; };
+        const tc = e.target.closest('[data-test-chat]');
+        if (tc) {
+          const key = S.$('[name=chatKey]', root).value.trim();
+          if (!key) { aiMsg('Paste a chat API key first.', 'bad'); return; }
+          S.ai.save({ chatKey: key, chatModel: S.$('[name=chatModel]', root).value });
+          busy(tc, true);
+          try { const r = await S.ai.chat([{ role: 'user', content: 'Reply with one short friendly Japanese greeting and its English meaning.' }], { temperature: 0.3 }); aiMsg(`Chat works ✓ — ${r.replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 120)}`, 'good'); }
+          catch (err) { aiMsg(err.message, 'bad'); } finally { busy(tc, false); }
+          return;
+        }
+        const tv = e.target.closest('[data-test-voice]');
+        if (tv) {
+          const f = S.$('[data-ai-form]', root);
+          const d = Object.fromEntries(new FormData(f).entries());
+          if (!(d.voiceKey || d.chatKey).trim()) { aiMsg('Paste an API key first.', 'bad'); return; }
+          S.ai.save({ voiceKey: d.voiceKey.trim(), chatKey: d.chatKey.trim(), voice: d.voice, ttsModel: d.ttsModel });
+          busy(tv, true);
+          try { const url = await S.ai.speechUrl('こんにちは。いっしょに にほんごを べんきょうしましょう。'); await new Audio(url).play(); aiMsg(d.voiceEngine === 'openai' ? 'Voice works ✓' : 'Voice works ✓ — set “Voice engine” to ChatGPT voice and Save to use it everywhere.', 'good'); }
+          catch (err) { aiMsg(err.message, 'bad'); } finally { busy(tv, false); }
+          return;
+        }
+        if (e.target.closest('[data-remove-keys]')) {
+          if (S.confirm('Remove your API keys from this browser?')) { S.ai.save({ chatKey: '', voiceKey: '', voiceEngine: 'browser' }); S.toast('Keys removed'); S.rerender(); }
+          return;
+        }
         const mode = e.target.closest('[data-mode]');
         if (mode) { this.mode = mode.dataset.mode; S.rerender(); return; }
         if (e.target.closest('[data-google]')) {

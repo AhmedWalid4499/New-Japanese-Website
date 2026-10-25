@@ -11,7 +11,10 @@
     settings: 'sakura_settings',  // {theme, ttsRate, dailyGoal, ...}
     plan: 'sakura_plan',          // {'week-task': true}
     dict: 'sakura_dict_history',  // ['word', ...]
+    aiplan: 'sakura_ai_plan',     // personalised plan from the AI coach {title, weeks, done, updated, ...}
   };
+  // Device-only keys: never exported or synced (API keys, chat transcripts)
+  const LOCAL_ONLY = ['sakura_ai_keys', 'sakura_ai_chat', 'sakura_ai_interview'];
   const CUSTOM_TYPES = ['vocab', 'kanji', 'grammar', 'adj', 'counters'];
   const customKey = (t) => `sakura_custom_${t}`;
 
@@ -200,6 +203,8 @@
     Object.entries(local.activity || {}).forEach(([d, n]) => { out.activity[d] = Math.max(out.activity[d] || 0, n); });
     out.settings = { ...(remote.settings || {}), ...(local.settings || {}) };
     out.plan = { ...(remote.plan || {}), ...(local.plan || {}) };
+    const ra = remote.aiplan, la = local.aiplan;
+    out.aiplan = ra && la ? ((ra.updated || 0) > (la.updated || 0) ? ra : la) : (la || ra || null);
     out.dict = S.uniq([...(local.dict || []), ...(remote.dict || [])]).slice(0, 12);
     for (const [name, key] of Object.entries(KEYS)) if (out[name] != null) write(key, out[name], true);
     CUSTOM_TYPES.forEach((t) => {
@@ -212,6 +217,7 @@
   store.reset = () => {
     Object.values(KEYS).forEach((k) => localStorage.removeItem(k));
     CUSTOM_TYPES.forEach((t) => localStorage.removeItem(customKey(t)));
+    LOCAL_ONLY.filter((k) => k !== 'sakura_ai_keys').forEach((k) => localStorage.removeItem(k));
     listeners.forEach((fn) => fn('*'));
   };
 
