@@ -1,0 +1,46 @@
+// Hiragana & katakana charts (row by row).
+// Plain data — edit freely. Loaded as a classic script, so these consts are global.
+
+const HIRAGANA_ROWS=[
+  {row:'あ行',cells:[{k:'あ',r:'a'},{k:'い',r:'i'},{k:'う',r:'u'},{k:'え',r:'e'},{k:'お',r:'o'}]},
+  {row:'か行',cells:[{k:'か',r:'ka'},{k:'き',r:'ki'},{k:'く',r:'ku'},{k:'け',r:'ke'},{k:'こ',r:'ko'}]},
+  {row:'さ行',cells:[{k:'さ',r:'sa'},{k:'し',r:'shi'},{k:'す',r:'su'},{k:'せ',r:'se'},{k:'そ',r:'so'}]},
+  {row:'た行',cells:[{k:'た',r:'ta'},{k:'ち',r:'chi'},{k:'つ',r:'tsu'},{k:'て',r:'te'},{k:'と',r:'to'}]},
+  {row:'な行',cells:[{k:'な',r:'na'},{k:'に',r:'ni'},{k:'ぬ',r:'nu'},{k:'ね',r:'ne'},{k:'の',r:'no'}]},
+  {row:'は行',cells:[{k:'は',r:'ha'},{k:'ひ',r:'hi'},{k:'ふ',r:'fu'},{k:'へ',r:'he'},{k:'ほ',r:'ho'}]},
+  {row:'ま行',cells:[{k:'ま',r:'ma'},{k:'み',r:'mi'},{k:'む',r:'mu'},{k:'め',r:'me'},{k:'も',r:'mo'}]},
+  {row:'や行',cells:[{k:'や',r:'ya'},{k:'',r:''},{k:'ゆ',r:'yu'},{k:'',r:''},{k:'よ',r:'yo'}]},
+  {row:'ら行',cells:[{k:'ら',r:'ra'},{k:'り',r:'ri'},{k:'る',r:'ru'},{k:'れ',r:'re'},{k:'ろ',r:'ro'}]},
+  {row:'わ行',cells:[{k:'わ',r:'wa'},{k:'',r:''},{k:'',r:''},{k:'',r:''},{k:'を',r:'wo'}]},
+  {row:'ん',cells:[{k:'ん',r:'n'},{k:'',r:''},{k:'',r:''},{k:'',r:''},{k:'',r:''}]},
+  {row:'が行',cells:[{k:'が',r:'ga'},{k:'ぎ',r:'gi'},{k:'ぐ',r:'gu'},{k:'げ',r:'ge'},{k:'ご',r:'go'}]},
+  {row:'ざ行',cells:[{k:'ざ',r:'za'},{k:'じ',r:'ji'},{k:'ず',r:'zu'},{k:'ぜ',r:'ze'},{k:'ぞ',r:'zo'}]},
+  {row:'だ行',cells:[{k:'だ',r:'da'},{k:'ぢ',r:'ji'},{k:'づ',r:'zu'},{k:'で',r:'de'},{k:'ど',r:'do'}]},
+  {row:'ば行',cells:[{k:'ば',r:'ba'},{k:'び',r:'bi'},{k:'ぶ',r:'bu'},{k:'べ',r:'be'},{k:'ぼ',r:'bo'}]},
+  {row:'ぱ行',cells:[{k:'ぱ',r:'pa'},{k:'ぴ',r:'pi'},{k:'ぷ',r:'pu'},{k:'ぺ',r:'pe'},{k:'ぽ',r:'po'}]},
+  {row:'きゃ etc',cells:[{k:'きゃ',r:'kya'},{k:'きゅ',r:'kyu'},{k:'きょ',r:'kyo'},{k:'しゃ',r:'sha'},{k:'しゅ',r:'shu'}]},
+  {row:'しょ etc',cells:[{k:'しょ',r:'sho'},{k:'ちゃ',r:'cha'},{k:'ちゅ',r:'chu'},{k:'ちょ',r:'cho'},{k:'にゃ',r:'nya'}]},
+  {row:'ひゃ etc',cells:[{k:'にゅ',r:'nyu'},{k:'にょ',r:'nyo'},{k:'ひゃ',r:'hya'},{k:'ひゅ',r:'hyu'},{k:'ひょ',r:'hyo'}]},
+  {row:'みゃ etc',cells:[{k:'みゃ',r:'mya'},{k:'みゅ',r:'myu'},{k:'みょ',r:'myo'},{k:'りゃ',r:'rya'},{k:'りょ',r:'ryo'}]},
+  {row:'ぎゃ etc',cells:[{k:'ぎゃ',r:'gya'},{k:'ぎゅ',r:'gyu'},{k:'ぎょ',r:'gyo'},{k:'じゃ',r:'ja'},{k:'じゅ',r:'ju'}]},
+  {row:'じょ etc',cells:[{k:'じょ',r:'jo'},{k:'びゃ',r:'bya'},{k:'びゅ',r:'byu'},{k:'びょ',r:'byo'},{k:'ぴゃ',r:'pya'}]},
+];
+
+const KATAKANA_ROWS=[
+  {row:'ア行',cells:[{k:'ア',r:'a'},{k:'イ',r:'i'},{k:'ウ',r:'u'},{k:'エ',r:'e'},{k:'オ',r:'o'}]},
+  {row:'カ行',cells:[{k:'カ',r:'ka'},{k:'キ',r:'ki'},{k:'ク',r:'ku'},{k:'ケ',r:'ke'},{k:'コ',r:'ko'}]},
+  {row:'サ行',cells:[{k:'サ',r:'sa'},{k:'シ',r:'shi'},{k:'ス',r:'su'},{k:'セ',r:'se'},{k:'ソ',r:'so'}]},
+  {row:'タ行',cells:[{k:'タ',r:'ta'},{k:'チ',r:'chi'},{k:'ツ',r:'tsu'},{k:'テ',r:'te'},{k:'ト',r:'to'}]},
+  {row:'ナ行',cells:[{k:'ナ',r:'na'},{k:'ニ',r:'ni'},{k:'ヌ',r:'nu'},{k:'ネ',r:'ne'},{k:'ノ',r:'no'}]},
+  {row:'ハ行',cells:[{k:'ハ',r:'ha'},{k:'ヒ',r:'hi'},{k:'フ',r:'fu'},{k:'ヘ',r:'he'},{k:'ホ',r:'ho'}]},
+  {row:'マ行',cells:[{k:'マ',r:'ma'},{k:'ミ',r:'mi'},{k:'ム',r:'mu'},{k:'メ',r:'me'},{k:'モ',r:'mo'}]},
+  {row:'ヤ行',cells:[{k:'ヤ',r:'ya'},{k:'',r:''},{k:'ユ',r:'yu'},{k:'',r:''},{k:'ヨ',r:'yo'}]},
+  {row:'ラ行',cells:[{k:'ラ',r:'ra'},{k:'リ',r:'ri'},{k:'ル',r:'ru'},{k:'レ',r:'re'},{k:'ロ',r:'ro'}]},
+  {row:'ワ行',cells:[{k:'ワ',r:'wa'},{k:'',r:''},{k:'',r:''},{k:'',r:''},{k:'ヲ',r:'wo'}]},
+  {row:'ン',cells:[{k:'ン',r:'n'},{k:'',r:''},{k:'',r:''},{k:'',r:''},{k:'',r:''}]},
+  {row:'ガ行',cells:[{k:'ガ',r:'ga'},{k:'ギ',r:'gi'},{k:'グ',r:'gu'},{k:'ゲ',r:'ge'},{k:'ゴ',r:'go'}]},
+  {row:'ザ行',cells:[{k:'ザ',r:'za'},{k:'ジ',r:'ji'},{k:'ズ',r:'zu'},{k:'ゼ',r:'ze'},{k:'ゾ',r:'zo'}]},
+  {row:'ダ行',cells:[{k:'ダ',r:'da'},{k:'ヂ',r:'ji'},{k:'ヅ',r:'zu'},{k:'デ',r:'de'},{k:'ド',r:'do'}]},
+  {row:'バ行',cells:[{k:'バ',r:'ba'},{k:'ビ',r:'bi'},{k:'ブ',r:'bu'},{k:'ベ',r:'be'},{k:'ボ',r:'bo'}]},
+  {row:'パ行',cells:[{k:'パ',r:'pa'},{k:'ピ',r:'pi'},{k:'プ',r:'pu'},{k:'ペ',r:'pe'},{k:'ポ',r:'po'}]},
+];
