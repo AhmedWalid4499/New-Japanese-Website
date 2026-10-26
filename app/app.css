@@ -164,8 +164,8 @@ body.in-lesson #tabbar { display: none; }
 .start-bubble small { font-size: 11px; opacity: .7; margin-left: 2px; }
 .start-bubble::after { content: ""; position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; background: var(--ink); transform: translateX(-50%) rotate(45deg); }
 @keyframes bob { 50% { transform: translateY(-4px); } }
-.path-owl { position: absolute; pointer-events: none; }
-.path-owl .owl { width: 60px; }
+.path-mascot { position: absolute; pointer-events: none; }
+.path-mascot .mascot { width: 60px; }
 .path-end { text-align: center; padding: 40px 0 10px; color: var(--ink-2); position: relative; z-index: 1; }
 
 /* Hanko — the red seal used for stamps and feedback */
@@ -305,20 +305,25 @@ body.in-lesson #tabbar { display: none; }
 .onboard { position: fixed; inset: 0; z-index: 150; display: flex; flex-direction: column; max-width: 520px; margin: 0 auto; background: var(--paper) var(--washi); padding: calc(20px + var(--safe-t)) 22px calc(20px + var(--safe-b)); }
 .ob-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .ob-row { display: flex; align-items: center; gap: 10px; align-self: stretch; }
-.ob-row .owl { width: 80px; flex: none; }
-.onboard .owl.big { width: 160px; }
+.ob-row .mascot { width: 80px; flex: none; }
+.onboard .mascot.big { width: 160px; }
 .speech-bubble { position: relative; margin-top: 18px; padding: 16px 20px; border-radius: 18px; background: var(--card); box-shadow: 0 0 0 1px var(--rule), var(--shadow); font-size: 18px; font-weight: 600; }
 .speech-bubble.left { margin: 0; text-align: left; }
 
-/* ── Owl ── */
-.owl { display: block; }
-.owl.big { width: 140px; margin: 0 auto; }
-.owl.mini { width: 66px; flex: none; }
-.owl.cheer, .owl.wave { animation: hop 1.4s ease-in-out infinite; }
-.owl.cheer .wing-l, .owl.wave .wing-r { transform-origin: 30px 80px; animation: flap .6s ease-in-out infinite alternate; }
-.owl.sad { width: 100px; margin: 0 auto 6px; filter: saturate(.6); }
+/* ── Maru the lucky cat ── */
+.mascot { display: block; overflow: visible; }
+.mascot.big { width: 140px; margin: 0 auto; }
+.mascot.mini { width: 66px; flex: none; }
+.mascot .face-sad { display: none; }
+.mascot.sad .face-sad { display: inline; }
+.mascot.sad .face-happy { display: none; }
+.mascot.sad { width: 100px; margin: 0 auto 6px; }
+.mascot.cheer { animation: hop 1.4s ease-in-out infinite; }
+.mascot .paw { transform-origin: 88px 86px; }
+.mascot.cheer .paw, .mascot.wave .paw { animation: beckon .55s ease-in-out infinite alternate; }
+.path-mascot .mascot .paw { animation: beckon 1.2s ease-in-out infinite alternate; }
 @keyframes hop { 50% { transform: translateY(-6px); } }
-@keyframes flap { to { transform: rotate(-30deg); } }
+@keyframes beckon { from { transform: rotate(8deg); } to { transform: rotate(-22deg); } }
 
 /* ── Lesson ── */
 .lesson { position: fixed; inset: 0; z-index: 120; display: flex; flex-direction: column; max-width: 520px; margin: 0 auto; background: var(--paper) var(--washi); padding-top: var(--safe-t); }
@@ -355,7 +360,7 @@ body.in-lesson #tabbar { display: none; }
 .speaker:active, .speaker.pulse { transform: translateY(2px) scale(.97); }
 .listen-row { display: flex; justify-content: center; align-items: flex-end; padding: 18px 0; }
 .prompt-row { display: flex; align-items: center; gap: 12px; }
-.prompt-row .owl.mini { width: 76px; }
+.prompt-row .mascot.mini { width: 76px; }
 .bubble-prompt { flex: 1; padding: 14px 18px; border-radius: 20px; background: var(--card); box-shadow: 0 0 0 1px var(--rule), var(--shadow); }
 .bubble-prompt .jp { font-family: var(--mincho); font-size: 46px; line-height: 1.2; font-weight: 600; }
 .bubble-prompt .jp.small { font-family: var(--jp); font-size: 24px; font-weight: 500; }
@@ -418,6 +423,6 @@ body.in-lesson #tabbar { display: none; }
 .tally dt { display: flex; align-items: center; gap: 8px; color: var(--ink-2); }
 .tally dt .ic { width: 18px; height: 18px; color: var(--gold); }
 .tally dd { margin: 0; font-family: var(--mincho); font-size: 20px; font-weight: 700; }
-.result-owl { margin: 6px auto 0; }
+.result-mascot { margin: 6px auto 0; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

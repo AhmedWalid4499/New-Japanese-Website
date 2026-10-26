@@ -71,7 +71,7 @@ Keys are stored only in your browser (never synced or included in backups) and u
 A separate mobile app with a Duolingo-like learning loop but its own look — a journey through Japan on washi paper (ink trail, hanko stamps, sakura petals as lives, a lantern streak) — that lives in the `app/` folder (the website is unchanged).
 
 - **Path (道)** — a winding ink trail of 19 chapters (hiragana → greetings → katakana → numbers → sentences → … → expressions), ~180 bite-sized lessons with multiple choice, listening, match-the-pairs, build-the-sentence and fill-in-the-blank exercises.
-- **Petals (lives), XP, a lantern streak, daily goal and achievements**, with Me3temed the owl cheering you on.
+- **Petals (lives), XP, a lantern streak, daily goal and achievements**, with Maru the lucky cat cheering you on.
 - **Letters** (kana charts with audio), **Practice** (personalized review, mistakes, listening, phrasebook) and **Profile** (stats, weekly chart, settings).
 - Works **offline** and saves progress on the phone.
 
