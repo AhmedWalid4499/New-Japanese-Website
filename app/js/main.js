@@ -1,10 +1,11 @@
 // App shell: tab bar + screen switching, service worker, first-run onboarding.
 (function (A) {
+  // Kanji tabs: 道 the path, 字 letters, 練 practice, 私 me
   const TABS = [
-    { id: 'learn', label: 'Learn', icon: 'home' },
-    { id: 'letters', label: 'Letters', glyph: 'あ' },
-    { id: 'practice', label: 'Practice', icon: 'dumbbell' },
-    { id: 'profile', label: 'Profile', icon: 'user' },
+    { id: 'learn', label: 'Path', glyph: '道' },
+    { id: 'letters', label: 'Letters', glyph: '字' },
+    { id: 'practice', label: 'Practice', glyph: '練' },
+    { id: 'profile', label: 'Me', glyph: '私' },
   ];
 
   A.go = (tab) => {

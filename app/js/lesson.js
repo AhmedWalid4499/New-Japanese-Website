@@ -1,7 +1,7 @@
 // Lessons: builds a mix of exercises for a set of items, then plays them full-screen.
 (function (A) {
   const esc = A.esc;
-  const PRAISE = ['Nice!', 'Great job!', 'Excellent!', 'Correct!', 'すごい！', 'Awesome!', 'Perfect!'];
+  const PRAISE = ['よくできました — well done!', 'いいね! Nice!', 'すごい! Great!', 'Perfect — 完璧!', 'Correct — その通り!', 'さすが! Brilliant!'];
   const MAX_EXERCISES = 15;
 
   // ── Exercise builders ──
@@ -98,7 +98,7 @@
     root.innerHTML = `
       <header class="lesson-top">
         <button class="icon-btn" data-quit aria-label="Quit lesson">${A.icon('x')}</button>
-        <div class="lesson-bar"><span data-bar></span></div>
+        <div class="lesson-bar"><span data-bar><i class="bar-petal">${A.icon('heart')}</i></span></div>
         ${useHearts ? `<span class="hearts" data-hearts>${A.icon('heart')}<b>${A.hearts()}</b></span>` : `<span class="hearts practice">${A.icon('dumbbell')}</span>`}
       </header>
       <main class="lesson-body" data-body></main>
@@ -128,7 +128,7 @@
       render[current.type](current);
     }
 
-    const speakerBtn = (text, big) => `<button class="speaker ${big ? 'big' : ''}" data-say="${esc(text)}" aria-label="Play audio">${A.icon('volume')}</button>${big ? `<button class="speaker slow" data-say="${esc(text)}" data-slow aria-label="Play slowly">${A.icon('turtle')}</button>` : ''}`;
+    const speakerBtn = (text, big) => `<button class="speaker ${big ? 'big' : ''}" data-say="${esc(text)}" aria-label="Play audio">${A.icon('volume')}</button>${big ? `<button class="speaker slow" data-say="${esc(text)}" data-slow aria-label="Play slowly"><span class="slow-txt">0.5×</span></button>` : ''}`;
     body.addEventListener('click', (e) => { const s = e.target.closest('[data-say]'); if (s) { A.speak(s.dataset.say, s.hasAttribute('data-slow')); s.classList.add('pulse'); setTimeout(() => s.classList.remove('pulse'), 600); } });
     const hint = (it) => (A.state.profile.romaji && it.read && it.kind !== 'kana' ? `<div class="romaji">${esc(it.read)}</div>` : '');
 
@@ -266,7 +266,8 @@
       bar();
       foot.className = `lesson-foot feedback ${r.ok ? 'good' : 'bad'}`;
       foot.innerHTML = `<div class="fb">
-          <div class="fb-head"><span class="fb-icon">${A.icon(r.ok ? 'check' : 'x')}</span><b>${r.ok ? esc(A.pick(PRAISE)) : 'Correct solution:'}</b></div>
+          <span class="hanko ${r.ok ? '' : 'miss'}" lang="ja">${r.ok ? '正解' : '惜しい'}</span>
+          <div class="fb-head"><b>${r.ok ? esc(A.pick(PRAISE)) : 'Almost — the answer is:'}</b></div>
           ${!r.ok ? `<div class="fb-solution ${r.solutionJp ? 'jp' : ''}" ${r.solutionJp ? 'lang="ja"' : ''}>${esc(r.solution)}</div>` : ''}
           ${r.meaning ? `<div class="fb-meaning" ${/[ぁ-ん一-龯ァ-ン]/.test(r.meaning) ? 'lang="ja"' : ''}>${esc(r.meaning)}</div>` : ''}
         </div>
@@ -284,9 +285,9 @@
       const acc = Math.max(0, Math.round(((done) / Math.max(1, done + mistakes)) * 100));
       if (!completed) {
         A.sfx('wrong');
-        body.innerHTML = `<div class="ex center result">${A.owl('sad big')}<h1>Out of hearts</h1><p class="muted">Hearts refill one every 30 minutes — or earn one now with a quick practice session.</p></div>`;
+        body.innerHTML = `<div class="ex center result">${A.owl('sad big')}<h1>Out of petals</h1><p class="muted">Petals grow back one every 30 minutes — or earn one now with a quick practice session.</p></div>`;
         foot.className = 'lesson-foot';
-        foot.innerHTML = '<button class="btn primary block lg" data-p>Practice to earn a heart</button><button class="btn ghost block" data-q>No thanks</button>';
+        foot.innerHTML = '<button class="btn primary block lg" data-p>Practice to earn a petal</button><button class="btn ghost block" data-q>No thanks</button>';
         A.$('[data-p]', foot).addEventListener('click', () => { close(); cfg.onDone && cfg.onDone({ outOfHearts: true, practice: true }); });
         A.$('[data-q]', foot).addEventListener('click', () => { close(); cfg.onDone && cfg.onDone({ outOfHearts: true }); });
         return;
@@ -296,20 +297,23 @@
       const extended = A.addXp(xp);
       A.sfx('complete'); A.confetti();
       body.innerHTML = `<div class="ex center result">
-        ${A.owl('cheer big')}
-        <h1>${mistakes === 0 ? 'Perfect lesson!' : esc(cfg.doneTitle || 'Lesson complete!')}</h1>
-        <div class="stat-tiles">
-          <div class="stat-tile xp"><span>Total XP</span><b>${A.icon('bolt')}${xp}</b></div>
-          <div class="stat-tile acc"><span>${acc >= 90 ? 'Amazing' : acc >= 70 ? 'Good' : 'Accuracy'}</span><b>${A.icon('target')}${acc}%</b></div>
-          <div class="stat-tile time"><span>Time</span><b>⏱ ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}</b></div>
-        </div></div>`;
+        <div class="scroll-card">
+          <span class="hanko big" lang="ja">${mistakes === 0 ? '完璧' : '合格'}</span>
+          <div class="result-jp" lang="ja">お疲れさま</div>
+          <h1>${mistakes === 0 ? 'A flawless lesson!' : esc(cfg.doneTitle || 'Lesson complete')}</h1>
+          <dl class="tally">
+            <div><dt>${A.icon('bolt')} Experience</dt><dd>+${xp} XP</dd></div>
+            <div><dt>${A.icon('target')} Accuracy</dt><dd>${acc}%</dd></div>
+            <div><dt>⏱ Time</dt><dd>${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}</dd></div>
+          </dl>
+        </div>${A.owl('cheer mini result-owl')}</div>`;
       foot.className = 'lesson-foot';
       foot.innerHTML = '<button class="btn primary block lg" data-cont>Continue</button>';
       A.$('[data-cont]', foot).addEventListener('click', () => {
         if (extended) {
           const n = A.streak().n;
-          body.innerHTML = `<div class="ex center result"><div class="streak-big">${A.icon('flame')}<b>${n}</b></div><h1>day streak!</h1>
-            <p class="muted">${before.n === 0 ? 'You started a streak! Come back tomorrow to keep it going.' : 'You extended your streak. 続けよう — keep it up!'}</p>
+          body.innerHTML = `<div class="ex center result"><div class="streak-big lit">${A.icon('flame')}<b>${n}</b></div><h1>${n === 1 ? 'Your lantern is lit!' : `${n} days in a row!`}</h1>
+            <p class="muted">${before.n === 0 ? 'Study again tomorrow to keep your lantern glowing.' : 'Another lantern lit on your journey. 続けよう — keep going!'}</p>
             <div class="week-dots">${weekDots()}</div></div>`;
           A.sfx('correct');
           foot.innerHTML = '<button class="btn primary block lg" data-ok>Continue</button>';

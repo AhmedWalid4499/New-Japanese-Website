@@ -94,11 +94,12 @@ window.A = window.A || {};
   A.sfx = (kind) => {
     if (!state.profile.sound) return;
     try {
-      if (kind === 'correct') { tone(880, 0, 0.12, 'triangle'); tone(1320, 0.09, 0.22, 'triangle'); }
-      else if (kind === 'wrong') { tone(220, 0, 0.18, 'square', 0.06); tone(165, 0.12, 0.25, 'square', 0.06); }
-      else if (kind === 'tap') tone(660, 0, 0.05, 'sine', 0.05);
-      else if (kind === 'match') tone(990, 0, 0.1, 'triangle', 0.08);
-      else if (kind === 'complete') [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.11, 0.3, 'triangle', 0.1));
+      // Japanese "in" pentatonic: D E♭ G A B♭ — plucked like a koto
+      if (kind === 'correct') { tone(784, 0, 0.5, 'triangle', 0.12); tone(1175, 0.08, 0.7, 'sine', 0.08); }
+      else if (kind === 'wrong') { tone(311, 0, 0.35, 'sine', 0.1); tone(294, 0.12, 0.5, 'sine', 0.08); }
+      else if (kind === 'tap') tone(1175, 0, 0.08, 'sine', 0.04);
+      else if (kind === 'match') tone(880 + Math.random() * 200, 0, 0.3, 'triangle', 0.07);
+      else if (kind === 'complete') [587, 622, 784, 880, 932, 1175].forEach((f, i) => tone(f, i * 0.12, 0.9, 'triangle', 0.08));
     } catch (e) {}
   };
 
@@ -167,8 +168,9 @@ window.A = window.A || {};
     user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
     x: '<path d="M6 6l12 12M18 6 6 18"/>',
     volume: '<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',
-    heart: '<path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" fill="currentColor"/>',
-    flame: '<path d="M12 22c4 0 7-3 7-7 0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-2 2-5 5-5 8 0 4 3 7 7 7z" fill="currentColor"/>',
+    // a sakura petal (lives) and a paper lantern (streak)
+    heart: '<path d="M12 22c-4.6-2.3-7.5-6.4-7.5-10.6A5.2 5.2 0 0 1 9.6 6L12 8.3 14.4 6a5.2 5.2 0 0 1 5.1 5.4C19.5 15.6 16.6 19.7 12 22z" fill="currentColor"/>',
+    flame: '<path d="M9 2.5h6M12 2.5V5M9.5 21.5h5M12 19v2.5"/><rect x="5.5" y="5" width="13" height="14" rx="6.5" fill="currentColor"/><path d="M6.5 9.5h11M6 14.5h12" stroke="#0003"/>',
     bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor"/>',
     star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.5 2.9 1-6.1L3.2 9.5l6.1-.9z" fill="currentColor"/>',
     check: '<path d="m5 12 5 5L20 7"/>',

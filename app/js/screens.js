@@ -8,9 +8,9 @@
     const st = A.streak();
     return `<div class="status-bar">
       <button class="status flag" data-go="profile" aria-label="Course">🇯🇵</button>
-      <button class="status streak ${st.today ? 'lit' : ''}" data-info="streak">${A.icon('flame')}<b>${st.n}</b></button>
+      <button class="status streak ${st.today ? 'lit' : ''}" data-info="streak" aria-label="Streak">${A.icon('flame')}<b>${st.n}</b></button>
       <button class="status xp" data-info="xp">${A.icon('bolt')}<b>${A.state.xp}</b></button>
-      <button class="status heart" data-info="hearts">${A.icon('heart')}<b>${A.hearts()}</b></button>
+      <button class="status heart" data-info="hearts" aria-label="Petals">${A.icon('heart')}<b>${A.hearts()}</b></button>
     </div>`;
   };
   document.addEventListener('click', (e) => {
@@ -21,14 +21,14 @@
     const goal = A.state.profile.goal, today = A.todayXp();
     const mins = Math.ceil(A.nextHeartIn() / 60000);
     const html = {
-      streak: `<div class="sheet-body center"><div class="streak-big ${st.today ? '' : 'off'}">${A.icon('flame')}<b>${st.n}</b></div><h2>${st.n ? `${st.n} day streak` : 'No streak yet'}</h2>
-        <p class="muted">${st.today ? 'You’ve practised today. See you tomorrow!' : 'Complete a lesson today to ' + (st.n ? 'keep your streak alive!' : 'start a streak!')}</p><div class="week-dots">${A.weekDots()}</div>
+      streak: `<div class="sheet-body center"><div class="streak-big ${st.today ? 'lit' : 'off'}">${A.icon('flame')}<b>${st.n}</b></div><h2>${st.n ? `${st.n} day${st.n > 1 ? 's' : ''} in a row` : 'Light your first lantern'}</h2>
+        <p class="muted">${st.today ? 'You’ve practised today. See you tomorrow!' : 'Finish a lesson today to ' + (st.n ? 'keep your lantern glowing!' : 'light your first lantern!')}</p><div class="week-dots">${A.weekDots()}</div>
         <p class="muted small">Longest streak: ${st.best} days</p></div>`,
       xp: `<div class="sheet-body center"><h2>Daily goal</h2><div class="goal-ring">${ring(Math.min(100, (today / goal) * 100), `${today}/${goal}`)}</div>
         <p class="muted">${today >= goal ? 'Goal reached — 素晴らしい!' : `Earn ${goal - today} more XP today to hit your goal.`}</p><p class="muted small">Total: ${A.state.xp} XP</p></div>`,
       hearts: `<div class="sheet-body center"><div class="hearts-row">${Array.from({ length: A.MAX_HEARTS }, (_, k) => `<span class="${k < A.hearts() ? 'on' : ''}">${A.icon('heart')}</span>`).join('')}</div>
-        <h2>${A.hearts() === A.MAX_HEARTS ? 'Full hearts' : `${A.hearts()} hearts`}</h2><p class="muted">You lose a heart for each mistake in a lesson. ${A.hearts() < A.MAX_HEARTS ? `Next heart in ${mins} min.` : ''}</p>
-        ${A.hearts() < A.MAX_HEARTS ? '<button class="btn primary block" data-close data-practice-heart>Practice to earn a heart</button>' : ''}</div>`,
+        <h2>${A.hearts() === A.MAX_HEARTS ? 'All petals in bloom' : `${A.hearts()} petal${A.hearts() === 1 ? '' : 's'} left`}</h2><p class="muted">Each mistake in a lesson costs a petal. ${A.hearts() < A.MAX_HEARTS ? `The next one grows back in ${mins} min.` : ''}</p>
+        ${A.hearts() < A.MAX_HEARTS ? '<button class="btn primary block" data-close data-practice-heart>Practice to earn a petal</button>' : ''}</div>`,
     }[kind];
     const s = A.sheet(html);
     const ph = A.$('[data-practice-heart]', s.el);
@@ -47,11 +47,11 @@
   A.screens.learn = (el) => {
     const cur = A.currentLesson();
     const goal = A.state.profile.goal, today = A.todayXp();
-    el.innerHTML = `${A.statusBar()}
+    el.innerHTML = `${A.statusBar()}<div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       ${!isStandalone() && isIOS() && !A.state.dismissInstall ? `<div class="install-tip"><span>${A.icon('share')}</span><div><b>Install Sakura Study</b><br>Tap Share, then “Add to Home Screen”.</div><button class="icon-btn" data-dismiss-install aria-label="Dismiss">${A.icon('x')}</button></div>` : ''}
       <div class="goal-strip" data-info="xp"><span>Daily goal</span><div class="goal-bar"><i style="width:${Math.min(100, (today / goal) * 100)}%"></i></div><b>${today}/${goal} XP</b></div>
       <div class="path">${A.UNITS.map((u) => unitHtml(u, cur)).join('')}
-        <div class="path-end">${A.owl('big')}<p>You’ve reached the end of N5. おめでとう!</p></div></div>`;
+        <div class="path-end"><span class="hanko big" lang="ja">N5</span><p>The end of the N5 journey. おめでとう!</p></div></div>`;
     const dis = A.$('[data-dismiss-install]', el);
     if (dis) dis.addEventListener('click', () => { A.state.dismissInstall = true; A.save(); dis.closest('.install-tip').remove(); });
     el.addEventListener('click', (e) => {
@@ -64,23 +64,39 @@
     requestAnimationFrame(() => { const c = A.$('.node.current', el); if (c) c.scrollIntoView({ block: 'center' }); });
   };
 
-  // Nodes zig-zag down the path like a winding trail
-  const OFFSETS = [0, 44, 70, 44, 0, -44, -70, -44];
+  // Stops wind down the page like a mountain trail, joined by an ink line
+  const OFFSETS = [0, 52, 78, 52, 0, -52, -78, -52];
+  const STEP = 96; // px between stops
+  const KANJI_NUM = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+  A.kanjiNum = (n) => (n <= 10 ? KANJI_NUM[n] : n < 20 ? `十${KANJI_NUM[n - 10]}` : `${KANJI_NUM[Math.floor(n / 10)]}十${KANJI_NUM[n % 10]}`);
+  function trail(u) {
+    const xs = u.lessons.map((_, i) => OFFSETS[(i + u.index * 3) % OFFSETS.length]);
+    const h = u.lessons.length * STEP;
+    let d = `M ${180 + xs[0]} ${STEP / 2}`;
+    for (let i = 1; i < xs.length; i++) {
+      const y0 = (i - 1) * STEP + STEP / 2, y1 = i * STEP + STEP / 2;
+      d += ` C ${180 + xs[i - 1]} ${y0 + STEP / 2}, ${180 + xs[i]} ${y1 - STEP / 2}, ${180 + xs[i]} ${y1}`;
+    }
+    const doneN = u.lessons.filter(A.lessonDone).length;
+    return `<svg class="trail" viewBox="0 0 360 ${h}" preserveAspectRatio="xMidYMin meet" style="height:${h}px" aria-hidden="true">
+      <path d="${d}" class="trail-line"/>${doneN ? `<path d="${d}" class="trail-done" pathLength="${u.lessons.length - 1 || 1}" stroke-dasharray="${Math.max(0, doneN - (doneN === u.lessons.length ? 1 : 0))} 999"/>` : ''}</svg>`;
+  }
   function unitHtml(u, cur) {
     const done = A.unitProgress(u);
     return `<section class="unit" style="--u:${u.color};--ud:${u.dark}">
       <header class="unit-head">
-        <div><div class="unit-kicker">Unit ${u.index + 1} · ${done}/${u.lessons.length}</div><h2>${esc(u.title)}</h2><div class="unit-jp" lang="ja">${esc(u.jp)}</div></div>
+        <span class="chapter" lang="ja">第${A.kanjiNum(u.index + 1)}章</span>
+        <div class="unit-text"><h2>${esc(u.title)}</h2><div class="unit-meta"><span lang="ja">${esc(u.jp)}</span> · ${done}/${u.lessons.length} stamps</div></div>
         <button class="guide-btn" data-guide="${u.id}" aria-label="Guidebook">${A.icon('book')}</button>
       </header>
-      <div class="nodes">${u.lessons.map((l, i) => {
+      <div class="nodes">${trail(u)}${u.lessons.map((l, i) => {
         const isDone = A.lessonDone(l), isCur = cur === l, locked = !A.isUnlocked(l);
-        const icon = isDone ? A.icon('check') : locked ? A.icon('lock') : A.icon('star');
+        const face = isDone ? '<span class="stamp" lang="ja">済</span>' : locked ? A.icon('lock') : `<span class="stop-num">${i + 1}</span>`;
         const off = OFFSETS[(i + u.index * 3) % OFFSETS.length];
         return `<div class="node-wrap" style="transform:translateX(${off}px)">
-          ${isCur ? '<div class="start-bubble">START</div>' : ''}
-          <button class="node ${isDone ? 'done' : ''} ${isCur ? 'current' : ''} ${locked ? 'locked' : ''}" data-lesson="${l.key}" aria-label="Lesson ${i + 1}${isDone ? ', completed' : locked ? ', locked' : ''}">${icon}</button>
-          ${i === 2 && !locked ? `<div class="path-owl" style="transform:translateX(${off > 0 ? -120 : 120}px)">${A.owl('mini')}</div>` : ''}
+          ${isCur ? `<div class="start-bubble" lang="ja">はじめ <small>Start</small></div>` : ''}
+          <button class="node ${isDone ? 'done' : ''} ${isCur ? 'current' : ''} ${locked ? 'locked' : ''}" data-lesson="${l.key}" aria-label="Lesson ${i + 1}${isDone ? ', completed' : locked ? ', locked' : ''}">${face}</button>
+          ${i === 2 && !locked ? `<div class="path-owl" style="transform:translateX(${off > 0 ? -118 : 118}px)">${A.owl('mini')}</div>` : ''}
         </div>`;
       }).join('')}</div></section>`;
   }
@@ -90,8 +106,8 @@
     const u = l.unit, done = A.lessonDone(l), locked = !A.isUnlocked(l);
     const preview = l.items.slice(0, 6).map((it) => `<span lang="ja">${esc(it.jp)}</span>`).join(' ');
     const s = A.sheet(`<div class="sheet-body lesson-pop" style="--u:${u.color};--ud:${u.dark}">
-      <div class="pop-kicker">${esc(u.title)}</div>
-      <h2>Lesson ${l.index + 1} of ${u.lessons.length}</h2>
+      <div class="pop-kicker" lang="ja">第${A.kanjiNum(u.index + 1)}章 · ${esc(u.title)}</div>
+      <h2>Stop ${l.index + 1} of ${u.lessons.length}</h2>
       <div class="pop-preview">${preview}</div>
       ${locked ? '<p class="muted">Complete the lessons above to unlock this one!</p><button class="btn block" data-close>OK</button>'
         : `<button class="btn unit-btn block lg" data-start>${done ? 'Practice again +5 XP' : 'Start +10 XP'}</button>`}
@@ -102,8 +118,8 @@
 
   function startLesson(l) {
     if (A.hearts() === 0) {
-      const s = A.sheet(`<div class="sheet-body center">${A.owl('sad')}<h2>Out of hearts</h2><p class="muted">Next heart in ${Math.ceil(A.nextHeartIn() / 60000)} minutes — or practise to earn one now.</p>
-        <button class="btn primary block" data-close data-p>Practice to earn a heart</button></div>`);
+      const s = A.sheet(`<div class="sheet-body center">${A.owl('sad')}<h2>Out of petals</h2><p class="muted">The next petal grows back in ${Math.ceil(A.nextHeartIn() / 60000)} minutes — or practise to earn one now.</p>
+        <button class="btn primary block" data-close data-p>Practice to earn a petal</button></div>`);
       A.$('[data-p]', s.el).addEventListener('click', () => A.startPractice('review', true));
       return;
     }
@@ -127,7 +143,7 @@
 
   function guide(u) {
     A.sheet(`<div class="sheet-body guide" style="--u:${u.color}">
-      <div class="pop-kicker">Unit ${u.index + 1} guidebook</div><h2>${esc(u.title)}</h2>
+      <div class="pop-kicker" lang="ja">第${A.kanjiNum(u.index + 1)}章 · Guidebook</div><h2>${esc(u.title)}</h2>
       ${u.guide.map((g) => `<section><h3 lang="ja">${esc(g.h)}</h3><p>${esc(g.p)}</p>${g.ex ? `<div class="guide-ex"><button class="speaker" data-say-g="${esc(g.ex.jp)}">${A.icon('volume')}</button><div><div lang="ja">${esc(g.ex.jp)}</div><small>${esc(g.ex.en)}</small></div></div>` : ''}</section>`).join('')}
       <h3>Key words</h3><div class="key-words">${u.items.slice(0, 12).map((it) => `<button class="kw" data-say-g="${esc(it.say)}"><span lang="ja">${esc(it.jp)}</span><small>${esc(it.en)}</small></button>`).join('')}</div>
       <button class="btn primary block" data-close>Got it</button></div>`).el.addEventListener('click', (e) => { const s = e.target.closest('[data-say-g]'); if (s) A.speak(s.dataset.sayG); });
@@ -178,19 +194,19 @@
     if (list.length < 4) { A.toast('Finish a few lessons first — then come back to practise!'); return; }
     A.play({
       exercises: A.buildPractice(list, { kinds: kind === 'listen' ? 'listen' : '' }), hearts: false, xp: 5, doneTitle: 'Practice complete!',
-      onDone: (r) => { if (r && forHeart) { A.gainHeart(1); A.toast('+1 heart ❤️'); } A.go(forHeart ? 'learn' : 'practice'); },
+      onDone: (r) => { if (r && forHeart) { A.gainHeart(1); A.toast('+1 petal 🌸'); } A.go(forHeart ? 'learn' : 'practice'); },
     });
   };
 
   A.screens.practice = (el) => {
     const learned = A.learnedCount(), due = A.dueItems().length, mistakes = A.mistakeItems().length;
     el.innerHTML = `${A.statusBar()}
-      <div class="screen-head"><h1>Practice</h1><p class="muted">Strengthen what you’ve learned. Practice never costs hearts.</p></div>
+      <div class="screen-head"><h1>Practice</h1><p class="muted">Strengthen what you’ve learned. Practice never costs petals.</p></div>
       <div class="practice-list">
-        ${card('review', 'Personalized review', due ? `${due} items ready for review` : 'A mix of everything you’ve learned', '覚', '#58cc02', '#46a302')}
-        ${card('mistakes', 'Mistakes', mistakes ? `${mistakes} items to fix` : 'No recent mistakes — nice!', '直', '#ff4b4b', '#d63a3a')}
-        ${card('listen', 'Listening', 'Train your ear with native audio', '聴', '#1cb0f6', '#1899d6')}
-        ${card('phrases', 'Phrasebook', 'Survival phrases with audio', '話', '#ff9600', '#d67e00')}
+        ${card('review', 'Personalized review', due ? `${due} items ready for review` : 'A mix of everything you’ve learned', '覚', '#6b8f3a', '#53712c')}
+        ${card('mistakes', 'Mistakes', mistakes ? `${mistakes} items to fix` : 'No recent mistakes — nice!', '直', '#c4473a', '#9c372c')}
+        ${card('listen', 'Listening', 'Train your ear with native audio', '聴', '#3b5a8c', '#2c446b')}
+        ${card('phrases', 'Phrasebook', 'Survival phrases with audio', '話', '#c9922a', '#a0731d')}
       </div>
       <p class="muted center small">${learned} words, characters and phrases learned so far.</p>`;
     el.addEventListener('click', (e) => {
