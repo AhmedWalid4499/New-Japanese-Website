@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Sakura Study</title>
+  <meta name="description" content="Learn Japanese for the JLPT N5 — bite-sized lessons, streaks and practice on the go.">
+  <meta name="theme-color" content="#f8f3ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#151a2b" media="(prefers-color-scheme: dark)">
+  <!-- iPhone: install to Home Screen and run full-screen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Sakura Study">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700;800&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="app">
+    <main id="screen"></main>
+    <nav id="tabbar" aria-label="Main"></nav>
+  </div>
+  <noscript><p style="padding:2rem;text-align:center">Sakura Study needs JavaScript.</p></noscript>
+
+  <!-- Study content is shared with the website (../assets/js/data) -->
+  <script defer src="../assets/js/data/grammar.js"></script>
+  <script defer src="../assets/js/data/kana.js"></script>
+  <script defer src="../assets/js/data/kanji.js"></script>
+  <script defer src="../assets/js/data/vocab.js"></script>
+  <script defer src="../assets/js/data/phrases.js"></script>
+  <script defer src="../assets/js/data/practice.js"></script>
+
+  <script defer src="js/core.js"></script>
+  <script defer src="js/course.js"></script>
+  <script defer src="js/lesson.js"></script>
+  <script defer src="js/screens.js"></script>
+  <script defer src="js/main.js"></script>
+</body>
+</html>

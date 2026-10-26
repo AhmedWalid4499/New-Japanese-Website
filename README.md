@@ -65,3 +65,16 @@ Open **Account & settings → AI & voice** and add your own keys:
 
 Chat uses the official Anthropic JavaScript SDK (loaded from jsDelivr, version pinned in `assets/js/core/ai.js`).
 Keys are stored only in your browser (never synced or included in backups) and usage is billed to your own accounts.
+
+## 📱 Sakura Study iPhone app (`app/`)
+
+A separate mobile app with a Duolingo-like learning loop but its own look — a journey through Japan on washi paper (ink trail, hanko stamps, sakura petals as lives, a lantern streak) — that lives in the `app/` folder (the website is unchanged).
+
+- **Path (道)** — a winding ink trail of 19 chapters (hiragana → greetings → katakana → numbers → sentences → … → expressions), ~180 bite-sized lessons with multiple choice, listening, match-the-pairs, build-the-sentence and fill-in-the-blank exercises.
+- **Petals (lives), XP, a lantern streak, daily goal and achievements**, with Me3temed the owl cheering you on.
+- **Letters** (kana charts with audio), **Practice** (personalized review, mistakes, listening, phrasebook) and **Profile** (stats, weekly chart, settings).
+- Works **offline** and saves progress on the phone.
+
+**Install on iPhone:** open `https://<your-username>.github.io/<repo>/app/` in **Safari** → tap **Share** → **Add to Home Screen** → **Add**. Sakura Study then opens full-screen from its own icon like any other app.
+
+The app reads its lessons from the same `assets/js/data/` files as the website. After changing app files, bump `VERSION` in `app/sw.js` so installed copies update.
