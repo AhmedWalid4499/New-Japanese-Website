@@ -158,8 +158,20 @@ window.A = window.A || {};
     })();
   };
 
-  // Me3temed the owl — the app's mascot
-  A.owl = (cls = '') => `<svg class="owl ${cls}" viewBox="0 0 120 130" aria-hidden="true"><ellipse cx="60" cy="125" rx="22" ry="4" fill="#0002"/><ellipse cx="60" cy="88" rx="30" ry="28" fill="#4a6741"/><ellipse cx="60" cy="92" rx="19" ry="20" fill="#f0e8c8"/><path d="M51 84 Q60 78 69 84 Q60 90 51 84Z" fill="#b8a060" opacity=".7"/><ellipse class="wing-l" cx="30" cy="90" rx="10" ry="16" fill="#3a5332" transform="rotate(10 30 90)"/><ellipse class="wing-r" cx="90" cy="90" rx="10" ry="16" fill="#3a5332" transform="rotate(-10 90 90)"/><circle cx="60" cy="55" r="30" fill="#4a6741"/><ellipse cx="60" cy="58" rx="23" ry="22" fill="#f0e8c8"/><circle cx="49" cy="54" r="11" fill="#1c1c2e"/><circle cx="49" cy="54" r="8.5" fill="#3a7a68"/><circle cx="49" cy="54" r="5" fill="#1c1c2e"/><circle cx="46.5" cy="51.5" r="2.2" fill="#fff"/><circle cx="71" cy="54" r="11" fill="#1c1c2e"/><circle cx="71" cy="54" r="8.5" fill="#3a7a68"/><circle cx="71" cy="54" r="5" fill="#1c1c2e"/><circle cx="68.5" cy="51.5" r="2.2" fill="#fff"/><path d="M56 63 Q60 69 64 63 Q62 67 60 68 Q58 67 56 63Z" fill="#c8a040"/><ellipse cx="44" cy="28" rx="7" ry="11" fill="#3a5332" transform="rotate(-20 44 28)"/><ellipse cx="76" cy="28" rx="7" ry="11" fill="#3a5332" transform="rotate(20 76 28)"/><polygon points="42,75 56,80 56,70" fill="#f0306a"/><polygon points="78,75 64,80 64,70" fill="#f0306a"/><circle cx="60" cy="75" r="5.5" fill="#c01050"/><path d="M50 113l-7 9M50 113v10M50 113l7 9M70 113l-7 9M70 113v10M70 113l7 9" stroke="#c8a040" stroke-width="3.5" stroke-linecap="round"/></svg>`;
+  // Maru (まる) the lucky cat — the app's mascot. Classes: big / mini / cheer / wave (paw beckons) / sad
+  A.mascot = (cls = '') => `<svg class="mascot ${cls}" viewBox="0 0 120 130" aria-hidden="true"><ellipse cx="60" cy="124" rx="32" ry="4" fill="#0002"/>
+    <path d="M30 96c0-16 13-26 30-26s30 10 30 26v16c0 7-6 11-12 11H42c-6 0-12-4-12-11z" fill="#fffaf2" stroke="#ead9c6" stroke-width="1.5"/>
+    <ellipse cx="74" cy="104" rx="10" ry="8" fill="#e5a15a"/><path d="M40 122v-6M80 122v-6" stroke="#ead9c6" stroke-width="2" stroke-linecap="round"/>
+    <g class="paw"><path d="M88 86c8-6 10-20 6-30" stroke="#fffaf2" stroke-width="13" stroke-linecap="round" fill="none"/><circle cx="94" cy="53" r="9" fill="#fffaf2" stroke="#ead9c6" stroke-width="1.5"/><path d="M90 50h8M90 54h8" stroke="#e8c9b8" stroke-width="1.5"/></g>
+    <path d="M24 34 30 8l20 16z" fill="#fffaf2"/><path d="M96 34 90 8 70 24z" fill="#2a2522"/><path d="M29 29 32 15l10 8z" fill="#f6b9c4"/><path d="M91 29 88 15l-10 8z" fill="#f6b9c4"/>
+    <ellipse cx="60" cy="48" rx="35" ry="30" fill="#fffaf2" stroke="#ead9c6" stroke-width="1.5"/>
+    <path d="M78 22c10 4 16 12 17 22-8-2-14-8-17-22z" fill="#2a2522"/><path d="M34 30c4-4 10-7 14-7-2 6-8 10-14 7z" fill="#e5a15a"/>
+    <g class="face-happy"><path d="M42 48q5 4 10 0M68 48q5 4 10 0" stroke="#2a2522" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M54 62q3 3 6 0 3 3 6 0" stroke="#2a2522" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+    <g class="face-sad"><path d="M42 50q5-4 10-1M68 49q5-3 10 1" stroke="#2a2522" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M54 65q6-5 12 0" stroke="#2a2522" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M80 55q2 5 0 7q-2-2 0-7z" fill="#7fb6e8"/></g>
+    <path d="M57 56h6l-3 3z" fill="#f08aa0"/>
+    <path d="M24 52h12M24 58l12-2M96 52H84M96 58l-12-2" stroke="#cdbfb2" stroke-width="1.5"/>
+    <ellipse cx="38" cy="58" rx="5" ry="3" fill="#f59a9a" opacity=".7"/><ellipse cx="82" cy="58" rx="5" ry="3" fill="#f59a9a" opacity=".7"/>
+    <path d="M36 76q24 10 48 0" stroke="#c23a3a" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="60" cy="84" r="6" fill="#e8b84a"/><path d="M57 85h6" stroke="#9c7a2a" stroke-width="1.5"/></svg>`;
 
   // Icons (24×24, stroke)
   const IC = {

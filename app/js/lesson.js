@@ -110,7 +110,7 @@
     const close = () => { A.speakStop(); root.remove(); document.body.classList.remove('in-lesson'); };
     A.$('[data-quit]', root).addEventListener('click', () => {
       if (done === 0) { close(); cfg.onDone && cfg.onDone(null); return; }
-      const s = A.sheet(`<div class="sheet-body center">${A.owl('sad')}<h2>Wait, don’t go!</h2><p class="muted">You’ll lose your progress in this lesson if you quit now.</p>
+      const s = A.sheet(`<div class="sheet-body center">${A.mascot('sad')}<h2>Wait, don’t go!</h2><p class="muted">You’ll lose your progress in this lesson if you quit now.</p>
         <button class="btn primary block" data-close>Keep learning</button><button class="btn ghost danger block" data-end>End session</button></div>`);
       A.$('[data-end]', s.el).addEventListener('click', () => { s.close(); close(); cfg.onDone && cfg.onDone(null); });
     });
@@ -172,7 +172,7 @@
         const chosen = [];
         body.innerHTML = `<div class="ex">
           <h2 class="ex-title">${esc(e.title)}</h2>
-          <div class="prompt-row">${A.owl('mini')}<div class="bubble-prompt speech"><span class="${e.promptJp ? 'jp small' : ''}" lang="${e.promptJp ? 'ja' : 'en'}">${esc(e.prompt)}</span>${e.promptJp ? hint(e.item) : ''}</div>${speakerBtn(e.say)}</div>
+          <div class="prompt-row">${A.mascot('mini')}<div class="bubble-prompt speech"><span class="${e.promptJp ? 'jp small' : ''}" lang="${e.promptJp ? 'ja' : 'en'}">${esc(e.prompt)}</span>${e.promptJp ? hint(e.item) : ''}</div>${speakerBtn(e.say)}</div>
           <div class="answer-line" data-line></div>
           <div class="tiles" data-tiles>${e.tiles.map((t, i) => `<button class="tile ${e.tileJp ? 'jp' : ''}" data-t="${i}" ${e.tileJp ? 'lang="ja"' : ''}>${esc(t)}</button>`).join('')}</div></div>`;
         if (e.promptJp) setTimeout(() => A.speak(e.say), 150);
@@ -285,7 +285,7 @@
       const acc = Math.max(0, Math.round(((done) / Math.max(1, done + mistakes)) * 100));
       if (!completed) {
         A.sfx('wrong');
-        body.innerHTML = `<div class="ex center result">${A.owl('sad big')}<h1>Out of petals</h1><p class="muted">Petals grow back one every 30 minutes — or earn one now with a quick practice session.</p></div>`;
+        body.innerHTML = `<div class="ex center result">${A.mascot('sad big')}<h1>Out of petals</h1><p class="muted">Petals grow back one every 30 minutes — or earn one now with a quick practice session.</p></div>`;
         foot.className = 'lesson-foot';
         foot.innerHTML = '<button class="btn primary block lg" data-p>Practice to earn a petal</button><button class="btn ghost block" data-q>No thanks</button>';
         A.$('[data-p]', foot).addEventListener('click', () => { close(); cfg.onDone && cfg.onDone({ outOfHearts: true, practice: true }); });
@@ -306,7 +306,7 @@
             <div><dt>${A.icon('target')} Accuracy</dt><dd>${acc}%</dd></div>
             <div><dt>⏱ Time</dt><dd>${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}</dd></div>
           </dl>
-        </div>${A.owl('cheer mini result-owl')}</div>`;
+        </div>${A.mascot('cheer mini result-mascot')}</div>`;
       foot.className = 'lesson-foot';
       foot.innerHTML = '<button class="btn primary block lg" data-cont>Continue</button>';
       A.$('[data-cont]', foot).addEventListener('click', () => {

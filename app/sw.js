@@ -1,6 +1,6 @@
 // Offline support: the app and its study content are cached so lessons work without a connection.
 // Bump VERSION whenever app files change so phones pick up the update.
-const VERSION = 'sakura-app-v2';
+const VERSION = 'sakura-app-v3';
 const FILES = [
   './', './index.html', './app.css', './manifest.webmanifest',
   './js/core.js', './js/course.js', './js/lesson.js', './js/screens.js', './js/main.js',

@@ -96,7 +96,7 @@
         return `<div class="node-wrap" style="transform:translateX(${off}px)">
           ${isCur ? `<div class="start-bubble" lang="ja">はじめ <small>Start</small></div>` : ''}
           <button class="node ${isDone ? 'done' : ''} ${isCur ? 'current' : ''} ${locked ? 'locked' : ''}" data-lesson="${l.key}" aria-label="Lesson ${i + 1}${isDone ? ', completed' : locked ? ', locked' : ''}">${face}</button>
-          ${i === 2 && !locked ? `<div class="path-owl" style="transform:translateX(${off > 0 ? -118 : 118}px)">${A.owl('mini')}</div>` : ''}
+          ${i === 2 && !locked ? `<div class="path-mascot" style="transform:translateX(${off > 0 ? -118 : 118}px)">${A.mascot('mini')}</div>` : ''}
         </div>`;
       }).join('')}</div></section>`;
   }
@@ -118,7 +118,7 @@
 
   function startLesson(l) {
     if (A.hearts() === 0) {
-      const s = A.sheet(`<div class="sheet-body center">${A.owl('sad')}<h2>Out of petals</h2><p class="muted">The next petal grows back in ${Math.ceil(A.nextHeartIn() / 60000)} minutes — or practise to earn one now.</p>
+      const s = A.sheet(`<div class="sheet-body center">${A.mascot('sad')}<h2>Out of petals</h2><p class="muted">The next petal grows back in ${Math.ceil(A.nextHeartIn() / 60000)} minutes — or practise to earn one now.</p>
         <button class="btn primary block" data-close data-p>Practice to earn a petal</button></div>`);
       A.$('[data-p]', s.el).addEventListener('click', () => A.startPractice('review', true));
       return;
@@ -296,12 +296,12 @@
     root.className = 'onboard';
     let goal = 20;
     const steps = [
-      () => `<div class="ob-body">${A.owl('big wave')}<div class="speech-bubble">こんにちは！ I’m <b>Me3temed</b>.<br>Let’s learn Japanese together!</div></div>
+      () => `<div class="ob-body">${A.mascot('big wave')}<div class="speech-bubble">こんにちは！ I’m <b>Maru</b>, your lucky cat.<br>Let’s learn Japanese together!</div></div>
         <div class="ob-foot"><button class="btn primary block lg" data-next>Get started</button></div>`,
-      () => `<div class="ob-body"><div class="ob-row">${A.owl('mini')}<div class="speech-bubble left">What’s your daily learning goal?</div></div>
+      () => `<div class="ob-body"><div class="ob-row">${A.mascot('mini')}<div class="speech-bubble left">What’s your daily learning goal?</div></div>
         <div class="goal-opts list">${[[10, 'Casual', '5 min'], [20, 'Regular', '10 min'], [30, 'Serious', '15 min'], [50, 'Intense', '20 min']].map(([v, l, m]) => `<button class="${goal === v ? 'on' : ''}" data-goal="${v}"><b>${m} / day</b><small>${l}</small></button>`).join('')}</div></div>
         <div class="ob-foot"><button class="btn primary block lg" data-next>Continue</button></div>`,
-      () => `<div class="ob-body">${A.owl('big cheer')}<div class="speech-bubble">Great! We’ll start with <b>hiragana</b>, the first Japanese alphabet. 🌸</div></div>
+      () => `<div class="ob-body">${A.mascot('big cheer')}<div class="speech-bubble">Great! We’ll start with <b>hiragana</b>, the first Japanese alphabet. 🌸</div></div>
         <div class="ob-foot"><button class="btn primary block lg" data-next>Start my first lesson</button></div>`,
     ];
     let i = 0;
