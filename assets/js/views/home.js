@@ -17,6 +17,7 @@
       { label: 'Kana', glyph: 'あ', route: 'review?deck=kana', done: S.store.cards.mastered(ids('kana'), cards), total: ids('kana').length, how: 'mastered in flashcards' },
       { label: 'Kanji', glyph: '漢', route: 'review?deck=kanji', done: S.store.cards.mastered(ids('kanji'), cards), total: KANJI.length, how: 'mastered in flashcards' },
       { label: 'Vocabulary', glyph: '語', route: 'review?deck=vocab', done: S.store.cards.mastered(ids('vocab'), cards), total: ids('vocab').length, how: 'mastered in flashcards' },
+      { label: 'Grammar course', glyph: '学', route: 'course', done: S.course.doneCount(), total: GRAMMAR_COURSE.length, how: 'lessons completed' },
       { label: 'Grammar', glyph: '文', route: 'grammar', done: S.store.srs.count('grammar', 'known'), total: grammarTotal, how: 'marked “Know it”' },
       { label: 'Phrases', glyph: '話', route: 'phrases', done: S.store.srs.count('phrases', 'known'), total: SURVIVAL_PHRASES.length, how: 'marked “Know it”' },
       { label: 'Listening', glyph: '聴', route: 'listening', done: S.store.srs.count('listen', 'known'), total: listenTotal, how: 'marked “Know it”' },
@@ -26,6 +27,8 @@
   function nextSteps(due) {
     const steps = [];
     if (due) steps.push({ glyph: '覚', title: `Review ${due} due card${due > 1 ? 's' : ''}`, sub: 'Spaced repetition keeps them in long-term memory', route: 'review' });
+    const cm = S.course.nextModule();
+    if (cm) steps.push({ glyph: '学', title: `Lesson ${cm.n}: ${cm.title}`, sub: `Grammar course · ${S.course.doneCount()} of ${GRAMMAR_COURSE.length} lessons done`, route: `course/${cm.id}` });
     const ai = S.aiPlanNext();
     if (ai) steps.push({ glyph: '計', title: ai.task.text, sub: `Your plan · ${ai.week.label}: ${ai.week.focus}`, route: ai.task.section !== 'none' ? ai.task.section : 'myplan' });
     const plan = S.store.plan.all();

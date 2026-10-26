@@ -76,6 +76,7 @@
       messages: () => messages,
       reset(greeting = opts.greeting) { messages = [{ role: 'assistant', content: greeting }]; save(); paint(); },
       push(m) { messages.push(m); save(); paint(); },
+      send,
     };
   };
 

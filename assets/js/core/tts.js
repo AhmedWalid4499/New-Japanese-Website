@@ -62,5 +62,36 @@
       if (S.ai && S.ai.useVoice()) aiSpeak(clean, r, btn);
       else browserSpeak(clean, r, btn);
     },
+    // Speak and resolve when finished — for playing dialogues line by line.
+    // gender 'f' | 'm' picks a matching ChatGPT voice (or shifts the browser voice's pitch).
+    say(text, { gender, voice: v, rate } = {}) {
+      const clean = String(text).replace(/[()（）]/g, '').trim();
+      const r = rate || S.store.settings.get('ttsRate') || 0.85;
+      S.tts.stop();
+      return new Promise((resolve) => {
+        if (!clean) { resolve(); return; }
+        const viaBrowser = () => {
+          if (!synth) { resolve(); return; }
+          const u = new SpeechSynthesisUtterance(clean);
+          u.lang = 'ja-JP'; u.rate = r;
+          if (voice) u.voice = voice;
+          if (gender) u.pitch = gender === 'm' ? 0.75 : 1.2;
+          u.onend = u.onerror = () => resolve();
+          synth.speak(u);
+        };
+        if (!(S.ai && S.ai.useVoice())) { viaBrowser(); return; }
+        const name = v || (gender ? S.ai.SPEAKER_VOICES[gender][0] : undefined);
+        S.ai.speechUrl(clean, { slow: r < 0.7, voice: name }).then((url) => {
+          audio = new Audio(url);
+          audio.playbackRate = Math.max(0.5, Math.min(1.5, r / 0.85));
+          audio.onended = audio.onerror = () => resolve();
+          audio.onpause = () => resolve();
+          return audio.play();
+        }).catch((e) => {
+          if (!warned) { S.toast(`ChatGPT voice unavailable — using the browser voice. (${e.message})`); warned = true; }
+          viaBrowser();
+        });
+      });
+    },
   };
 })(window.S);

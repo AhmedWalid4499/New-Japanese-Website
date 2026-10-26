@@ -9,7 +9,7 @@ Accounts are optional and only used to sync progress across devices.
 
 | Learn | Practice | Track | Explore |
 |---|---|---|---|
-| Kana · Grammar (50 patterns) · Kanji (82, with stroke order) · Vocabulary (540+) · Adjectives · Counters · Numbers & time · Survival phrases | Flashcards (spaced repetition) · Quizzes (kana, kanji, vocab, numbers) · Sentence drills · Listening · Reading (16 passages) · Writing · Mock exam | Progress & streaks · Bookmarks · 8-week study plan | Dictionary · Anime corner · Resources |
+| Kana · **Grammar course (32 step-by-step lessons)** · Grammar reference (50 patterns) · Kanji (82, with stroke order) · Vocabulary (540+) · Adjectives · Counters · Numbers & time · Survival phrases | AI tutor · Speaking · Flashcards (spaced repetition) · Quizzes · Conjugation trainer · Sentence drills · Listening · Dialogues · Reading (16 passages) · Stories · Writing (AI-corrected) · Full JLPT N5 mock exam | Progress & streaks · Bookmarks · 8-week study plan | Dictionary · Anime corner · Resources |
 
 Press <kbd>/</kbd> or <kbd>Ctrl/⌘ K</kbd> anywhere to search everything.
 
@@ -29,7 +29,10 @@ assets/js/
 
 | To change…            | Open                          | Find                  |
 |-----------------------|-------------------------------|-----------------------|
+| Grammar course lessons | `assets/js/data/course1.js`, `course2.js` (units in `course.js`) | `GRAMMAR_COURSE_1`, `GRAMMAR_COURSE_2`, `COURSE_UNITS` |
 | Grammar patterns      | `assets/js/data/grammar.js`   | `GRAMMAR_SECTIONS`    |
+| Stories / dialogues   | `assets/js/data/stories.js`, `dialogues.js` | `STORIES`, `DIALOGUES` |
+| Conjugation verbs & adjectives | `assets/js/shared/conjugate.js` | `VERBS`, `ADJS` |
 | Kanji                 | `assets/js/data/kanji.js`     | `KANJI`               |
 | Vocabulary / adj pairs| `assets/js/data/vocab.js`     | `VOCAB`, `ADJ_PAIRS`  |
 | Counters              | `assets/js/data/counters.js`  | `COUNTERS`            |
@@ -60,10 +63,14 @@ Open **Account & settings → AI & voice** and add your own keys:
 - **Claude API key** (Anthropic) powers:
   - **AI tutor** — chat with "Sensei", who knows your progress, explains grammar, quizzes you and corrects sentences.
   - **Study plan** — the AI coach interviews you (level, goals, deadline, time per day) and builds a week-by-week plan whose tasks link to the right pages. Plans sync with your account; the classic 8-week plan is still under **N5 roadmap**.
+  - **Writing** — "Check with Sensei" grades your translations (any correct answer counts) and corrects free writing (diary, self-introduction…) sentence by sentence.
+  - **Stories & dialogues** — Claude writes new graded stories and JLPT-style conversations on any topic.
+  - **Speaking** — judges "repeat after me" attempts and plays your partner in spoken role-plays (café, directions, self-introduction…), then gives feedback.
+  - **Ask Sensei** buttons on every grammar lesson and pattern.
   - Choose Claude Opus 5.5 (default), Sonnet 5.5 or Haiku 5.5.
-- **ChatGPT API key** (OpenAI) powers **ChatGPT voice** — switch "Voice engine" to ChatGPT for natural Japanese pronunciation on every speaker button.
+- **ChatGPT API key** (OpenAI) powers **ChatGPT voice** — switch "Voice engine" to ChatGPT for natural Japanese pronunciation on every speaker button (dialogues get two different voices) — and **listens when you speak** (speech-to-text). Without it, speaking practice uses the browser's own speech recognition (Safari / Chrome).
 
-Chat uses the official Anthropic JavaScript SDK (loaded from jsDelivr, version pinned in `assets/js/core/ai.js`).
+The AI code lives in `assets/js/shared/sakura-ai.js` and is shared by the website and the app; chat uses the official Anthropic JavaScript SDK (loaded from jsDelivr, version pinned there).
 Keys are stored only in your browser (never synced or included in backups) and usage is billed to your own accounts.
 
 ## 📱 Sakura Study iPhone app (`app/`)
@@ -72,7 +79,8 @@ A separate mobile app with a Duolingo-like learning loop but its own look — a 
 
 - **Path (道)** — a winding ink trail of 19 chapters (hiragana → greetings → katakana → numbers → sentences → … → expressions), ~180 bite-sized lessons with multiple choice, listening, match-the-pairs, build-the-sentence and fill-in-the-blank exercises.
 - **Petals (lives), XP, a lantern streak, daily goal and achievements**, with Maru the lucky cat cheering you on.
-- **Letters** (kana charts with audio), **Practice** (personalized review, mistakes, listening, phrasebook) and **Profile** (stats, weekly chart, settings).
+- **Grammar (文)** — the full 32-lesson grammar course: read the lesson, listen to the examples, then practise it.
+- **Letters** (kana charts with audio), **Practice** (personalized review, mistakes, listening, phrasebook, conjugation drill, stories, dialogues, repeat-after-me speaking, and talking with Claude) and **Profile** (stats, weekly chart, settings incl. **AI & voice** — the same keys as the website).
 - Works **offline** and saves progress on the phone.
 
 **Install on iPhone:** open `https://<your-username>.github.io/<repo>/app/` in **Safari** → tap **Share** → **Add to Home Screen** → **Add**. Sakura Study then opens full-screen from its own icon like any other app.

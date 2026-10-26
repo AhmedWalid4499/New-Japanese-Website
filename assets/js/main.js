@@ -7,7 +7,8 @@
     { group: '', items: [{ id: 'home', label: 'Home', glyph: '家', desc: 'Your study dashboard' }] },
     { group: 'Learn', items: [
       { id: 'kana', label: 'Kana', glyph: 'あ', desc: 'Hiragana & katakana charts' },
-      { id: 'grammar', label: 'Grammar', glyph: '文', desc: `${GRAMMAR_SECTIONS.reduce((a, s) => a + s.items.length, 0)} N5 patterns with examples` },
+      { id: 'course', label: 'Grammar course', glyph: '学', desc: `${GRAMMAR_COURSE.length} step-by-step grammar lessons` },
+      { id: 'grammar', label: 'Grammar reference', glyph: '文', desc: `${GRAMMAR_SECTIONS.reduce((a, s) => a + s.items.length, 0)} N5 patterns at a glance` },
       { id: 'kanji', label: 'Kanji', glyph: '漢', desc: `${KANJI.length} N5 kanji with stroke order` },
       { id: 'vocab', label: 'Vocabulary', glyph: '語', desc: `${VOCAB.length} words by topic` },
       { id: 'adjectives', label: 'Adjectives', glyph: '形', desc: 'い / な adjectives & opposites' },
@@ -17,13 +18,17 @@
     ] },
     { group: 'Practice', items: [
       { id: 'tutor', label: 'AI tutor', glyph: '先', desc: 'Chat with a Claude-powered teacher' },
+      { id: 'speaking', label: 'Speaking', glyph: '声', desc: 'Repeat after me & spoken role-play' },
       { id: 'review', label: 'Flashcards', glyph: '覚', desc: 'Spaced-repetition review' },
       { id: 'quiz', label: 'Quizzes', glyph: '問', desc: 'Kana, kanji, vocab & numbers' },
+      { id: 'conjugate', label: 'Conjugation', glyph: '活', desc: 'Drill verb & adjective forms' },
       { id: 'drills', label: 'Sentence drills', glyph: '練', desc: 'Fill-in-the-blank grammar' },
       { id: 'listening', label: 'Listening', glyph: '聴', desc: 'Listen first, then reveal' },
+      { id: 'dialogues', label: 'Dialogues', glyph: '会', desc: 'JLPT-style conversations, two voices' },
       { id: 'reading', label: 'Reading', glyph: '読', desc: 'Passages with comprehension questions' },
-      { id: 'writing', label: 'Writing', glyph: '書', desc: 'Translate English into Japanese' },
-      { id: 'exam', label: 'Mock exam', glyph: '試', desc: '30-question timed N5 test' },
+      { id: 'stories', label: 'Stories', glyph: '物', desc: 'Tap-to-translate graded stories' },
+      { id: 'writing', label: 'Writing', glyph: '書', desc: 'Translate & free writing, AI-corrected' },
+      { id: 'exam', label: 'Mock exam', glyph: '試', desc: 'Full JLPT N5 mock with real scoring' },
     ] },
     { group: 'Track', items: [
       { id: 'progress', label: 'Progress', glyph: '進', desc: 'Streaks, mastery and history' },
@@ -104,7 +109,7 @@
     S.$('#search-btn').innerHTML = `${S.icon('search')}<span>Search</span><kbd>/</kbd>`;
     S.$('#sound-btn').innerHTML = S.icon('music');
     S.$('#bottom-nav').innerHTML = [
-      ['home', '家', 'Home'], ['review', '覚', 'Cards'], ['quiz', '問', 'Quiz'], ['progress', '進', 'Progress'],
+      ['home', '家', 'Home'], ['review', '覚', 'Cards'], ['course', '学', 'Grammar'], ['progress', '進', 'Progress'],
     ].map(([id, g, l]) => `<a href="#/${id}" data-nav="${id}"><span class="glyph" lang="ja">${g}</span>${l}</a>`).join('') +
       `<button id="bottom-menu" aria-label="All sections">${S.icon('grid')}Menu</button>`;
 

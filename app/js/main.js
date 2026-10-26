@@ -1,8 +1,9 @@
 // App shell: tab bar + screen switching, service worker, first-run onboarding.
 (function (A) {
-  // Kanji tabs: 道 the path, 字 letters, 練 practice, 私 me
+  // Kanji tabs: 道 the path, 文 grammar, 字 letters, 練 practice, 私 me
   const TABS = [
     { id: 'learn', label: 'Path', glyph: '道' },
+    { id: 'grammar', label: 'Grammar', glyph: '文' },
     { id: 'letters', label: 'Letters', glyph: '字' },
     { id: 'practice', label: 'Practice', glyph: '練' },
     { id: 'profile', label: 'Me', glyph: '私' },
