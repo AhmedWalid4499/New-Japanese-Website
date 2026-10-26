@@ -12,9 +12,11 @@
     plan: 'sakura_plan',          // {'week-task': true}
     dict: 'sakura_dict_history',  // ['word', ...]
     aiplan: 'sakura_ai_plan',     // personalised plan from the AI coach {title, weeks, done, updated, ...}
+    course: 'sakura_course',      // grammar course {moduleId: {best, done, date}}
+    stories: 'sakura_stories',    // stories/dialogues finished {id: {best, date}}
   };
   // Device-only keys: never exported or synced (API keys, chat transcripts)
-  const LOCAL_ONLY = ['sakura_ai_keys', 'sakura_ai_chat', 'sakura_ai_interview'];
+  const LOCAL_ONLY = ['sakura_ai_keys', 'sakura_ai_chat', 'sakura_ai_interview', 'sakura_ai_stories', 'sakura_ai_dialogues'];
   const CUSTOM_TYPES = ['vocab', 'kanji', 'grammar', 'adj', 'counters'];
   const customKey = (t) => `sakura_custom_${t}`;
 
@@ -205,6 +207,10 @@
     out.plan = { ...(remote.plan || {}), ...(local.plan || {}) };
     const ra = remote.aiplan, la = local.aiplan;
     out.aiplan = ra && la ? ((ra.updated || 0) > (la.updated || 0) ? ra : la) : (la || ra || null);
+    ['course', 'stories'].forEach((k) => {
+      out[k] = { ...(remote[k] || {}) };
+      Object.entries(local[k] || {}).forEach(([id, v]) => { const r = out[k][id]; out[k][id] = r ? { ...newer(v, r), best: Math.max(v.best || 0, r.best || 0), done: !!(v.done || r.done) } : v; });
+    });
     out.dict = S.uniq([...(local.dict || []), ...(remote.dict || [])]).slice(0, 12);
     for (const [name, key] of Object.entries(KEYS)) if (out[name] != null) write(key, out[name], true);
     CUSTOM_TYPES.forEach((t) => {

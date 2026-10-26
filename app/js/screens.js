@@ -37,7 +37,7 @@
 
   const ring = (pct, label, size = 120) => {
     const r = (size - 14) / 2, c = 2 * Math.PI * r;
-    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/>
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--rule)" stroke-width="12"/>
       <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--gold)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c - (c * pct) / 100}" transform="rotate(-90 ${size / 2} ${size / 2})"/>
       <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" class="ring-text">${label}</text></svg>`;
   };
@@ -208,12 +208,15 @@
         ${card('listen', 'Listening', 'Train your ear with native audio', '聴', '#3b5a8c', '#2c446b')}
         ${card('phrases', 'Phrasebook', 'Survival phrases with audio', '話', '#c9922a', '#a0731d')}
       </div>
+      <h3 class="section-label">Skills</h3>
+      <div class="practice-list">${A.extraCards().map(([id, t, sub, g, c, d]) => card(id, t, sub, g, c, d)).join('')}</div>
       <p class="muted center small">${learned} words, characters and phrases learned so far.</p>`;
     el.addEventListener('click', (e) => {
       const c = e.target.closest('[data-p]');
       if (!c) return;
       if (c.dataset.p === 'phrases') return phrasebook();
-      A.startPractice(c.dataset.p);
+      if (['review', 'mistakes', 'listen'].includes(c.dataset.p)) return A.startPractice(c.dataset.p);
+      A.openExtra(c.dataset.p);
     });
   };
   const card = (id, title, sub, glyph, color, dark) => `<button class="pcard" data-p="${id}" style="--u:${color};--ud:${dark}"><span class="pcard-icon" lang="ja">${glyph}</span><span class="pcard-text"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="chev">›</span></button>`;
@@ -233,6 +236,8 @@
     { id: 'streak7', title: 'On fire', desc: 'Reach a 7 day streak', icon: '🔥', test: () => A.state.streak.best >= 7 },
     { id: 'words100', title: 'Word collector', desc: 'Learn 100 items', icon: '📚', test: () => A.learnedCount() >= 100 },
     { id: 'units5', title: 'Explorer', desc: 'Complete 5 units', icon: '🗾', test: () => A.UNITS.filter((u) => A.unitProgress(u) === u.lessons.length).length >= 5 },
+    { id: 'grammar5', title: 'Grammar explorer', desc: 'Complete 5 grammar lessons', icon: '文', test: () => Object.values(A.state.grammar || {}).filter((g) => g.done).length >= 5 },
+    { id: 'grammarAll', title: 'Grammar master', desc: 'Complete the whole grammar course', icon: '🎓', test: () => typeof GRAMMAR_COURSE !== 'undefined' && GRAMMAR_COURSE.every((m) => A.state.grammar?.[m.id]?.done) },
     { id: 'xp1000', title: 'Sensei in training', desc: 'Earn 1,000 XP', icon: '🏆', test: () => A.state.xp >= 1000 },
   ];
   A.checkAchievements = () => {
@@ -277,6 +282,7 @@
       <label class="toggle"><span>Show romaji hints</span><input type="checkbox" data-t="romaji" ${p.romaji ? 'checked' : ''}><i></i></label>
       <div class="field"><span>Speaking speed</span><div class="goal-opts three">${[[0.6, 'Slow'], [0.85, 'Natural'], [1, 'Fast']].map(([v, l]) => `<button class="${p.rate === v ? 'on' : ''}" data-rate="${v}"><b>${l}</b></button>`).join('')}</div></div>
       <button class="btn block" data-test>${A.icon('volume')} Test voice</button>
+      <button class="btn block" data-ai>${A.icon('spark')} AI & voice (Claude · ChatGPT)</button>
       <button class="btn primary block" data-close>Done</button>
       <button class="btn ghost danger block" data-reset>Reset all progress</button></div>`, { onClose: () => A.go(A.tab) });
     s.el.addEventListener('input', (e) => { if (e.target.matches('[data-name]')) { p.name = e.target.value.trim(); A.save(); } });
@@ -285,6 +291,7 @@
       const g = e.target.closest('[data-goal]'), r = e.target.closest('[data-rate]');
       if (g) { p.goal = +g.dataset.goal; A.$$('[data-goal]', s.el).forEach((b) => b.classList.toggle('on', b === g)); A.save(); }
       if (r) { p.rate = +r.dataset.rate; A.$$('[data-rate]', s.el).forEach((b) => b.classList.toggle('on', b === r)); A.save(); A.speak('こんにちは'); }
+      if (e.target.closest('[data-ai]')) { s.close(); setTimeout(A.aiSettings, 260); return; }
       if (e.target.closest('[data-test]')) A.speak('こんにちは。いっしょに にほんごを べんきょうしましょう。');
       if (e.target.closest('[data-reset]') && confirm('Reset ALL progress in the app? This can’t be undone.')) A.resetAll();
     });

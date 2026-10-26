@@ -35,7 +35,7 @@
       ${item.examples?.length ? `<ul class="examples">${item.examples.map(example).join('')}</ul>` : ''}
       ${item.conjugationTable ? conj(item.conjugationTable) : ''}
       ${item.extraNote ? `<div class="callout">${esc(item.extraNote)}</div>` : ''}
-      ${custom ? '' : `<footer class="card-foot">${S.ui.know('grammar', id)}</footer>`}
+      <footer class="card-foot">${custom ? '' : S.ui.know('grammar', id)}<span class="spacer"></span><button class="btn ghost sm" data-ask="${esc(`Explain the grammar pattern ${item.pattern} (${item.meaning}) in a simple way with new examples, then quiz me with one question.`)}">${S.icon('chat')} Ask Sensei</button></footer>
     </article>`;
   }
 
@@ -46,7 +46,7 @@
       const known = () => GRAMMAR_SECTIONS.reduce((a, s) => a + s.items.filter((_, i) => S.store.srs.get('grammar', `gc_${s.id}_${i}`) === 'known').length, 0);
 
       root.innerHTML = `
-        ${S.ui.pageHead({ kicker: 'Learn', title: 'Grammar', jp: 'ぶんぽう', desc: `${total} JLPT N5 patterns organised by topic. Mark each one <b>Know it</b> as you master it.`, actions: `<button class="btn" data-add>${S.icon('plus')} Add pattern</button>` })}
+        ${S.ui.pageHead({ kicker: 'Learn', title: 'Grammar', jp: 'ぶんぽう', desc: `${total} JLPT N5 patterns organised by topic — a quick reference. For step-by-step lessons, follow the <a href="#/course">grammar course</a>. Mark each pattern <b>Know it</b> as you master it.`, actions: `<button class="btn" data-add>${S.icon('plus')} Add pattern</button>` })}
         <div class="toolbar sticky">
           ${S.ui.chips('cat', [{ value: 'all', label: 'All' }, ...GRAMMAR_SECTIONS.map((s) => ({ value: s.id, label: SHORT[s.id] || s.title, count: s.items.length })), { value: 'mine', label: 'Mine', count: S.store.custom.list('grammar').length }], cat)}
           ${S.ui.searchBox('Search patterns, e.g. te-form, want, particle')}
@@ -82,6 +82,8 @@
         const chip = e.target.closest('[data-chip]');
         if (chip) { cat = chip.dataset.chip; S.ui.setChip(root, 'cat', cat); paint(); return; }
         if (e.target.closest('[data-add]')) { S.custom.openForm('grammar', () => { cat = 'mine'; S.ui.setChip(root, 'cat', 'mine'); paint(); }); return; }
+        const ask = e.target.closest('[data-ask]');
+        if (ask) { S.askSensei(ask.dataset.ask); return; }
         const del = e.target.closest('[data-del]');
         if (del) { S.custom.remove('grammar', +del.dataset.del, paint); return; }
         if (e.target.closest('[data-srs]')) setTimeout(paintKnown, 0);

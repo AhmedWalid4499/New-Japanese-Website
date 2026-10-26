@@ -112,15 +112,41 @@ window.A = window.A || {};
     voice = vs.find((v) => /kyoko|otoya|o-ren|hattori|google|nanami/i.test(v.name)) || vs[0] || null;
   };
   if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
-  A.speak = (text, slow) => {
-    if (!synth || !text) return;
-    synth.cancel();
-    const u = new SpeechSynthesisUtterance(String(text).replace(/_{2,}/g, '、').replace(/[()（）]/g, ''));
+  // ChatGPT voice when it's switched on in settings (keys are shared with the website), else iOS voices
+  const AI = window.SakuraAI;
+  let player = null, warned = false;
+  const clean = (text) => String(text).replace(/_{2,}/g, '、').replace(/[()（）]/g, '');
+  function browserSay(text, rate, gender, done) {
+    if (!synth) { done && done(); return; }
+    const u = new SpeechSynthesisUtterance(text);
     u.lang = 'ja-JP';
-    u.rate = slow ? 0.5 : state.profile.rate;
+    u.rate = rate;
     if (voice) u.voice = voice;
+    if (gender) u.pitch = gender === 'm' ? 0.75 : 1.2;
+    if (done) u.onend = u.onerror = () => done();
     synth.speak(u);
-  };
+  }
+  A.speakStop = () => { try { synth && synth.cancel(); } catch (e) {} if (player) { player.pause(); player = null; } };
+  // Speak and resolve when finished. opts: { slow, gender: 'f'|'m', voice }
+  A.say = (text, { slow, gender, voice: v } = {}) => new Promise((resolve) => {
+    const t = clean(text || '').trim();
+    A.speakStop();
+    if (!t) { resolve(); return; }
+    const rate = slow ? 0.5 : state.profile.rate;
+    if (!(AI && AI.useVoice())) { browserSay(t, rate, gender, resolve); return; }
+    const name = v || (gender ? AI.SPEAKER_VOICES[gender][0] : undefined);
+    AI.speechUrl(t, { slow, voice: name }).then((url) => {
+      const a = new Audio(url);
+      player = a;
+      a.playbackRate = slow ? 0.8 : Math.max(0.6, Math.min(1.4, rate / 0.85));
+      a.onended = a.onerror = a.onpause = () => resolve();
+      return a.play();
+    }).catch((e) => {
+      if (!warned) { A.toast('ChatGPT voice unavailable — using the iPhone voice'); warned = true; }
+      browserSay(t, rate, gender, resolve);
+    });
+  });
+  A.speak = (text, slow) => { if (text) A.say(text, { slow }); };
 
   // ── Small UI helpers ──
   A.toast = (msg) => {
@@ -192,6 +218,12 @@ window.A = window.A || {};
     turtle: '<path d="M4 15c0-4 3.6-7 8-7s8 3 8 7H4z" fill="currentColor"/><path d="M6 15v3M18 15v3M20 13h2"/>',
     share: '<path d="M12 3v12M8 7l4-4 4 4M5 12v8h14v-8"/>',
     target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
+    mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+    stop: '<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>',
+    play: '<path d="M7 4v16l13-8z" fill="currentColor"/>',
+    spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="currentColor"/>',
+    chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+    send: '<path d="M4 12h15M13 6l6 6-6 6"/>',
     trophy: '<path d="M8 4h8v6a4 4 0 0 1-8 0zM8 6H4a3 3 0 0 0 4 4M16 6h4a3 3 0 0 1-4 4M12 14v4M8 21h8"/>',
   };
   A.icon = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;

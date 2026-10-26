@@ -19,9 +19,13 @@ Learner progress: ${S.ai.learnerContext()}`;
         ${S.ui.pageHead({ kicker: 'Practice', title: 'AI tutor', jp: 'せんせい', desc: 'A Claude-powered teacher who knows your progress. Tap the speaker on any reply to hear the Japanese.', actions: S.ai.hasChat() ? `<button class="btn ghost" data-new>${S.icon('refresh')} New chat</button>` : '' })}
         <div data-body></div>`;
       const body = S.$('[data-body]', root);
-      if (!S.ai.hasChat()) { body.innerHTML = S.aiKeyNeeded('The AI tutor'); return; }
+      if (!S.ai.hasChat()) { try { sessionStorage.removeItem('sakura_ask'); } catch (e) {} body.innerHTML = S.aiKeyNeeded('The AI tutor'); return; }
       const pane = S.chatPane(body, { storageKey: 'sakura_ai_chat', system: SYSTEM, greeting: GREETING, suggestions: SUGGEST, placeholder: 'Ask Sensei anything… (Enter to send, Shift+Enter for a new line)' });
       S.$('[data-new]', root).addEventListener('click', () => { if (pane.messages().length <= 1 || S.confirm('Start a new chat? This conversation will be cleared.')) pane.reset(); });
+      // A question handed over by an "Ask Sensei" button elsewhere on the site
+      let ask = null;
+      try { ask = sessionStorage.getItem('sakura_ask'); sessionStorage.removeItem('sakura_ask'); } catch (e) {}
+      if (ask) pane.send(ask);
     },
   });
 })(window.S);

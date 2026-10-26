@@ -166,7 +166,7 @@
           if (e.optJp) A.speak(e.options[sel]);
           enableCheck();
         }));
-        e.evaluate = () => ({ ok: sel === e.answer, solution: e.options[e.answer], solutionJp: e.optJp, meaning: e.item ? (e.optJp ? e.item.en : e.item.jp) : '' });
+        e.evaluate = () => ({ ok: sel === e.answer, solution: e.options[e.answer], solutionJp: e.optJp, meaning: e.explain || (e.item ? (e.optJp ? e.item.en : e.item.jp) : '') });
       },
       build(e) {
         const chosen = [];
@@ -336,5 +336,4 @@
     return out.join('');
   }
   A.weekDots = weekDots;
-  A.speakStop = () => { try { speechSynthesis.cancel(); } catch (e) {} };
 })(window.A);

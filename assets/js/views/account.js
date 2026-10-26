@@ -51,7 +51,7 @@
       <span class="field-hint">${hint}</span></label>`;
     return `<section class="card" id="ai-settings">
       <h2 class="card-title"><span class="glyph sm" lang="ja">鍵</span> AI & voice</h2>
-      <p class="muted">Add your own keys: <b>Claude</b> powers the <a href="#/tutor">AI tutor</a> and your personal <a href="#/myplan">study plan</a>; <b>ChatGPT</b> provides natural Japanese voices. Keys are stored <b>only in this browser</b> — never synced or backed up, and only ever sent to Anthropic or OpenAI. Usage is billed to your own accounts.</p>
+      <p class="muted">Add your own keys: <b>Claude</b> powers the <a href="#/tutor">AI tutor</a>, your <a href="#/myplan">study plan</a>, writing corrections, new stories and dialogues, and speaking feedback; <b>ChatGPT</b> provides natural Japanese voices and listens when you <a href="#/speaking">practise speaking</a>. The same keys work in the iPhone app. Keys are stored <b>only in this browser</b> — never synced or backed up, and only ever sent to Anthropic or OpenAI. Usage is billed to your own accounts.</p>
       <form class="form" data-ai-form>
         <div class="grid-2">
           <div>
@@ -126,7 +126,6 @@
         const btn = S.$('[type=submit]', f);
         if (f.dataset.aiForm !== undefined) {
           S.ai.save({ anthropicKey: (data.anthropicKey || '').trim(), openaiKey: (data.openaiKey || '').trim(), chatModel: data.chatModel, voiceEngine: data.voiceEngine, voice: data.voice, ttsModel: data.ttsModel });
-          S.ai._cache.clear();
           S.toast(data.voiceEngine === 'openai' && !(data.openaiKey || '').trim() ? 'Saved — add a ChatGPT key to use ChatGPT voice' : 'AI settings saved');
           S.rerender();
           return;
@@ -158,7 +157,7 @@
           if (!key) { aiMsg('Paste your Claude API key first.', 'bad'); return; }
           S.ai.save({ anthropicKey: key, chatModel: S.$('[name=chatModel]', root).value });
           busy(tc, true);
-          try { const r = await S.ai.chat([{ role: 'user', content: 'Reply with one short friendly Japanese greeting and its English meaning.' }], { temperature: 0.3 }); aiMsg(`Claude works ✓ — ${r.replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 120)}`, 'good'); }
+          try { const r = await S.ai.chat([{ role: 'user', content: 'Reply with one short friendly Japanese greeting and its English meaning.' }]); aiMsg(`Claude works ✓ — ${r.replace(/\*\*/g, "").replace(/\s+/g, " ").slice(0, 120)}`, 'good'); }
           catch (err) { aiMsg(err.message, 'bad'); } finally { busy(tc, false); }
           return;
         }

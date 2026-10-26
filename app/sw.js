@@ -1,12 +1,15 @@
 // Offline support: the app and its study content are cached so lessons work without a connection.
 // Bump VERSION whenever app files change so phones pick up the update.
-const VERSION = 'sakura-app-v3';
+const VERSION = 'sakura-app-v4';
 const FILES = [
   './', './index.html', './app.css', './manifest.webmanifest',
-  './js/core.js', './js/course.js', './js/lesson.js', './js/screens.js', './js/main.js',
+  './js/core.js', './js/course.js', './js/lesson.js', './js/screens.js', './js/grammar.js', './js/extras.js', './js/main.js',
   './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png',
   '../assets/js/data/grammar.js', '../assets/js/data/kana.js', '../assets/js/data/kanji.js',
   '../assets/js/data/vocab.js', '../assets/js/data/phrases.js', '../assets/js/data/practice.js',
+  '../assets/js/data/course1.js', '../assets/js/data/course2.js', '../assets/js/data/course.js',
+  '../assets/js/data/stories.js', '../assets/js/data/dialogues.js',
+  '../assets/js/shared/conjugate.js', '../assets/js/shared/sakura-ai.js',
 ];
 
 self.addEventListener('install', (e) => {
