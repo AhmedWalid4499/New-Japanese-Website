@@ -89,7 +89,7 @@
   A.play = (cfg) => {
     const total = cfg.exercises.length;
     const queue = cfg.exercises.map((e) => ({ ...e, retried: false }));
-    let done = 0, mistakes = 0, current = null, answered = false;
+    let done = 0, mistakes = 0, current = null, answered = false, combo = 0, maxCombo = 0;
     const started = Date.now();
     const useHearts = cfg.hearts !== false;
 
@@ -99,6 +99,7 @@
       <header class="lesson-top">
         <button class="icon-btn" data-quit aria-label="Quit lesson">${A.icon('x')}</button>
         <div class="lesson-bar"><span data-bar><i class="bar-petal">${A.icon('heart')}</i></span></div>
+        <span class="combo-pill" data-combo hidden></span>
         ${useHearts ? `<span class="hearts" data-hearts>${A.icon('heart')}<b>${A.hearts()}</b></span>` : `<span class="hearts practice">${A.icon('dumbbell')}</span>`}
       </header>
       <main class="lesson-body" data-body></main>
@@ -126,6 +127,8 @@
       current = queue.shift();
       body.scrollTop = 0;
       render[current.type](current);
+      const exEl = A.$('.ex', body);
+      if (exEl) exEl.classList.add('ex-in');
     }
 
     const speakerBtn = (text, big) => `<button class="speaker ${big ? 'big' : ''}" data-say="${esc(text)}" aria-label="Play audio">${A.icon('volume')}</button>${big ? `<button class="speaker slow" data-say="${esc(text)}" data-slow aria-label="Play slowly"><span class="slow-txt">0.5×</span></button>` : ''}`;
@@ -252,20 +255,35 @@
 
     function answer(r, perfectMatch) {
       answered = true;
-      if (r.ok) { done++; A.sfx('correct'); }
-      else {
+      const pill = A.$('[data-combo]', root);
+      if (r.ok) {
+        done++; combo++; maxCombo = Math.max(maxCombo, combo);
+        A.quest('correct', 1); A.quest('combo', combo);
+        const milestone = combo === 3 || (combo >= 5 && combo % 5 === 0);
+        A.sfx(milestone ? 'taiko' : 'correct');
+        if (combo >= 3) {
+          pill.hidden = false;
+          pill.innerHTML = `<span lang="ja">連</span>${combo}×`;
+          pill.classList.remove('pop'); void pill.offsetWidth; pill.classList.add('pop');
+          if (milestone) comboBurst(combo);
+        }
+      } else {
+        if (combo >= 3) { pill.classList.add('broken'); setTimeout(() => { pill.hidden = true; pill.classList.remove('broken'); }, 500); }
+        combo = 0;
         mistakes++; A.sfx('wrong');
         if (!current.retried) queue.push({ ...current, retried: true, evaluate: null });
         if (useHearts) {
           A.loseHeart();
           const h = A.$('[data-hearts]', root);
+          if (h) petalFall(h);
           if (h) { h.innerHTML = `${A.icon('heart')}<b>${A.hearts()}</b>`; h.classList.add('shake'); setTimeout(() => h.classList.remove('shake'), 500); }
         }
       }
       if (r.quiet && r.ok) { bar(); setTimeout(next, perfectMatch ? 200 : 200); return; }
       bar();
       foot.className = `lesson-foot feedback ${r.ok ? 'good' : 'bad'}`;
-      foot.innerHTML = `<div class="fb">
+      const line = A.maruLine(r.ok ? (combo >= 5 ? 'combo' : 'good') : 'bad');
+      foot.innerHTML = `<div class="fb-maru maru-host">${A.mascot(r.ok ? 'cheer mini' : 'sad mini')}<div class="maru-bubble show"><b lang="ja">${esc(line[0])}</b><small>${esc(line[1])}</small></div></div><div class="fb">
           <span class="hanko ${r.ok ? '' : 'miss'}" lang="ja">${r.ok ? '正解' : '惜しい'}</span>
           <div class="fb-head"><b>${r.ok ? esc(A.pick(PRAISE)) : 'Almost — the answer is:'}</b></div>
           ${!r.ok ? `<div class="fb-solution ${r.solutionJp ? 'jp' : ''}" ${r.solutionJp ? 'lang="ja"' : ''}>${esc(r.solution)}</div>` : ''}
@@ -277,6 +295,28 @@
         if (useHearts && A.hearts() === 0) return finish(false);
         next();
       });
+    }
+
+    // A big "combo" banner across the screen
+    function comboBurst(n) {
+      const b = document.createElement('div');
+      b.className = 'combo-burst';
+      b.innerHTML = `<b lang="ja">${n}れんぞく！</b><span>${n} in a row${n >= 5 ? ' · bonus XP!' : ''}</span>`;
+      root.appendChild(b);
+      setTimeout(() => b.remove(), 1300);
+    }
+    // A petal drifts down from the counter when you lose one
+    function petalFall(h) {
+      const r = h.getBoundingClientRect();
+      const p = document.createElement('span');
+      p.className = 'flyer petal';
+      p.innerHTML = A.icon('heart');
+      document.body.appendChild(p);
+      p.animate([
+        { transform: `translate(${r.left}px,${r.top}px) rotate(0)`, opacity: 1 },
+        { transform: `translate(${r.left - 60}px,${r.top + 160}px) rotate(200deg)`, opacity: 0.8, offset: 0.5 },
+        { transform: `translate(${r.left - 20}px,${r.top + 340}px) rotate(420deg)`, opacity: 0 },
+      ], { duration: 1400, easing: 'ease-in' }).onfinish = () => p.remove();
     }
 
     function finish(completed) {
@@ -292,21 +332,29 @@
         A.$('[data-q]', foot).addEventListener('click', () => { close(); cfg.onDone && cfg.onDone({ outOfHearts: true }); });
         return;
       }
-      const xp = (cfg.xp || 10) + (mistakes === 0 ? 5 : 0);
+      const comboBonus = Math.floor(maxCombo / 5) * 2;
+      const xp = (cfg.xp || 10) + (mistakes === 0 ? 5 : 0) + comboBonus;
       const before = A.streak();
+      const xpFrom = A.state.xp;
       const extended = A.addXp(xp);
-      A.sfx('complete'); A.confetti();
+      A.pending = { ...(A.pending || {}), xp, xpFrom };
+      A.quest('lesson', 1);
+      if (mistakes === 0) A.quest('perfect', 1);
+      A.sfx('complete'); setTimeout(() => A.sfx('bell'), 650); A.confetti();
       body.innerHTML = `<div class="ex center result">
         <div class="scroll-card">
           <span class="hanko big" lang="ja">${mistakes === 0 ? '完璧' : '合格'}</span>
           <div class="result-jp" lang="ja">お疲れさま</div>
           <h1>${mistakes === 0 ? 'A flawless lesson!' : esc(cfg.doneTitle || 'Lesson complete')}</h1>
           <dl class="tally">
-            <div><dt>${A.icon('bolt')} Experience</dt><dd>+${xp} XP</dd></div>
+            <div><dt>${A.icon('bolt')} Experience</dt><dd>+<span data-xpcount>0</span> XP</dd></div>
+            ${maxCombo >= 3 ? `<div><dt><span class="combo-dt" lang="ja">連</span> Best combo</dt><dd>${maxCombo}×${comboBonus ? ` <small>+${comboBonus}</small>` : ''}</dd></div>` : ''}
             <div><dt>${A.icon('target')} Accuracy</dt><dd>${acc}%</dd></div>
             <div><dt>⏱ Time</dt><dd>${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}</dd></div>
           </dl>
-        </div>${A.mascot('cheer mini result-mascot')}</div>`;
+        </div><div class="maru-host result-maru">${A.mascot('cheer mini result-mascot')}</div></div>`;
+      A.countUp(A.$('[data-xpcount]', body), 0, xp, 1100);
+      setTimeout(() => A.maruSay(A.$('.result-maru .mascot', body), mistakes === 0 ? ['かんぺき！', 'A perfect lesson!'] : A.maruLine('good'), { speak: false, ms: 3000 }), 500);
       foot.className = 'lesson-foot';
       foot.innerHTML = '<button class="btn primary block lg" data-cont>Continue</button>';
       A.$('[data-cont]', foot).addEventListener('click', () => {

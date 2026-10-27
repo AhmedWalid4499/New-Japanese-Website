@@ -45,6 +45,7 @@
         if (r) {
           const g = A.state.grammar[m.id] || {};
           A.state.grammar[m.id] = { done: g.done || r.acc >= 60, best: Math.max(g.best || 0, r.acc), at: Date.now() };
+          A.quest('grammar', 1);
           A.save(); A.checkAchievements();
         }
         onFinish && onFinish();

@@ -81,6 +81,12 @@ A separate mobile app with a Duolingo-like learning loop but its own look — a 
 - **Petals (lives), XP, a lantern streak, daily goal and achievements**, with Maru the lucky cat cheering you on.
 - **Grammar (文)** — the full 32-lesson grammar course: read the lesson, listen to the examples, then practise it.
 - **Letters** (kana charts with audio), **Practice** (personalized review, mistakes, listening, phrasebook, conjugation drill, stories, dialogues, repeat-after-me speaking, and talking with Claude) and **Profile** (stats, weekly chart, settings incl. **AI & voice** — the same keys as the website).
+- **Lively by design:** Maru reacts to every answer (and chats when you tap him on the Path), combos for answers in a row (3×, 5×, 10× with bonus XP), XP and petals that fly into the top bar, temple-bell and taiko sounds, and haptics (Android vibration; a light tap on iPhone with iOS 18+).
+- **Daily quests:** three new quests every day; each one opens an omamori (lucky charm) with bonus XP or a petal, and finishing all three opens a golden one.
+- **Weekly league:** climb from the Sakura League to Fuji against practice rivals (top 5 move up, bottom 3 move down each week).
+- **Mini-games:** Kana Rain (catch falling kana), Memory (flip & match) and Time Attack (60-second vocab blitz), with personal bests.
+- **Write by hand:** trace hiragana, katakana and N5 kanji with your finger; every stroke is checked for shape, direction and order (stroke data from KanjiVG).
+- **Daily reminder:** adds a repeating alarm to the iPhone Calendar (web apps can't schedule notifications without a server), plus a nudge from Maru when you open the app late.
 - Works **offline** and saves progress on the phone.
 
 **Install on iPhone:** open `https://<your-username>.github.io/<repo>/app/` in **Safari** → tap **Share** → **Add to Home Screen** → **Add**. Sakura Study then opens full-screen from its own icon like any other app.
