@@ -91,9 +91,33 @@ window.A = window.A || {};
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
   };
+  // A short burst of filtered noise (drum skins, whooshes)
+  const noise = (t0, dur, freq, q = 1, gain = 0.2, type = 'lowpass') => {
+    const c = audio(), len = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t = c.currentTime + t0;
+    src.buffer = buf; f.type = type; f.frequency.value = freq; f.Q.value = q; g.gain.value = gain;
+    src.connect(f); f.connect(g); g.connect(c.destination); src.start(t);
+  };
+  // Pitch-dropping drum hit (taiko)
+  const drum = (t0, f0 = 150, gain = 0.5) => {
+    const c = audio(), o = c.createOscillator(), g = c.createGain(), t = c.currentTime + t0;
+    o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(52, t + 0.3);
+    g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + 0.5);
+    noise(t0, 0.08, 900, 0.7, 0.18);
+  };
   A.sfx = (kind) => {
     if (!state.profile.sound) return;
     try {
+      // Temple bell: inharmonic partials with a long ring
+      if (kind === 'bell') { [[1, 0.12], [2.01, 0.06], [2.76, 0.05], [5.4, 0.025], [8.9, 0.012]].forEach(([r, g]) => tone(392 * r, 0, 3.2 / Math.sqrt(r), 'sine', g)); return; }
+      if (kind === 'taiko') { drum(0, 160, 0.55); drum(0.16, 130, 0.4); return; }
+      if (kind === 'coin') { tone(1319, 0, 0.12, 'square', 0.03); tone(1976, 0.07, 0.25, 'square', 0.03); return; }
+      if (kind === 'chime') { [784, 880, 1175, 1319, 1568].forEach((f, i) => tone(f, i * 0.07, 0.8, 'sine', 0.06)); return; }
+      if (kind === 'pop') { tone(660, 0, 0.09, 'sine', 0.1); tone(990, 0.03, 0.08, 'sine', 0.06); return; }
+      if (kind === 'whoosh') { noise(0, 0.35, 1400, 0.6, 0.12, 'bandpass'); return; }
+      if (kind === 'meow') { const c = audio(), o = c.createOscillator(), g = c.createGain(), t = c.currentTime; o.type = 'triangle'; o.frequency.setValueAtTime(700, t); o.frequency.linearRampToValueAtTime(1050, t + 0.12); o.frequency.linearRampToValueAtTime(620, t + 0.38); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.08, t + 0.04); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.42); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + 0.45); return; }
       // Japanese "in" pentatonic: D E♭ G A B♭ — plucked like a koto
       if (kind === 'correct') { tone(784, 0, 0.5, 'triangle', 0.12); tone(1175, 0.08, 0.7, 'sine', 0.08); }
       else if (kind === 'wrong') { tone(311, 0, 0.35, 'sine', 0.1); tone(294, 0.12, 0.5, 'sine', 0.08); }
@@ -218,6 +242,7 @@ window.A = window.A || {};
     turtle: '<path d="M4 15c0-4 3.6-7 8-7s8 3 8 7H4z" fill="currentColor"/><path d="M6 15v3M18 15v3M20 13h2"/>',
     share: '<path d="M12 3v12M8 7l4-4 4 4M5 12v8h14v-8"/>',
     target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
+    bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',
     mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
     stop: '<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>',
     play: '<path d="M7 4v16l13-8z" fill="currentColor"/>',

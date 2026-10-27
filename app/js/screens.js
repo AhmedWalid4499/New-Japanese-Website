@@ -50,11 +50,22 @@
     el.innerHTML = `${A.statusBar()}<div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       ${!isStandalone() && isIOS() && !A.state.dismissInstall ? `<div class="install-tip"><span>${A.icon('share')}</span><div><b>Install Sakura Study</b><br>Tap Share, then “Add to Home Screen”.</div><button class="icon-btn" data-dismiss-install aria-label="Dismiss">${A.icon('x')}</button></div>` : ''}
       <div class="goal-strip" data-info="xp"><span>Daily goal</span><div class="goal-bar"><i style="width:${Math.min(100, (today / goal) * 100)}%"></i></div><b>${today}/${goal} XP</b></div>
+      ${A.questCard()}
       <div class="path">${A.UNITS.map((u) => unitHtml(u, cur)).join('')}
         <div class="path-end"><span class="hanko big" lang="ja">N5</span><p>The end of the N5 journey. おめでとう!</p></div></div>`;
     const dis = A.$('[data-dismiss-install]', el);
     if (dis) dis.addEventListener('click', () => { A.state.dismissInstall = true; A.save(); dis.closest('.install-tip').remove(); });
     el.addEventListener('click', (e) => {
+      const c = e.target.closest('[data-claim]');
+      if (c) { A.claimQuest(c.dataset.claim, () => A.go('learn')); return; }
+      const m = e.target.closest('[data-maru]');
+      if (m) {
+        const svg = A.$('.mascot', m);
+        svg.classList.remove('jump'); void svg.getBoundingClientRect(); svg.classList.add('jump');
+        A.sfx('meow');
+        A.maruSay(svg, A.maruChat());
+        return;
+      }
       const n = e.target.closest('[data-lesson]');
       if (n) return lessonPopup(n);
       const g = e.target.closest('[data-guide]');
@@ -96,7 +107,7 @@
         return `<div class="node-wrap" style="transform:translateX(${off}px)">
           ${isCur ? `<div class="start-bubble" lang="ja">はじめ <small>Start</small></div>` : ''}
           <button class="node ${isDone ? 'done' : ''} ${isCur ? 'current' : ''} ${locked ? 'locked' : ''}" data-lesson="${l.key}" aria-label="Lesson ${i + 1}${isDone ? ', completed' : locked ? ', locked' : ''}">${face}</button>
-          ${i === 2 && !locked ? `<div class="path-mascot" style="transform:translateX(${off > 0 ? -118 : 118}px)">${A.mascot('mini')}</div>` : ''}
+          ${isCur ? `<button class="path-mascot maru-host" data-maru aria-label="Talk to Maru" style="transform:translateX(${off > 0 ? -118 : 118}px)">${A.mascot('mini')}</button>` : ''}
         </div>`;
       }).join('')}</div></section>`;
   }
@@ -257,6 +268,8 @@
         <h1>${esc(p.name || 'Sakura learner')}</h1>
         <p class="muted small">Learning Japanese 🇯🇵 · Joined ${new Date(p.created).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</p>
       </div>
+      <h3 class="section-label">League</h3>
+      ${A.leagueCard()}
       <h3 class="section-label">Statistics</h3>
       <div class="stat-grid">
         <div class="stat-box"><span class="s-ic flame">${A.icon('flame')}</span><b>${st.n}</b><small>Day streak</small></div>
@@ -271,6 +284,7 @@
       <div class="card ach-list">${ACHIEVEMENTS.map((a) => `<div class="ach ${A.state.achievements[a.id] ? 'on' : ''}"><span class="ach-ic">${a.icon}</span><div><b>${esc(a.title)}</b><small>${esc(a.desc)}</small></div>${A.state.achievements[a.id] ? A.icon('check') : ''}</div>`).join('')}</div>
       <a class="btn block ghost" href="../" target="_blank" rel="noopener">Open the full Sakura Study website ↗</a>`;
     A.$('[data-settings]', el).addEventListener('click', settings);
+    A.$('[data-league]', el).addEventListener('click', () => { A.sfx('tap'); A.leagueSheet(); });
   };
 
   function settings() {
@@ -279,9 +293,11 @@
       <label class="field"><span>Name</span><input data-name value="${esc(p.name)}" placeholder="Your name" maxlength="24"></label>
       <div class="field"><span>Daily goal</span><div class="goal-opts">${[[10, 'Casual'], [20, 'Regular'], [30, 'Serious'], [50, 'Intense']].map(([v, l]) => `<button class="${p.goal === v ? 'on' : ''}" data-goal="${v}"><b>${l}</b><small>${v} XP / day</small></button>`).join('')}</div></div>
       <label class="toggle"><span>Sound effects</span><input type="checkbox" data-t="sound" ${p.sound ? 'checked' : ''}><i></i></label>
+      <label class="toggle"><span>Haptics (vibration)</span><input type="checkbox" data-t="haptics" ${p.haptics !== false ? 'checked' : ''}><i></i></label>
       <label class="toggle"><span>Show romaji hints</span><input type="checkbox" data-t="romaji" ${p.romaji ? 'checked' : ''}><i></i></label>
       <div class="field"><span>Speaking speed</span><div class="goal-opts three">${[[0.6, 'Slow'], [0.85, 'Natural'], [1, 'Fast']].map(([v, l]) => `<button class="${p.rate === v ? 'on' : ''}" data-rate="${v}"><b>${l}</b></button>`).join('')}</div></div>
       <button class="btn block" data-test>${A.icon('volume')} Test voice</button>
+      <button class="btn block" data-reminder>${A.icon('bell')} Daily reminder</button>
       <button class="btn block" data-ai>${A.icon('spark')} AI & voice (Claude · ChatGPT)</button>
       <button class="btn primary block" data-close>Done</button>
       <button class="btn ghost danger block" data-reset>Reset all progress</button></div>`, { onClose: () => A.go(A.tab) });
@@ -292,6 +308,7 @@
       if (g) { p.goal = +g.dataset.goal; A.$$('[data-goal]', s.el).forEach((b) => b.classList.toggle('on', b === g)); A.save(); }
       if (r) { p.rate = +r.dataset.rate; A.$$('[data-rate]', s.el).forEach((b) => b.classList.toggle('on', b === r)); A.save(); A.speak('こんにちは'); }
       if (e.target.closest('[data-ai]')) { s.close(); setTimeout(A.aiSettings, 260); return; }
+      if (e.target.closest('[data-reminder]')) { s.close(); setTimeout(A.reminderSettings, 260); return; }
       if (e.target.closest('[data-test]')) A.speak('こんにちは。いっしょに にほんごを べんきょうしましょう。');
       if (e.target.closest('[data-reset]') && confirm('Reset ALL progress in the app? This can’t be undone.')) A.resetAll();
     });

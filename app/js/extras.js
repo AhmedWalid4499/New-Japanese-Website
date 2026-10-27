@@ -43,6 +43,7 @@
   }
   const finishRead = (id, pct) => {
     A.state.read[id] = Math.max(A.state.read[id] || 0, pct);
+    A.quest('read', 1);
     A.addXp(pct === 100 ? 15 : 10); A.save();
     if (pct === 100) { A.confetti(); A.sfx('complete'); }
     A.toast(pct === 100 ? 'Perfect! +15 XP' : `${pct}% · +10 XP`);
@@ -192,6 +193,7 @@
         let score = kanaSim(it.jp, heard), fb = '';
         if (hasChat()) { try { const r = await AI.judgeSpeech({ target: it.jp, heard }); score = r.score; fb = r.feedback; } catch (e) { fb = ''; } }
         total += score;
+        A.quest('speak', 1);
         A.sfx(score >= 80 ? 'correct' : 'wrong');
         res.innerHTML = `<div class="heard"><small>I heard</small><div lang="ja">${esc(heard)}</div></div>
           <div class="speak-score ${score >= 80 ? 'good' : score >= 60 ? 'ok' : 'bad'}"><b>${score}%</b> ${score >= 80 ? 'じょうず！ Great!' : score >= 60 ? 'Close!' : 'Try again'}</div>${fb ? `<p class="small">${esc(fb)}</p>` : ''}
@@ -289,11 +291,13 @@
   A.aiSettings = aiSettings;
 
   A.extraCards = () => [
+    ['games', 'Mini-games', 'Kana Rain, Memory, Time Attack', '遊', '#e2843a', '#b8642a'],
+    ['write', 'Write by hand', 'Trace kana & kanji with your finger', '書', '#2a2522', '#000000'],
     ['conj', 'Conjugation drill', 'Verb & adjective forms', '活', '#5f8a37', '#466a26'],
     ['stories', 'Stories', 'Tap-to-translate reading', '物', '#b2547a', '#8e3f60'],
     ['dialogues', 'Dialogues', 'JLPT-style listening, two voices', '会', '#3b5a8c', '#2c446b'],
     ['speak', 'Repeat after me', 'Say it out loud, get a score', '声', '#c4473a', '#9c372c'],
     ['talk', 'Talk with Claude', hasChat() ? 'Spoken role-play & Sensei' : 'Add a Claude key in settings', '話', '#6b5bd2', '#5143a8'],
   ];
-  A.openExtra = (id) => ({ conj: A.conjugationDrill, stories: storyList, dialogues: dialogueList, speak: speaking, talk: () => (hasChat() ? talkMenu() : aiSettings()) }[id] || (() => {}))();
+  A.openExtra = (id) => ({ games: () => A.openGames(), write: () => A.openWriting(), conj: A.conjugationDrill, stories: storyList, dialogues: dialogueList, speak: speaking, talk: () => (hasChat() ? talkMenu() : aiSettings()) }[id] || (() => {}))();
 })(window.A);

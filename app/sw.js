@@ -1,11 +1,11 @@
 // Offline support: the app and its study content are cached so lessons work without a connection.
 // Bump VERSION whenever app files change so phones pick up the update.
-const VERSION = 'sakura-app-v4';
+const VERSION = 'sakura-app-v5';
 const FILES = [
   './', './index.html', './app.css', './manifest.webmanifest',
-  './js/core.js', './js/course.js', './js/lesson.js', './js/screens.js', './js/grammar.js', './js/extras.js', './js/main.js',
+  './js/core.js', './js/fun.js', './js/course.js', './js/lesson.js', './js/screens.js', './js/grammar.js', './js/extras.js', './js/games.js', './js/write.js', './js/main.js',
   './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png',
-  '../assets/js/data/grammar.js', '../assets/js/data/kana.js', '../assets/js/data/kanji.js',
+  '../assets/js/data/grammar.js', '../assets/js/data/kana.js', '../assets/js/data/kanji.js', '../assets/js/data/strokes.js',
   '../assets/js/data/vocab.js', '../assets/js/data/phrases.js', '../assets/js/data/practice.js',
   '../assets/js/data/course1.js', '../assets/js/data/course2.js', '../assets/js/data/course.js',
   '../assets/js/data/stories.js', '../assets/js/data/dialogues.js',
@@ -26,7 +26,7 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(caches.open(VERSION).then(async (cache) => {
     const hit = await cache.match(e.request, { ignoreSearch: true });
     const net = fetch(e.request).then((res) => {
-      if (res.ok && (new URL(e.request.url).origin === location.origin || e.request.url.includes('fonts.g'))) cache.put(e.request, res.clone());
+      if (res.ok && (new URL(e.request.url).origin === location.origin || /fonts\.g|kanjivg/.test(e.request.url))) cache.put(e.request, res.clone());
       return res;
     }).catch(() => hit);
     return hit || net;
